@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node server.js",
     "dev": "DEBUG=test:* nodemon server.js",
     "dev-windows": "nodemon server.js"
   },
