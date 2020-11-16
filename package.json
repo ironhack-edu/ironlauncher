@@ -7,6 +7,9 @@
   "license": "MIT",
   "bin": {
     "ironhack": "index.js",
-    "ironmake":"index.js"
+    "ironmake": "index.js"
+  },
+  "dependencies": {
+    "copy-template-dir": "^1.4.0"
   }
 }

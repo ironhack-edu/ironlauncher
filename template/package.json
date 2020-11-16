@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "dev": "DEBUG=test:* nodemon server.js",
-    "dev-windows": "nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.3",
