@@ -1,0 +1,23 @@
+{
+  "name": "test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "DEBUG=test:* nodemon server.js",
+    "dev-windows": "nodemon server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.3",
+    "hbs": "^4.0.1",
+    "mongoose": "^5.2.10",
+    "morgan": "^1.9.0",
+    "node-sass-middleware": "^0.11.0",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}

@@ -1,6 +1,5 @@
 module.exports = (app) => {
   app.use((req, res, next) => {
-    console.log("jere?");
     res.status(404);
     res.render("not-found");
   });
