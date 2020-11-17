@@ -7,9 +7,12 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-mongodb-session": "^2.4.1",
     "cookie-parser": "^1.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.16.3",
+    "express-session": "^1.17.1",
     "hbs": "^4.0.1",
     "mongoose": "^5.2.10",
     "morgan": "^1.9.0",

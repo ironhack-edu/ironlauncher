@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-console.log("hey");
 const copy = require("copy-template-dir");
 const path = require("path");
 
-const vars = { name: `awais` };
+const vars = { name: `andre` };
 
 const inDir = path.join(__dirname, `templates`);
 const outDir = path.join(process.cwd(), "output");
