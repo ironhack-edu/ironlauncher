@@ -17,6 +17,7 @@
     "cli-meow-help": "^2.0.2",
     "cli-should-cancel": "^1.0.3",
     "copy-template-dir": "^1.4.0",
+    "enquirer": "^2.3.6",
     "execa": "^4.1.0",
     "meow": "^8.0.0",
     "ora": "^5.1.0"
