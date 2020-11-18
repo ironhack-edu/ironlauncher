@@ -4,12 +4,18 @@ const alert = require("cli-alerts");
 const { basename } = require("path");
 const ora = require("ora");
 const execa = require("execa");
-const { inDir } = require("./paths");
+const path = require("path");
+const fs = require("fs");
+const { inDir, getTemplate } = require("./paths");
 
 const spinner = ora({ text: "" });
 
 module.exports = ({ inDirPath, outDirPath, vars }) => {
   const { name: outDir } = vars;
+  // return;
+  const layoutFile = path.join(getTemplate(), "layout.hbs");
+
+  doThat();
 
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
@@ -43,6 +49,8 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
       `${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`
     );
     process.chdir(outDirPath);
+    const pathToViews = path.join(process.cwd(), "views", "layout.hbs");
+    await fs.copyFile(layoutFile, pathToViews, () => {});
     await execa("npm", [`install`, ...pkgs]);
     await execa("npm", [`install`, `-D`, `nodemon`]);
     spinner.succeed(`${g("FINISHED")} instalation...`);

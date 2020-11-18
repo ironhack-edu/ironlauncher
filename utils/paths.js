@@ -11,7 +11,9 @@ function outDir(name) {
   return path.join(process.cwd(), name);
 }
 
+const getTemplate = () => path.join(__dirname, "..", `template`);
 module.exports = {
   inDir,
   outDir,
+  getTemplate,
 };

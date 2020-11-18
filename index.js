@@ -34,7 +34,7 @@ async function main() {
   const inDirPath = inDir(flags.auth);
   const outDirPath = outDir(name);
 
-  const vars = { name };
+  const vars = { name, body: "{{body}}", title: "{{title}}" };
   performCopy({ inDirPath, outDirPath, vars });
 }
 
