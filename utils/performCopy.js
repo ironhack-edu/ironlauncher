@@ -15,8 +15,6 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   // return;
   const layoutFile = path.join(getTemplate(), "layout.hbs");
 
-  doThat();
-
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
   const auth = [`connect-mongodb-session`, `express-session`];
