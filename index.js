@@ -1,23 +1,39 @@
 #!/usr/bin/env node
-
-const copy = require("copy-template-dir");
 const path = require("path");
+const cli = require("./utils/cli");
+const ask = require("./utils/ask");
+const copy = require("copy-template-dir");
 
-const vars = { name: `andre` };
+const getName = require("./utils/getName");
+const init = require("./utils/init");
+const question = require("./utils/question");
+const { inDir, outDir } = require("./utils/paths");
+const performCopy = require("./utils/performCopy");
+const alert = require("cli-alerts");
+const { input, flags, showHelp } = cli;
 
-const inDir = path.join(__dirname, `templates`);
-const outDir = path.join(process.cwd(), "output");
+async function main() {
+  init();
+  if (input.includes("help")) {
+    return showHelp(0);
+  }
+  let { name, issue } = getName(cli);
 
-copy(inDir, outDir, vars, (err, createdFiles) => {
-  if (err) throw err;
-  console.log();
-  console.log(`Creating a files in ${vars.name}`);
+  if (!name) {
+    name = await question({
+      message: "Project name?",
+      issue,
+      name: "name",
+      hint: "(This will be the name in package.json)",
+    });
+  }
 
-  createdFiles.forEach((filePath) => {
-    const fileName = path.basename(filePath);
-    console.log(`Created ${fileName}`);
-  });
-  console.log();
-  console.log("DONE");
-  console.log();
-});
+  // return;
+  const inDirPath = inDir(flags.auth);
+  const outDirPath = outDir(name);
+
+  const vars = { name };
+  performCopy({ inDirPath, outDirPath, vars });
+}
+
+main();

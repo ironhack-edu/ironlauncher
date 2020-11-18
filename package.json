@@ -5,11 +5,20 @@
   "repository": "git@github.com:itstheandre/lean-express-gen.git",
   "author": "André de Albuquerque (https://itstheandre.com)",
   "license": "MIT",
+  "description": "Ironhack generator for express bootstrapping",
   "bin": {
     "ironhack": "index.js",
     "ironmake": "index.js"
   },
   "dependencies": {
-    "copy-template-dir": "^1.4.0"
+    "await-to-js": "^2.1.1",
+    "chalk": "^4.1.0",
+    "cli-alerts": "^1.2.2",
+    "cli-meow-help": "^2.0.2",
+    "cli-should-cancel": "^1.0.3",
+    "copy-template-dir": "^1.4.0",
+    "execa": "^4.1.0",
+    "meow": "^8.0.0",
+    "ora": "^5.1.0"
   }
 }

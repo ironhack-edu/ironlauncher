@@ -11,7 +11,7 @@ const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
 router.get("/signup", shouldNotBeLoggedIn, (req, res) => {
-  res.render("signup");
+  res.render("auth/signup");
 });
 
 router.post("/signup", shouldNotBeLoggedIn, (req, res) => {
@@ -80,7 +80,7 @@ router.post("/signup", shouldNotBeLoggedIn, (req, res) => {
 });
 
 router.get("/login", shouldNotBeLoggedIn, (req, res) => {
-  res.render("login");
+  res.render("auth/login");
 });
 
 router.post("/login", shouldNotBeLoggedIn, (req, res) => {
@@ -127,7 +127,9 @@ router.post("/login", shouldNotBeLoggedIn, (req, res) => {
 router.get("/logout", isLoggedIn, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.status(500).render("/logout", { errorMessage: err.message });
+      return res
+        .status(500)
+        .render("auth/logout", { errorMessage: err.message });
     }
     res.redirect("/");
   });
