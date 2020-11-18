@@ -43,7 +43,7 @@ const commands = {
 const helpText = meowHelp({
   flags,
   commands,
-  name: "Irongenerator",
+  name: "ironhack or ironamake",
 });
 
 const options = {
