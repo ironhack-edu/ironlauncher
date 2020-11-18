@@ -12,6 +12,8 @@ const performCopy = require("./utils/performCopy");
 const alert = require("cli-alerts");
 const { input, flags, showHelp } = cli;
 
+// console.log("flags:", flags);
+
 async function main() {
   init();
   if (input.includes("help")) {
