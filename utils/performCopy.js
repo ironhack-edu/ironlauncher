@@ -23,6 +23,7 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     `morgan`,
     `node-sass-middleware`,
     `serve-favicon`,
+    `cookie-parser`,
   ];
   if (isAuth) {
     pkgs = [...pkgs, ...auth];
