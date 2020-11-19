@@ -24,7 +24,6 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     `hbs`,
     `mongoose`,
     `morgan`,
-    `node-sass-middleware`,
     `serve-favicon`,
     `cookie-parser`,
   ];

@@ -27,15 +27,6 @@ module.exports = (app) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  // On request it tries to recompile the scss file into a regular css file. If you dont want to use scss, you can remove this middleware
-  app.use(
-    require("node-sass-middleware")({
-      src: path.join(__dirname, "..", "public"),
-      dest: path.join(__dirname, "..", "public"),
-      sourceMap: true,
-    })
-  );
-
   // Normalizes the path to the views folder
   app.set("views", path.join(__dirname, "..", "views"));
   // sets the view engine to handlebars
