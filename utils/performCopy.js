@@ -17,7 +17,7 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
 
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
-  const auth = [`connect-mongodb-session`, `express-session``bcryptjs`];
+  const auth = [`connect-mongodb-session`, `express-session`, `bcryptjs`];
   let pkgs = [
     `dotenv`,
     `express`,
