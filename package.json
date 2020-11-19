@@ -1,5 +1,5 @@
 {
-  "name": "irongenerator",
+  "name": "ironlauncher",
   "version": "0.0.1",
   "main": "index.js",
   "repository": "git@github.com:itstheandre/lean-express-gen.git",
@@ -10,6 +10,16 @@
     "ironhack": "index.js",
     "ironmake": "index.js"
   },
+  "keywords": [
+    "express",
+    "generator",
+    "cli",
+    "ironhack",
+    "ironhack-launched",
+    "express-launcher",
+    "hbs",
+    "bcrypt"
+  ],
   "dependencies": {
     "await-to-js": "^2.1.1",
     "chalk": "^4.1.0",
