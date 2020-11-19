@@ -12,8 +12,12 @@ const app = express();
 // ℹ️ This function is getting exported from the config folder. It runs most middlewares
 require("./config")(app);
 
+const projectName = "{{name}}";
+const capitalized = (string) =>
+  string[0].toUpperCase() + string.slice(1).toLowerCase();
+
+app.locals.title = `${capitalized(projectName)}- Generated with IronGenerator`;
 // default value for title local
-app.locals.title = "Express - Generated with IronGenerator";
 
 // 👇 Start handling routes here
 const index = require("./routes/index");
