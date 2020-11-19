@@ -116,11 +116,15 @@ router.post("/login", shouldNotBeLoggedIn, (req, res) => {
           .render("login", { errorMessage: "Wrong credentials" });
       }
       req.session.user = user;
-      // req.session.user = user._id ! better and safer
+      // req.session.user = user._id ! better and safer but in this case we saving the entire user object
       return res.redirect("/");
     })
     .catch((err) => {
-      return res.status(500).render("login", { errorMessage: err.message });
+      console.log(err);
+      // in this case we are sending the error handling to the error handling middleware that is defined in the error handling file
+      // you can just as easily run the res.status that is commented out below
+      next(err);
+      // return res.status(500).render("login", { errorMessage: err.message });
     });
 });
 
