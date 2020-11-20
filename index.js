@@ -17,7 +17,7 @@ const pkg = require("./package.json");
 async function test() {
   const { version } = await getPackage("itstheandre/lean-express-gen");
   console.log("version online:", version);
-  console.log("version current", pkgs.version);
+  console.log("version current", pkg.version);
 }
 test();
 return;
