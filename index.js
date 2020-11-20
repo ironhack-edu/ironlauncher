@@ -11,7 +11,16 @@ const { inDir, outDir } = require("./utils/paths");
 const performCopy = require("./utils/performCopy");
 const alert = require("cli-alerts");
 const { input, flags, showHelp } = cli;
+const getPackage = require("get-repo-package-json");
+const pkg = require("./package.json");
 
+async function test() {
+  const { version } = await getPackage("itstheandre/lean-express-gen");
+  console.log("version online:", version);
+  console.log("version current", pkgs.version);
+}
+test();
+return;
 // console.log("flags:", flags);
 
 async function main() {

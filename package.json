@@ -32,6 +32,7 @@
     "copy-template-dir": "^1.4.0",
     "enquirer": "^2.3.6",
     "execa": "^4.1.0",
+    "get-repo-package-json": "^2.0.0",
     "meow": "^8.0.0",
     "ora": "^5.1.0"
   }
