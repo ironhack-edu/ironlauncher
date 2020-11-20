@@ -18,18 +18,18 @@ const flags = {
     // default: "",
     desc: "If you wish to be explicitit and define a name",
   },
-  // yarn: {
-  //   type: "boolean",
-  //   desc: "Decide if you want to use yarn or not",
-  //   default: false,
-  //   alias: "y",
-  // },
-  help: {
+  yarn: {
     type: "boolean",
-    alias: "h",
-    desc: "Another way of asking for the commands of the app",
+    desc: "Decide if you want to use yarn or not",
     default: false,
+    alias: "y",
   },
+  // help: {
+  //   type: "boolean",
+  //   alias: "h",
+  //   desc: "Another way of asking for the commands of the app",
+  //   default: false,
+  // },
 };
 
 const commands = {

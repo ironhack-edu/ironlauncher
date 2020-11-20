@@ -11,7 +11,8 @@ const { inDir, outDir } = require("./utils/paths");
 const performCopy = require("./utils/performCopy");
 const alert = require("cli-alerts");
 const { input, flags, showHelp } = cli;
-
+const { yarn = false, auth = false, json = false } = flags;
+return;
 // console.log("flags:", flags);
 
 async function main() {
