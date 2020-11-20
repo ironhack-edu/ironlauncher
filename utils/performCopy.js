@@ -7,6 +7,8 @@ const execa = require("execa");
 const path = require("path");
 const fs = require("fs");
 const { inDir, getTemplate } = require("./paths");
+const pkg = require("../package.json");
+const getPackage = require("get-repo-package-json");
 
 const spinner = ora({ text: "" });
 
@@ -41,6 +43,7 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
       console.log(`${g("CREATED")}: ${fileName}`);
     });
     console.log();
+    let isSameVersion = true;
     spinner.start(
       `${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`
     );
@@ -49,6 +52,10 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     await fs.copyFile(layoutFile, pathToViews, () => {});
     await execa("npm", [`install`, ...pkgs]);
     await execa("npm", [`install`, `-D`, `nodemon`]);
+    const onlineVersion = await getPackage("itstheandre/lean-express-gen");
+    if (onlineVersion.version !== pkg.version) {
+      isSameVersion = false;
+    }
     spinner.succeed(`${g("FINISHED")} instalation...`);
 
     alert({
@@ -58,6 +65,15 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
         `./${outDir}`
       )} directory`,
     });
+
+    if (!isSameVersion) {
+      alert({
+        type: "warning",
+        msg:
+          "There is a new version of ironlauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
+      });
+    }
+
     return alert({
       type: `info`,
       msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
