@@ -19,6 +19,7 @@ async function main() {
   if (input.includes("help")) {
     return showHelp(0);
   }
+  return;
   let { name, issue } = getName(cli);
 
   if (!name) {

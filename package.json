@@ -35,5 +35,11 @@
     "get-repo-package-json": "^2.0.0",
     "meow": "^8.0.0",
     "ora": "^5.1.0"
+  },
+  "devDependencies": {
+    "ava": "^3.13.0"
+  },
+  "scripts": {
+    "test": "ava"
   }
 }
