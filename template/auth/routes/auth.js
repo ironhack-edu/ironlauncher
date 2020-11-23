@@ -90,7 +90,7 @@ router.get("/login", shouldNotBeLoggedIn, (req, res) => {
   res.render("auth/login");
 });
 
-router.post("/login", shouldNotBeLoggedIn, (req, res) => {
+router.post("/login", shouldNotBeLoggedIn, (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username) {
