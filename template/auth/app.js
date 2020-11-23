@@ -1,10 +1,15 @@
 // ℹ️ To get access to environment
-require("dotenv").config();
+// https://www.npmjs.com/package/dotenv
+require("dotenv/config");
 
 // ℹ️ Connect to the database
 require("./db");
 
+// node js framework for handling http requests
+// https://www.npmjs.com/package/express
 const express = require("express");
+// we need to install it in order to use handlebars
+// https://www.npmjs.com/package/hbs
 const hbs = require("hbs");
 
 const app = express();

@@ -1,20 +1,25 @@
 // We reuse this import in order to have access to the `body` property in requests
 const express = require("express");
 // ℹ️ Reponsible for the messages you in the terminal as requests are coming in
+// https://www.npmjs.com/package/morgan
 const logger = require("morgan");
 
 // ℹ️ If we deal with cookies (we will when dealing with auth)
+// https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 // ℹ️ In order to serve a custom favicon on each request
+// https://www.npmjs.com/package/serve-favicon
 const favicon = require("serve-favicon");
 
 // ℹ️ global package used to `normalize` paths amongst different operating systems
 const path = require("path");
 
 // ℹ️ Session middleware for authentication
+// https://www.npmjs.com/package/express-session
 const session = require("express-session");
 
 // ℹ️ MongoStore in order to save the user session in the database
+// https://www.npmjs.com/package/connect-mongodb-session
 const MongoStore = require("connect-mongodb-session")(session);
 
 // Middleware configuration

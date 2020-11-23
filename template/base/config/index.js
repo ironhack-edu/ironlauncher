@@ -1,11 +1,14 @@
 // We reuse this import in order to have access to the `body` property in requests
 const express = require("express");
 // ℹ️ Reponsible for the messages you in the terminal as requests are coming in
+// https://www.npmjs.com/package/morgan
 const logger = require("morgan");
 
 // ℹ️ If we deal with cookies (we will when dealing with auth)
+// https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 // ℹ️ In order to serve a custom favicon on each request
+// https://www.npmjs.com/package/serve-favicon
 const favicon = require("serve-favicon");
 
 // ℹ️ global package used to `normalize` paths amongst different operating systems
