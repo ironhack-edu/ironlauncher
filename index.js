@@ -12,9 +12,6 @@ const performCopy = require("./utils/performCopy");
 const alert = require("cli-alerts");
 const { input, flags, showHelp } = cli;
 
-//
-// console.log("flags:", flags);
-
 async function main() {
   init();
   if (input.includes("help")) {
@@ -27,7 +24,7 @@ async function main() {
       message: "Project name?",
       issue,
       name: "name",
-      hint: "(This will be the name in package.json)",
+      hint: "(This will be the name in package.json)"
     });
   }
 

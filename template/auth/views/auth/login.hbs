@@ -1,14 +1,14 @@
 <form action="/auth/login" method="POST">
-   <label for="username">username</label>
-   <input type="text" id="username" name="username">
-   <label for="password">password</label>
-   <input type="password" id="password" name="password">
+   <label> Username
+      <input type="text" name="username">
+   </label>
+   <label> Password
+      <input type="password" name="password">
+   </label>
 
    <button type="submit">Submit</button>
 </form>
 
 {{#if errorMessage}}
-
-{{errorMessage}}
-
+   {{errorMessage}}
 {{/if}}

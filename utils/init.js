@@ -5,13 +5,13 @@ const unhandled = require("cli-handle-unhandled");
 module.exports = () => {
   unhandled();
   welcome({
-    title: "Iron Generator",
+    title: "IronGenerator",
     tagLine: "by Ironhack",
     description: pkg.description,
     version: pkg.version,
     bgColor: "#2DC5FA",
     color: "#000000",
     clear: true,
-    bold: true,
+    bold: true
   });
 };

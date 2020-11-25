@@ -1,14 +1,15 @@
-// ℹ️ To get access to environment
+// ℹ️ Gets access to environment variables/settings
 // https://www.npmjs.com/package/dotenv
-require("dotenv").config();
+require("dotenv/config");
 
-// ℹ️ Connect to the database
+// ℹ️ Connects to the database
 require("./db");
 
-// node js framework for handling http requests
+// Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
 const express = require("express");
-// we need to install it in order to use handlebars
+
+// Handles the handlebars
 // https://www.npmjs.com/package/hbs
 const hbs = require("hbs");
 
@@ -19,8 +20,7 @@ require("./config")(app);
 
 // default value for title local
 const projectName = "{{name}}";
-const capitalized = (string) =>
-  string[0].toUpperCase() + string.slice(1).toLowerCase();
+const capitalized = (string) => string[0].toUpperCase() + string.slice(1).toLowerCase();
 
 app.locals.title = `${capitalized(projectName)}- Generated with IronGenerator`;
 
@@ -28,7 +28,7 @@ app.locals.title = `${capitalized(projectName)}- Generated with IronGenerator`;
 const index = require("./routes/index");
 app.use("/", index);
 
-// ❗ To handle errors. Routes that dont exist or errors that you handle in specfic routes
+// ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
 module.exports = app;
