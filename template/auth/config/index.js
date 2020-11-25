@@ -1,17 +1,20 @@
 // We reuse this import in order to have access to the `body` property in requests
 const express = require("express");
-// ℹ️ Reponsible for the messages you in the terminal as requests are coming in
+
+// ℹ️ Responsible for the messages you see in the terminal as requests are coming in
 // https://www.npmjs.com/package/morgan
 const logger = require("morgan");
 
-// ℹ️ If we deal with cookies (we will when dealing with auth)
+// ℹ️ Needed when we deal with cookies (we will when dealing with authentication)
 // https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
-// ℹ️ In order to serve a custom favicon on each request
+
+// ℹ️ Serves a custom favicon on each request
 // https://www.npmjs.com/package/serve-favicon
 const favicon = require("serve-favicon");
 
 // ℹ️ global package used to `normalize` paths amongst different operating systems
+// https://www.npmjs.com/package/path
 const path = require("path");
 
 // ℹ️ Session middleware for authentication
@@ -24,7 +27,7 @@ const MongoStore = require("connect-mongodb-session")(session);
 
 // Middleware configuration
 module.exports = (app) => {
-  // in development environment the app logs
+  // In development environment the app logs
   app.use(logger("dev"));
 
   // To have access to `body` property in the request
@@ -34,17 +37,15 @@ module.exports = (app) => {
 
   // Normalizes the path to the views folder
   app.set("views", path.join(__dirname, "..", "views"));
-  // sets the view engine to handlebars
+  // Sets the view engine to handlebars
   app.set("view engine", "hbs");
-  // access to the public folder
+  // AHandles access to the public folder
   app.use(express.static(path.join(__dirname, "..", "public")));
 
-  // access to the favicon
-  app.use(
-    favicon(path.join(__dirname, "..", "public", "images", "favicon.ico"))
-  );
+  // Handles access to the favicon
+  app.use(favicon(path.join(__dirname, "..", "public", "images", "favicon.ico")));
 
-  // ℹ️ Middleware that adds a req.session information and later to make sure you are who you are say you are
+  // ℹ️ Middleware that adds a "req.session" information and later to check that you are who you say you are 😅
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "super hyper secret key",
@@ -52,8 +53,8 @@ module.exports = (app) => {
       saveUninitialized: false,
       store: new MongoStore({
         uri: process.env.MONGODB_URI || "mongodb://localhost/name",
-        collection: "sessions",
-      }),
+        collection: "sessions"
+      })
     })
   );
 };

@@ -25,7 +25,7 @@ module.exports = async ({ message, hint, initial, name }) => {
         }
         //  if (state.)
         return !value ? "Please add a value" : true;
-      },
+      }
     })
       .on("cancel", () => shouldCancel())
       .run()

@@ -10,13 +10,13 @@ const flags = {
   auth: {
     type: "boolean",
     alias: "a",
-    desc: `Adds auth behaviour`,
+    desc: `Adds auth behaviour`
   },
   name: {
     type: "string",
     alias: "n",
     // default: "",
-    desc: "If you wish to be explicitit and define a name",
+    desc: "If you wish to be explicit and define a name"
   },
   // yarn: {
   //   type: "boolean",
@@ -28,29 +28,29 @@ const flags = {
     type: "boolean",
     alias: "h",
     desc: "Another way of asking for the commands of the app",
-    default: false,
-  },
+    default: false
+  }
 };
 
 const commands = {
   "<name>": {
-    desc: `The name of the project will be added as the path to mongodb and package.json`,
+    desc: `The name of the project will be added as the path to mongodb and package.json`
   },
   help: {
-    desc: "Print help info",
-  },
+    desc: "Print help info"
+  }
 };
 const helpText = meowHelp({
   flags,
   commands,
-  name: "ironhack or ironamake",
+  name: "ironhack or ironamake"
 });
 
 const options = {
   inferType: true,
   description: false,
   hardRejection: false,
-  flags,
+  flags
 };
 
 module.exports = meow(helpText, { options });

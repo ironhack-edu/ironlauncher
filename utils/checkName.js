@@ -10,5 +10,5 @@ const isNotEmpty = () => fs.readdirSync(process.cwd()).length;
 
 module.exports = {
   isNotEmpty,
-  byName,
+  byName
 };
