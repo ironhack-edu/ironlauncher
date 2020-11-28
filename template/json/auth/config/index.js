@@ -40,6 +40,7 @@ module.exports = (app) => {
   // To have access to `body` property in the request
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
 
   // ℹ️ Middleware that adds a "req.session" information and later to check that you are who you say you are 😅
   app.use(

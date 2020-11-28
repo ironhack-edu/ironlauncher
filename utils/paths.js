@@ -16,5 +16,5 @@ const getTemplate = () => path.join(__dirname, "..", `template`);
 module.exports = {
   inDir,
   outDir,
-  getTemplate
+  getTemplate,
 };
