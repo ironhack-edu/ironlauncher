@@ -1,0 +1,8 @@
+form.form__signup {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  max-width: 300px;
+  margin: 0 auto;
+}

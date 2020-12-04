@@ -1,25 +1,17 @@
-import React, { Component } from 'react';
-
-const formStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  alignContent: 'center',
-  maxWidth: '300px',
-  margin: '0 auto'
-};
+import React, { Component } from "react";
+import "./auth.css";
 
 export default class Signup extends Component {
   state = {
-    email: '',
-    password: '',
-    error: null
+    email: "",
+    password: "",
+    error: null,
   };
 
-  handleInputChange = event => {
+  handleInputChange = (event) => {
     const { name, value } = event.target;
     this.setState({
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -27,7 +19,7 @@ export default class Signup extends Component {
     return (
       <div>
         <h1>Sign Up</h1>
-        <form onSubmit={this.handleFormSubmission} style={formStyle}>
+        <form onSubmit={this.handleFormSubmission} className="auth__form">
           <label htmlFor="input-email">Email</label>
           <input
             id="input-email"
@@ -58,7 +50,7 @@ export default class Signup extends Component {
             </div>
           )}
 
-          <button style={{ maxWidth: '100px', margin: '1em auto' }} type="submit">
+          <button className="button__submit" type="submit">
             Submit
           </button>
         </form>
