@@ -24,11 +24,11 @@ export default class Login extends Component {
       password: this.state.password,
     };
     login(credentials).then((res) => {
-      console.log(res);
       if (!res.status) {
         // handle not great request
       }
-      this.props.authenticate(res.data);
+      localStorage.setItem("accessToken", res.data.accessToken);
+      this.props.authenticate(res.data.user);
       this.props.history.push("/");
     });
   };

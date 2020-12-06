@@ -28,7 +28,7 @@ class App extends React.Component {
       if (!res.status) {
         console.log("RES IN CASE OF FAILURE", res);
         // deal with failed backend call
-        this.setState({
+        return this.setState({
           isLoading: false,
         });
       }
@@ -49,10 +49,11 @@ class App extends React.Component {
         logout(accessToken).then((res) => {
           if (!res.status) {
             // deal with error here
+            console.log("SOMETHING HAPPENED", err);
           }
 
           localStorage.removeItem("accessToken");
-          this.setState({
+          return this.setState({
             isLoading: false,
             user: null,
           });
@@ -74,7 +75,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <Navbar user={this.state.user} />
+        <Navbar handleLogout={this.handleLogout} user={this.state.user} />
         <Switch>
           <NormalRoute exact path="/" component={HomePage} />
           <NormalRoute

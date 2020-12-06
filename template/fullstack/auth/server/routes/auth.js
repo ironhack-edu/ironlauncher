@@ -15,10 +15,16 @@ const Session = require("../models/Session.model");
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
-router.get("/session/:accessToken", (req, res) => {
-  const { accessToken } = req.params;
+router.get("/session", (req, res) => {
+  // we dont want to throw an error, and just maintain the user as null
+  if (!req.headers.authorization) {
+    return res.json(null);
+  }
 
-  Session.findById({ _id: accessToken })
+  // accessToken is being sent on every request in the headers
+  const accessToken = req.headers.authorization;
+
+  Session.findById(accessToken)
     .populate("userId")
     .then((session) => {
       if (!session) {
@@ -126,7 +132,7 @@ router.post("/login", shouldNotBeLoggedIn, (req, res, next) => {
         if (!isSamePassword) {
           return res.status(400).json({ errorMessage: "Wrong credentials." });
         }
-        Session.create({ user: user._id, createdAt: Date.now() }).then(
+        Session.create({ userId: user._id, createdAt: Date.now() }).then(
           (session) => {
             return res.json({ user, accessToken: session._id });
           }
@@ -143,9 +149,7 @@ router.post("/login", shouldNotBeLoggedIn, (req, res, next) => {
 });
 
 router.delete("/logout", isLoggedIn, (req, res) => {
-  Session.deleteOne({
-    userId: req.body.accessToken,
-  })
+  Session.findByIdAndDelete(req.headers.authorization)
     .then(() => {
       res.status(200).json({ message: "User was logged out" });
     })

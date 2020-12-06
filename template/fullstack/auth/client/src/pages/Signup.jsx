@@ -28,7 +28,8 @@ export default class Signup extends Component {
       if (!res.status) {
         // unsuccessful signup
       }
-      this.props.authenticate(res.data);
+      localStorage.setItem("accessToken", res.data.accessToken);
+      this.props.authenticate(res.data.user);
       this.props.history.push("/");
     });
   };

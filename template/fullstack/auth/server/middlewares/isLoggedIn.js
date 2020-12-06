@@ -1,11 +1,24 @@
-// !TODO - still need to check if auth is done via sessions or not
+const Session = require("../models/Session.model");
+
 module.exports = (req, res, next) => {
   // checks if the user is logged in when trying to access a specific page
-  if (!req.session.user) {
-    return res
-      .status(403)
-      .json({ errorMessage: "You must be logged in to see this page" });
+  if (!req.headers.authorization) {
+    return res.status(403).json({ errorMessage: "You are not logged in" });
   }
-  req.user = req.session.user;
-  next();
+
+  Session.findById(req.headers.authorization)
+    .populate({ path: "userId", model: "User" })
+    .then((session) => {
+      if (!session) {
+        return res
+          .status(404)
+          .json({ errorMessage: "No session started for this user" });
+      }
+      // makes the user available in `req.user` from now onwards
+      req.user = session.userId;
+      next();
+    })
+    .catch((err) => {
+      return res.status(500).json({ errorMessage: err.message });
+    });
 };
