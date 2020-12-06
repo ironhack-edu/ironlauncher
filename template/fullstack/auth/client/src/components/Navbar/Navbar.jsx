@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = (props) => {
   return (
     <nav>
       <Link to="/" className="nav__projectName">
@@ -10,12 +10,20 @@ const Navbar = () => {
       </Link>
 
       <div className="nav__authLinks">
-        <Link to="/auth/signup" className="authLink">
-          Signup
-        </Link>
-        <Link to="/auth/signin" className="authLink">
-          Sign In
-        </Link>
+        {props.user ? (
+          <Link to="/protected" className="authLink">
+            Protected Page
+          </Link>
+        ) : (
+          <>
+            <Link to="/auth/signup" className="authLink">
+              Signup
+            </Link>
+            <Link to="/auth/login" className="authLink">
+              Log In
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

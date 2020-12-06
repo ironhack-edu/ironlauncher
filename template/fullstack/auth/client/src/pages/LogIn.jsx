@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { login } from "../services/auth";
 import "./Signup";
 
-export default class SignIn extends Component {
+export default class Login extends Component {
   state = {
-    email: "",
+    username: "",
     password: "",
     error: null,
   };
@@ -15,18 +16,35 @@ export default class SignIn extends Component {
     });
   };
 
+  handleFormSubmission = (event) => {
+    event.preventDefault();
+
+    const credentials = {
+      username: this.state.username,
+      password: this.state.password,
+    };
+    login(credentials).then((res) => {
+      console.log(res);
+      if (!res.status) {
+        // handle not great request
+      }
+      this.props.authenticate(res.data);
+      this.props.history.push("/");
+    });
+  };
+
   render() {
     return (
       <div>
-        <h1>Sign In</h1>
+        <h1>Log In</h1>
         <form onSubmit={this.handleFormSubmission} className="signup__form">
-          <label htmlFor="input-email">Email</label>
+          <label htmlFor="input-username">Username</label>
           <input
-            id="input-email"
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={this.state.email}
+            id="input-username"
+            type="text"
+            name="username"
+            placeholder="username"
+            value={this.state.username}
             onChange={this.handleInputChange}
             required
           />

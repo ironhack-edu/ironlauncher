@@ -28,6 +28,7 @@ module.exports = (app) => {
   app.set("trust proxy", 1);
 
   // controls a very specific header to pass headers from the frontend
+  // ! please configure the cors `origin` key so that you can accept the requests wherever they might be coming from
   app.use(
     cors({
       credentials: true,
@@ -59,4 +60,9 @@ module.exports = (app) => {
       },
     })
   );
+
+  app.use((req, res, next) => {
+    req.user = req.session.user || null;
+    next();
+  });
 };

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { signup } from "../services/auth";
 import "./auth.css";
 
 export default class Signup extends Component {
   state = {
-    email: "",
+    username: "",
     password: "",
     error: null,
   };
@@ -15,18 +16,35 @@ export default class Signup extends Component {
     });
   };
 
+  handleFormSubmission = (event) => {
+    event.preventDefault();
+    const credentials = {
+      username: this.state.username,
+      password: this.state.password,
+    };
+    signup(credentials).then((res) => {
+      // successful signup
+      console.log(res);
+      if (!res.status) {
+        // unsuccessful signup
+      }
+      this.props.authenticate(res.data);
+      this.props.history.push("/");
+    });
+  };
+
   render() {
     return (
       <div>
         <h1>Sign Up</h1>
         <form onSubmit={this.handleFormSubmission} className="auth__form">
-          <label htmlFor="input-email">Email</label>
+          <label htmlFor="input-username">Username</label>
           <input
-            id="input-email"
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={this.state.email}
+            id="input-username"
+            type="text"
+            name="username"
+            placeholder="Text"
+            value={this.state.username}
             onChange={this.handleInputChange}
             required
           />
