@@ -2,7 +2,7 @@ const Session = require("../models/Session.model");
 
 module.exports = (req, res, next) => {
   // checks if the user is logged in when trying to access a specific page
-  if (!req.headers.authorization) {
+  if (!req.headers.authorization || req.headers.authorization === "null") {
     return res.status(403).json({ errorMessage: "You are not logged in" });
   }
 

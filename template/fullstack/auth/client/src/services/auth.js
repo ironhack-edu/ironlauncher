@@ -24,9 +24,6 @@ function successStatus(res) {
 
 const authService = axios.create({
   baseURL: `${process.env.REACT_APP_SERVER_URL}/auth`,
-  headers: {
-    Authorization: localStorage.getItem("accessToken"),
-  },
 });
 
 export function login(credentials) {
@@ -38,7 +35,11 @@ export function login(credentials) {
 
 export function getLoggedIn() {
   return authService
-    .get(`session`)
+    .get(`session`, {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    })
     .then(successStatus)
     .catch(internalServerError);
 }
@@ -52,7 +53,11 @@ export function signup(credentials) {
 
 export function logout() {
   return authService
-    .delete("/logout")
+    .delete("/logout", {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    })
     .then(successStatus)
     .catch(internalServerError);
 }
