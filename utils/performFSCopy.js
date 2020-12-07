@@ -14,20 +14,20 @@ const { react, jsonSetup } = require("./full/instalation");
 const spinner = ora({ text: "" });
 
 module.exports = ({ inDirPath, outDirPath, vars }) => {
-  console.log("outDirPath:", outDirPath);
+  // console.log("outDirPath:", outDirPath);
   const server = path.join(outDirPath, `server`);
   const { name: outDir } = vars;
-  console.log("server:", server);
+  // console.log("server:", server);
   // const client = path.join(outDirPath, `client`);
   const client = path.join(outDirPath, `client`);
-  console.log("client:", client);
+  // console.log("client:", client);
 
   // return;
   const layoutFile = path.join(getTemplate(), "layout.hbs");
 
   const pathBase = inDirPath.split("/");
-  console.log("pathBase:", pathBase);
-  const isJson = pathBase[pathBase.length - 2] === "json";
+  // console.log("pathBase:", pathBase);
+  // const isJson = pathBase[pathBase.length - 2] === "json";
   const isAuth = pathBase[pathBase.length - 1] === "auth";
   const auth = [`bcryptjs`];
   let pkgs = [
