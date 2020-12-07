@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Navbar.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
 
-const Navbar = (props) => {
+const Navbar = props => {
   return (
     <nav>
       <Link to="/" className="nav__projectName">
@@ -15,7 +15,9 @@ const Navbar = (props) => {
             <Link to="/protected" className="authLink">
               Protected Page
             </Link>
-            <button onClick={props.handleLogout}>Logout</button>
+            <button className="nav-logoutbtn" onClick={props.handleLogout}>
+              Logout
+            </button>
           </>
         ) : (
           <>
