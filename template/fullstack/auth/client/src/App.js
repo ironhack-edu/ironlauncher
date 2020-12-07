@@ -1,14 +1,14 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
+import LoadingComponent from "./components/Loading";
+import Navbar from "./components/Navbar/Navbar";
 import HomePage from "./pages/HomePage";
 import LogIn from "./pages/LogIn";
+import ProtectedPage from "./pages/ProtectedPage";
 import Signup from "./pages/Signup";
-import Navbar from "./components/Navbar/Navbar";
-import { getLoggedIn, logout } from "./services/auth";
-import LoadingComponent from "./components/Loading";
 import NormalRoute from "./routing-components/NormalRoute";
 import ProtectedRoute from "./routing-components/ProtectedRoute";
-import ProtectedPage from "./pages/ProtectedPage";
+import { getLoggedIn, logout } from "./services/auth";
 
 class App extends React.Component {
   state = {
@@ -49,7 +49,7 @@ class App extends React.Component {
         logout(accessToken).then((res) => {
           if (!res.status) {
             // deal with error here
-            console.log("SOMETHING HAPPENED", err);
+            console.log("SOMETHING HAPPENED", res);
           }
 
           localStorage.removeItem("accessToken");
