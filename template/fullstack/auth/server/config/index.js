@@ -32,10 +32,4 @@ module.exports = (app) => {
   // To have access to `body` property in the request
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-
-  app.use((req, res, next) => {
-    // here we are creating a new piece of the request - the user. so every further request will have a key: req.user
-    req.user = req.session.user || null;
-    next();
-  });
 };
