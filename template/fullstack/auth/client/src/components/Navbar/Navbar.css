@@ -31,7 +31,6 @@ nav {
   font-weight: inherit;
   padding: 0.5em 1em;
   margin-left: 1em;
-  background: ;
   background-color: #5595ff;
   box-shadow: 0 0 5px 0 aliceblue;
   border: none;
@@ -39,6 +38,8 @@ nav {
   cursor: pointer;
   color: #e3f2ff;
   transition: all 0.2s ease-in-out;
+  position: sticky;
+  top: 0;
 }
 
 .nav-logoutbtn:hover {
