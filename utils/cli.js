@@ -2,11 +2,11 @@ const meow = require("meow");
 const meowHelp = require("cli-meow-help");
 
 const flags = {
-  json: {
-    type: "boolean",
-    default: false,
-    desc: "Creates an opinionated json server setup with express",
-  },
+  // json: {
+  //   type: "boolean",
+  //   default: false,
+  //   desc: "Creates an opinionated json server setup with express",
+  // },
 
   auth: {
     type: "boolean",
