@@ -25,3 +25,23 @@ nav {
 .authLink:hover {
   color: #ffffff;
 }
+
+.nav-logoutbtn {
+  font-family: inherit;
+  font-weight: inherit;
+  padding: 0.5em 1em;
+  margin-left: 1em;
+  background: ;
+  background-color: #5595ff;
+  box-shadow: 0 0 5px 0 aliceblue;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  color: #e3f2ff;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-logoutbtn:hover {
+  transform: scale(1.05);
+  background-color: #d13e3e;
+}
