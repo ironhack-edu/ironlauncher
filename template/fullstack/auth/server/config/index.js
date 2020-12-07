@@ -13,14 +13,6 @@ const cookieParser = require("cookie-parser");
 // unless the request if from the same domain, by default express wont accept POST requests
 const cors = require("cors");
 
-// ℹ️ Session middleware for authentication
-// https://www.npmjs.com/package/express-session
-const session = require("express-session");
-
-// ℹ️ MongoStore in order to save the user session in the database
-// https://www.npmjs.com/package/connect-mongodb-session
-const MongoStore = require("connect-mongodb-session")(session);
-
 // Middleware configuration
 module.exports = (app) => {
   // Because this is a server that will accept requests from outside and it will be hosted ona server with a `proxy`, express needs to know that it should trust that setting.
@@ -40,24 +32,6 @@ module.exports = (app) => {
   // To have access to `body` property in the request
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-
-  // ℹ️ Middleware that adds a "req.session" information and later to check that you are who you say you are 😅
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET || "super hyper secret key",
-      resave: false,
-      saveUninitialized: false,
-      store: new MongoStore({
-        uri: process.env.MONGODB_URI || "mongodb://localhost/name",
-        collection: "sessions",
-      }),
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365,
-        sameSite: "none",
-        secure: process.env.NODE_ENV === "production",
-      },
-    })
-  );
 
   app.use((req, res, next) => {
     // here we are creating a new piece of the request - the user. so every further request will have a key: req.user

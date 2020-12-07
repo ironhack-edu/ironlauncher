@@ -29,7 +29,7 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   console.log("pathBase:", pathBase);
   const isJson = pathBase[pathBase.length - 2] === "json";
   const isAuth = pathBase[pathBase.length - 1] === "auth";
-  const auth = [`connect-mongodb-session`, `express-session`, `bcryptjs`];
+  const auth = [`bcryptjs`];
   let pkgs = [
     `dotenv`,
     `express`,
