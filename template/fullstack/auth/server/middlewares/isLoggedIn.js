@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   }
 
   Session.findById(req.headers.authorization)
-    .populate({ path: "userId", model: "User" })
+    .populate({ path: "user", model: "User" })
     .then((session) => {
       if (!session) {
         return res
