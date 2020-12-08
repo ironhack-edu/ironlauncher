@@ -33,7 +33,7 @@ class App extends React.Component {
         });
       }
       this.setState({
-        user: res.data,
+        user: res.data.user,
         isLoading: false,
       });
     });
