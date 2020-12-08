@@ -51,7 +51,6 @@ async function main() {
   const outDirPath = outDir(name);
 
   const vars = { name, body: "{{body}}", title: "{{title}}" };
-  // return;
   if (isFullStack) {
     return performFSCopy({ inDirPath: newInDirPath, outDirPath, vars });
   }

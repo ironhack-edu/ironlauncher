@@ -19,12 +19,6 @@ const flags = {
   //   default: false,
   //   alias: "y",
   // },
-  help: {
-    type: "boolean",
-    alias: "h",
-    desc: "Another way of asking for the commands of the app",
-    default: false,
-  },
   fullstack: {
     type: "boolean",
     default: false,
