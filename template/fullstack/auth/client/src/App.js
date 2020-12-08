@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import NormalRoute from "./routing-components/NormalRoute";
 import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
+import * as PATHS from "./utils/paths";
 
 class App extends React.Component {
   state = {
@@ -82,22 +83,22 @@ class App extends React.Component {
       <div className="App">
         <Navbar handleLogout={this.handleLogout} user={this.state.user} />
         <Switch>
-          <NormalRoute exact path="/" component={HomePage} />
+          <NormalRoute exact path={PATHS.HOMEPAGE} component={HomePage} />
           <NormalRoute
             exact
-            path="/auth/signup"
+            path={PATHS.SIGNUPPAGE}
             authenticate={this.authenticate}
             component={Signup}
           />
           <NormalRoute
             exact
-            path="/auth/login"
+            path={PATHS.LOGINPAGE}
             authenticate={this.authenticate}
             component={LogIn}
           />
           <ProtectedRoute
             exact
-            path="/protected"
+            path={PATHS.PROTECTEDPAGE}
             component={ProtectedPage}
             user={this.state.user}
           />

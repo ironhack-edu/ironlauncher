@@ -22,6 +22,7 @@ function successStatus(res) {
   };
 }
 
+// creates a basic url for every request in this file
 const authService = axios.create({
   baseURL: `${process.env.REACT_APP_SERVER_URL}/auth`,
 });
