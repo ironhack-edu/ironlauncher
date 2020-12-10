@@ -3,7 +3,14 @@ import { Route, Redirect } from "react-router-dom";
 import * as PATHS from "../utils/paths";
 
 // the protected route component must take a user in order to check if the user is authenticated or not. If not moves the user to the login page
-const ProtectedRoute = ({ user, exact, to, component, ...componentProps }) => {
+const ProtectedRoute = ({
+  user,
+  exact,
+  to,
+  path,
+  component,
+  ...componentProps
+}) => {
   const Component = component;
   if (!user) {
     return <Redirect to={PATHS.LOGINPAGE} />;
@@ -11,7 +18,7 @@ const ProtectedRoute = ({ user, exact, to, component, ...componentProps }) => {
   return (
     <Route
       exact={exact}
-      to={to}
+      path={to || path}
       render={(props) => (
         <Component {...componentProps} {...props} user={user} />
       )}
