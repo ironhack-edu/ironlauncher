@@ -7,7 +7,7 @@ const NormalRoute = ({ exact, to, path, component, ...componentProps }) => {
   return (
     <Route
       exact={exact}
-      path={to || path}
+      path={path || to}
       render={(props) => <Component {...componentProps} {...props} />}
     />
   );
