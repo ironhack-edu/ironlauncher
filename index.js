@@ -20,7 +20,7 @@ const performFSCopy = require("./utils/performFSCopy");
 const { input, flags, showHelp } = cli;
 
 const {
-  // json = false,
+  json = false,
   auth = false,
   f = false,
   fs: full = false,
@@ -54,9 +54,9 @@ async function main() {
   if (isFullStack) {
     return performFSCopy({ inDirPath: newInDirPath, outDirPath, vars });
   }
-  // if (json) {
-  //   return performJSONCopy({ inDirPath: newInDirPath, outDirPath, vars });
-  // }
+  if (json) {
+    return performJSONCopy({ inDirPath: newInDirPath, outDirPath, vars });
+  }
   return performViewsCopy({ inDirPath: newInDirPath, outDirPath, vars });
 }
 
