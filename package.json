@@ -15,10 +15,12 @@
     "generator",
     "cli",
     "ironhack",
-    "ironhack-launched",
+    "ironlauncher",
+    "ironhack-launcher",
     "express-launcher",
     "hbs",
-    "bcrypt"
+    "bcrypt",
+    "react"
   ],
   "dependencies": {
     "await-to-js": "^2.1.1",
