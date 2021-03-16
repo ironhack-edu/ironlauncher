@@ -7,28 +7,15 @@ const flags = {
     default: false,
     desc: "Creates an opinionated json server setup with express",
   },
-
   auth: {
     type: "boolean",
     alias: "a",
     desc: `Adds auth behaviour`,
   },
-  // yarn: {
-  //   type: "boolean",
-  //   desc: "Decide if you want to use yarn or not",
-  //   default: false,
-  //   alias: "y",
-  // },
-  fullstack: {
-    type: "boolean",
-    default: false,
-    desc: "Creates an opinioated express and create-react-app setup",
-    alias: "f",
-  },
   fs: {
     type: "boolean",
     default: false,
-    desc: "Shorter version of --fulstack",
+    desc: "Creates an opinioated express and create-react-app setup",
   },
 };
 

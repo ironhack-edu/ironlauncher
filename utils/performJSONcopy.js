@@ -18,21 +18,9 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   // return;
 
   const pathBase = inDirPath.split("/");
-  console.log("pathBase:", pathBase);
   // const isJson = pathBase[pathBase.length - 2] === "json";
   const isAuth = pathBase[pathBase.length - 1] === "auth";
-  // const auth = [`connect-mongodb-session`, `express-session`, `bcryptjs`];
-  // let pkgs = [
-  //   `dotenv`,
-  //   `express`,
-  //   `mongoose`,
-  //   `morgan`,
-  //   `cookie-parser`,
-  //   "cors",
-  // ];
-  // if (isAuth) {
-  //   pkgs = [...pkgs, ...auth];
-  // }
+
   copy(inDirPath, outDirPath, vars, async (err, createdFiles) => {
     if (err) throw err;
     console.log();

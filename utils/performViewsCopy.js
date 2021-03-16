@@ -19,8 +19,16 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
 
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
-  const auth = [`connect-mongodb-session`, `express-session`, `bcryptjs`];
-  let pkgs = [`dotenv`, `express`, `hbs`, `mongoose`, `morgan`, `serve-favicon`, `cookie-parser`];
+  const auth = [`connect-mongo`, `express-session`, `bcryptjs`];
+  let pkgs = [
+    `dotenv`,
+    `express`,
+    `hbs`,
+    `mongoose`,
+    `morgan`,
+    `serve-favicon`,
+    `cookie-parser`,
+  ];
   if (isAuth) {
     pkgs = [...pkgs, ...auth];
   }
@@ -36,7 +44,9 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`);
+    spinner.start(
+      `${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`
+    );
     process.chdir(outDirPath);
     const pathToViews = path.join(process.cwd(), "views", "layout.hbs");
     await fs.copyFile(layoutFile, pathToViews, () => {});
@@ -51,21 +61,23 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     alert({
       type: "success",
       name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
+      msg: `\n\n${createdFiles.length} files created in ${d(
+        `./${outDir}`
+      )} directory`,
     });
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of ironlauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
+          "There is a new version of ironlauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 
     return alert({
       type: `info`,
       msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE"
+      name: "DONE",
     });
   });
 };

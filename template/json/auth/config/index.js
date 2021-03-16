@@ -18,8 +18,8 @@ const cors = require("cors");
 const session = require("express-session");
 
 // ℹ️ MongoStore in order to save the user session in the database
-// https://www.npmjs.com/package/connect-mongodb-session
-const MongoStore = require("connect-mongodb-session")(session);
+// https://www.npmjs.com/package/connect-mongo
+const MongoStore = require("connect-mongo");
 
 // Middleware configuration
 module.exports = (app) => {
@@ -49,9 +49,8 @@ module.exports = (app) => {
       secret: process.env.SESSION_SECRET || "super hyper secret key",
       resave: false,
       saveUninitialized: false,
-      store: new MongoStore({
-        uri: process.env.MONGODB_URI || "mongodb://localhost/name",
-        collection: "sessions",
+      store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/name",
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,

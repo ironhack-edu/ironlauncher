@@ -1,7 +1,7 @@
 const execa = require("execa");
 exports.jsonSetup = async (setupInfo) => {
   const { isAuth = false, outDirPath } = setupInfo;
-  const auth = [`connect-mongodb-session`, `express-session`, `bcryptjs`];
+  const auth = [`connect-mongo`, `express-session`, `bcryptjs`];
   let pkgs = [
     `dotenv`,
     `express`,

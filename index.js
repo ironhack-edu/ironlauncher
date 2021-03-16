@@ -19,15 +19,7 @@ const { yellow: y, dim: d } = require("chalk");
 const performFSCopy = require("./utils/performFSCopy");
 const { input, flags, showHelp } = cli;
 
-const {
-  json = false,
-  auth = false,
-  f = false,
-  fs: full = false,
-  fullstack = false,
-} = flags;
-
-const isFullStack = full || fullstack || f;
+const { json = false, auth = false, fs: isFullStack = false } = flags;
 
 async function main() {
   init();
