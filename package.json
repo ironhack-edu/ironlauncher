@@ -7,8 +7,8 @@
   "license": "MIT",
   "description": "Ironhack generator for express bootstrapping",
   "bin": {
-    "ironhack": "index.js",
-    "ironmake": "index.js"
+    "ironlauncher": "index.js",
+    "ironlauch": "index.js"
   },
   "keywords": [
     "express",

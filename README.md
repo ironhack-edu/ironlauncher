@@ -1,5 +1,7 @@
 # Ironhack generator
 
+Welcome to the ironlauncher! A quick start for your javascript applications.
+
 ## Installation guide
 
 ```sh
@@ -17,9 +19,7 @@ npm install -g ironlauncher
 ```sh
 npx ironlaucher # <your-app-name> + flag(s)
 # OR
-ironhack # <your-app-name> + flag(s)
-# OR also
-ironmake # <your-app-name> + flag(s)
+ironlauncher # <your-app-name> + flag(s)
 ```
 
 ## Help
@@ -29,7 +29,7 @@ If you want to see the flags and options you can always run one of these command
 ```sh
 npx ironlauncher help
 # or
-ironhack help
+ironlauncher help
 ```
 
 ---
