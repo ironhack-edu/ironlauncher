@@ -6,6 +6,9 @@
   "author": "André de Albuquerque (https://itstheandre.com)",
   "license": "MIT",
   "description": "Ironhack generator for express bootstrapping",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
   "bin": {
     "ironlauncher": "index.js",
     "ironlauch": "index.js"
@@ -23,7 +26,7 @@
     "react"
   ],
   "dependencies": {
-    "await-to-js": "^2.1.1",
+    "await-to-js": "^3.0.0",
     "chalk": "^4.1.0",
     "cli-alerts": "^1.2.2",
     "cli-handle-error": "^4.4.0",
@@ -32,10 +35,18 @@
     "cli-should-cancel": "^1.0.3",
     "cli-welcome": "^2.2.2",
     "copy-template-dir": "^1.4.0",
+    "create-template-folder": "^1.0.2",
     "enquirer": "^2.3.6",
-    "execa": "^4.1.0",
+    "execa": "^5.0.0",
     "get-repo-package-json": "^2.0.0",
-    "meow": "^8.0.0",
-    "ora": "^5.1.0"
+    "inquirer": "^8.0.0",
+    "meow": "^9.0.0",
+    "ora": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^7.3.1",
+    "@types/node": "^14.14.35",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   }
 }

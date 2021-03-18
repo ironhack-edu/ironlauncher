@@ -33,7 +33,7 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     console.log();
     let isSameVersion = true;
     spinner.start(
-      `${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`
+      `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
     );
     await jsonSetup({ isAuth, outDirPath });
     const onlineVersion = await getPackage("itstheandre/lean-express-gen");
