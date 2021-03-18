@@ -11,3 +11,5 @@ npm-debug.log
 **/node_modules
 template/auth-1
 template/base-1
+src
+dist
