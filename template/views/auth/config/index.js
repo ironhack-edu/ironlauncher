@@ -25,6 +25,9 @@ const session = require("express-session");
 // https://www.npmjs.com/package/connect-mongo
 const MongoStore = require("connect-mongo");
 
+// Connects the mongo uri to maintain the same naming structure
+const MONGO_URI = require("../utils/consts");
+
 // Middleware configuration
 module.exports = (app) => {
   // In development environment the app logs
@@ -54,7 +57,7 @@ module.exports = (app) => {
       resave: false,
       saveUninitialized: false,
       store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/name",
+        mongoUrl: MONGO_URI,
       }),
     })
   );

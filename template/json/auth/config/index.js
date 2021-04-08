@@ -21,6 +21,9 @@ const session = require("express-session");
 // https://www.npmjs.com/package/connect-mongo
 const MongoStore = require("connect-mongo");
 
+// Connects the mongo uri to maintain the same naming structure
+const MONGO_URI = require("../utils/consts");
+
 // Middleware configuration
 module.exports = (app) => {
   // Because this is a server that will accept requests from outside and it will be hosted ona server with a `proxy`, express needs to know that it should trust that setting.
@@ -50,7 +53,7 @@ module.exports = (app) => {
       resave: false,
       saveUninitialized: false,
       store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/name",
+        mongoUrl: MONGO_URI,
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
