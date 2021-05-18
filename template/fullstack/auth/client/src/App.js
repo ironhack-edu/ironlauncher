@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Switch } from "react-router-dom";
 import LoadingComponent from "./components/Loading";
 import Navbar from "./components/Navbar/Navbar";
@@ -11,101 +11,71 @@ import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
 import * as PATHS from "./utils/paths";
 
-class App extends React.Component {
-  state = {
-    user: null,
-    isLoading: true,
-  };
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  componentDidMount = () => {
+  useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      return this.setState({
-        isLoading: false,
-      });
+      return setIsLoading(false);
     }
     getLoggedIn(accessToken).then((res) => {
       if (!res.status) {
-        console.log("RES IN CASE OF FAILURE", res);
-        // deal with failed backend call
-        return this.setState({
-          isLoading: false,
-        });
+        return setIsLoading(false);
       }
-      this.setState({
-        user: res.data.user,
-        isLoading: false,
-      });
+      setUser(res.data.user);
     });
-  };
+  }, []);
 
-  handleLogout = () => {
+  function handleLogout() {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      return this.setState({
-        user: null,
-        isLoading: false,
-      });
+      setUser(null);
+      return setIsLoading(false);
     }
-    this.setState(
-      {
-        isLoading: true,
-      },
-      () => {
-        logout(accessToken).then((res) => {
-          if (!res.status) {
-            // deal with error here
-            console.log("SOMETHING HAPPENED", res);
-          }
-
-          localStorage.removeItem("accessToken");
-          return this.setState({
-            isLoading: false,
-            user: null,
-          });
-        });
+    setIsLoading(true);
+    logout(accessToken).then((res) => {
+      if (!res.status) {
+        // deal with error here
+        console.error("Logout was unsuccessful: ", res);
       }
-    );
-  };
-
-  authenticate = (user) => {
-    this.setState({
-      user,
+      localStorage.removeItem("accessToken");
+      setIsLoading(false);
+      return setUser(null);
     });
-  };
+  }
 
-  render() {
-    if (this.state.isLoading) {
-      return <LoadingComponent />;
-    }
+  function authenticate(user) {
+    setUser(user);
+  }
 
-    return (
+  return (
+    (isLoading && <LoadingComponent />) || (
       <div className="App">
-        <Navbar handleLogout={this.handleLogout} user={this.state.user} />
+        <Navbar handleLogout={handleLogout} user={user} />
         <Switch>
           <NormalRoute exact path={PATHS.HOMEPAGE} component={HomePage} />
           <NormalRoute
             exact
             path={PATHS.SIGNUPPAGE}
-            authenticate={this.authenticate}
+            authenticate={authenticate}
             component={Signup}
           />
           <NormalRoute
             exact
             path={PATHS.LOGINPAGE}
-            authenticate={this.authenticate}
+            authenticate={authenticate}
             component={LogIn}
           />
           <ProtectedRoute
             exact
             path={PATHS.PROTECTEDPAGE}
             component={ProtectedPage}
-            user={this.state.user}
+            user={user}
           />
         </Switch>
       </div>
-    );
-  }
+    )
+  );
 }
-
-export default App;
