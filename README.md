@@ -1,9 +1,8 @@
 # Ironhack generator
 
-Welcome to the ironlauncher! A quick start for your javascript applications.
+Welcome to the IronLauncher! A quick start for your JavaScript applications.
 
 ## Installation guide
-
 
 ```sh
 # Recommended.
@@ -11,7 +10,6 @@ npx ironlauncher <app-name>
 # OR
 npm install -g ironlauncher
 ```
-
 
 ## Usage
 
@@ -25,7 +23,7 @@ ironlauncher # <your-app-name> + flag(s)
 
 ## Help
 
-If you want to see the flags and options you can always run one of these commands
+If you want to see the flags and options you can always run one of these commands:
 
 ```sh
 npx ironlauncher help
@@ -43,31 +41,36 @@ ironlauncher help
 
 ---
 
-
 ## Results + flags
+
+<br>
+
+- :arrow_down: This will result in an Express application with handlebars setup:
+
 ```sh
 npx ironlauncher new-app
 ```
 
-👆 This will result in an express application with handlebars setup
+<br>
+
+- :arrow_down: This will result in an Express application with handlebars setup with basic authentication set up for you:
 
 ```sh
 npx ironlauncher new-app --auth
 ```
-👆 This will result in an express application with handlebars setup with basic authentication set up for you
 
-#### You can add the `--auth` flag to any other flag and it will setup the basic authentication for the other options
+:star: :star: :star: **You can add the `--auth` flag to any other flag and it will setup the basic authentication for the other options as well.**
+
+- :arrow_down: This will result in an Express **API** without any view layer:
 
 ```sh
 npx ironlauncher new-app --json
 ```
-👆 This will result in an express **api** without any view layer
+
+- :arrow_down: This will result in a CRA (Create React App) and Express setup, where there is already connection between them:
 
 ```sh
 npx ironlauncher new-app --fs
 ```
-👆 This will result in a create react app and express setup. With both backend and frontend already connected 
 
-new-app  - client (Create React App)
-         - server (Express Server)
-
+<br>
