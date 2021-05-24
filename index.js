@@ -17,11 +17,10 @@ const ora = require("ora");
 const execa = require("execa");
 const { yellow: y, dim: d } = require("chalk");
 const performFSCopy = require("./utils/performFSCopy");
+const { getCurrentFolderName } = require("./utils/getCurrentFolderName");
 const { input, flags, showHelp } = cli;
 
 const { json = false, auth = false, fs: isFullStack = false } = flags;
-
-return console.log(input, flags);
 
 async function main() {
   init();
@@ -40,10 +39,12 @@ async function main() {
     });
   }
 
-  // return;
   const newInDirPath = inNew({ ...flags, isFullStack });
   const outDirPath = outDir(name);
 
+  if (name === ".") {
+    name = getCurrentFolderName();
+  }
   const vars = { name, body: "{{body}}", title: "{{title}}" };
   if (isFullStack) {
     return performFSCopy({ inDirPath: newInDirPath, outDirPath, vars });

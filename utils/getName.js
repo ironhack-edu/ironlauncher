@@ -9,11 +9,6 @@ module.exports = ({ input, flags }) => {
         issue: "The current folder is not empty.",
       };
     }
-    const [currentFolder] = process.cwd().split(sep).slice(-1);
-    return {
-      name: currentFolder,
-      issue: "",
-    };
   }
   if (input[0]) {
     const exists = byName(input[0]);

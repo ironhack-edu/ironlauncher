@@ -15,17 +15,21 @@ module.exports = async ({ message, hint, initial, name }) => {
       validate(value) {
         // console.log("state.name:", state.name);
         if (name === "name") {
+          if (value === ".") {
+            if (isNotEmpty()) {
+              return `This directory is not empty, please choose a different name`;
+            }
+            return true;
+          }
+
           if (fs.existsSync(value)) {
             // console.log("fs.existsSync(value):", fs.existsSync(value));
             return `Directory already exists`;
           }
-          if (value === "." && isNotEmpty()) {
-            return `This directory is not empty, please choose a different name`;
-          }
         }
         //  if (state.)
         return !value ? "Please add a value" : true;
-      }
+      },
     })
       .on("cancel", () => shouldCancel())
       .run()
