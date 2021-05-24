@@ -9,7 +9,7 @@ const fs = require("fs");
 const { inDir, getTemplate } = require("./paths");
 const pkg = require("../package.json");
 const getPackage = require("get-repo-package-json");
-const { jsonSetup } = require("./full/instalation");
+const { jsonSetup } = require("./full/installation");
 
 const spinner = ora({ text: "" });
 
@@ -32,36 +32,32 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(
-      `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
-    );
+    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`);
     await jsonSetup({ isAuth, outDirPath });
     const onlineVersion = await getPackage("itstheandre/lean-express-gen");
     if (onlineVersion.version !== pkg.version) {
       isSameVersion = false;
     }
-    spinner.succeed(`${g("FINISHED")} instalation...`);
+    spinner.succeed(`${g("FINISHED")} installation...`);
 
     alert({
       type: "success",
       name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(
-        `./${outDir}`
-      )} directory`,
+      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
     });
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of ironlauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
+          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
       });
     }
 
     return alert({
       type: `info`,
       msg: `JSON Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE",
+      name: "DONE"
     });
   });
 };
