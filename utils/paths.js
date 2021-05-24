@@ -1,5 +1,9 @@
 const path = require("path");
 
+function currentPath() {
+  return __dirname;
+}
+
 function inDir(auth) {
   if (auth) {
     return path.join(__dirname, "..", `template`, `auth`);
@@ -17,4 +21,5 @@ module.exports = {
   inDir,
   outDir,
   getTemplate,
+  currentPath,
 };

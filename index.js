@@ -21,6 +21,8 @@ const { input, flags, showHelp } = cli;
 
 const { json = false, auth = false, fs: isFullStack = false } = flags;
 
+return console.log(input, flags);
+
 async function main() {
   init();
   if (input.includes("help")) {

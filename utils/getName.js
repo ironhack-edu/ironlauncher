@@ -1,4 +1,4 @@
-const fs = require("fs");
+const { sep } = require("path");
 const { byName, isNotEmpty } = require("./checkName");
 
 module.exports = ({ input, flags }) => {
@@ -9,8 +9,9 @@ module.exports = ({ input, flags }) => {
         issue: "The current folder is not empty.",
       };
     }
+    const [currentFolder] = process.cwd().split(sep).slice(-1);
     return {
-      name: ".",
+      name: currentFolder,
       issue: "",
     };
   }
