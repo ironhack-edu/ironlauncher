@@ -1,4 +1,3 @@
-const { sep } = require("path");
 const { byName, isNotEmpty } = require("./checkName");
 
 module.exports = ({ input, flags }) => {

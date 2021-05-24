@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { login } from "../services/auth";
 import "./Signup";
+import * as CONSTS from "../utils/consts";
+import * as PATHS from "../utils/paths";
 
 export default class Login extends Component {
   state = {
@@ -27,9 +29,9 @@ export default class Login extends Component {
       if (!res.status) {
         // handle not great request
       }
-      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem(CONSTS.ACCESS_TOKEN, res.data.accessToken);
       this.props.authenticate(res.data.user);
-      this.props.history.push("/");
+      this.props.history.push(PATHS.HOMEPAGE);
     });
   };
 

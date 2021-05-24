@@ -17,6 +17,12 @@ const flags = {
     default: false,
     desc: "Creates an opinioated express and create-react-app setup",
   },
+  hooks: {
+    type: "boolean",
+    default: false,
+    desc:
+      "If you are using the `--fs` setup it also provides the same setup but using React Hooks instead of class components",
+  },
 };
 
 const commands = {

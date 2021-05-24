@@ -10,6 +10,7 @@ const { inDir, getTemplate } = require("./paths");
 const pkg = require("../package.json");
 const getPackage = require("get-repo-package-json");
 const { react, jsonSetup } = require("./full/installation");
+const { sep } = require("path");
 
 const spinner = ora({ text: "" });
 
@@ -22,15 +23,19 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   const client = path.join(outDirPath, `client`);
   // console.log("client:", client);
 
-  // return;
-  const layoutFile = path.join(getTemplate(), "layout.hbs");
-
-  const pathBase = inDirPath.split("/");
+  const pathBase = inDirPath.split(sep);
   // console.log("pathBase:", pathBase);
   // const isJson = pathBase[pathBase.length - 2] === "json";
   const isAuth = pathBase[pathBase.length - 1] === "auth";
   const auth = [`bcryptjs`];
-  let pkgs = [`dotenv`, `express`, `mongoose`, `morgan`, `cookie-parser`, "cors"];
+  let pkgs = [
+    `dotenv`,
+    `express`,
+    `mongoose`,
+    `morgan`,
+    `cookie-parser`,
+    "cors",
+  ];
   if (isAuth) {
     pkgs = [...pkgs, ...auth];
   }
@@ -45,10 +50,15 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`);
+    spinner.start(
+      `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
+    );
     // await react(client);
     // await jsonSetup({ isAuth, outDirPath: server });
-    await Promise.all([react(client), jsonSetup({ isAuth, outDirPath: server })]);
+    await Promise.all([
+      react(client),
+      jsonSetup({ isAuth, outDirPath: server }),
+    ]);
     // process.chdir(outDirPath);
     // await execa("npm", [`install`, ...pkgs]);
     // await execa("npm", [`install`, `-D`, `nodemon`]);
@@ -61,21 +71,23 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     alert({
       type: "success",
       name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
+      msg: `\n\n${createdFiles.length} files created in ${d(
+        `./${outDir}`
+      )} directory`,
     });
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
+          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 
     return alert({
       type: `info`,
       msg: `JSON Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE"
+      name: "DONE",
     });
   });
 };

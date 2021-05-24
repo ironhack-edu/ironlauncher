@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as CONSTS from "../utils/consts";
 
 // here we are just maing our code look more DRY. With every backend call we must deal with errors and success states. The idea of creating these kinds of services is to make our lives easier in the components
 function internalServerError(err) {
@@ -36,9 +37,9 @@ export function login(credentials) {
 
 export function getLoggedIn() {
   return authService
-    .get(`session`, {
+    .get(`/session`, {
       headers: {
-        Authorization: localStorage.getItem("accessToken"),
+        Authorization: localStorage.getItem(CONSTS.ACCESS_TOKEN),
       },
     })
     .then(successStatus)
@@ -56,7 +57,7 @@ export function logout() {
   return authService
     .delete("/logout", {
       headers: {
-        Authorization: localStorage.getItem("accessToken"),
+        Authorization: localStorage.getItem(CONSTS.ACCESS_TOKEN),
       },
     })
     .then(successStatus)

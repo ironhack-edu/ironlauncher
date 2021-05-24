@@ -10,6 +10,7 @@ import NormalRoute from "./routing-components/NormalRoute";
 import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
 import * as PATHS from "./utils/paths";
+import * as CONSTS from "./utils/consts";
 
 class App extends React.Component {
   state = {
@@ -18,7 +19,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
     if (!accessToken) {
       return this.setState({
         isLoading: false,
@@ -40,7 +41,7 @@ class App extends React.Component {
   };
 
   handleLogout = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
     if (!accessToken) {
       return this.setState({
         user: null,
@@ -55,10 +56,10 @@ class App extends React.Component {
         logout(accessToken).then((res) => {
           if (!res.status) {
             // deal with error here
-            console.log("SOMETHING HAPPENED", res);
+            console.error("💡 SOMETHING HAPPENED THAT HAS TO DEALT WITH", res);
           }
 
-          localStorage.removeItem("accessToken");
+          localStorage.removeItem(CONSTS.ACCESS_TOKEN);
           return this.setState({
             isLoading: false,
             user: null,

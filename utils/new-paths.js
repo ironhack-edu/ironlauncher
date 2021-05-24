@@ -1,7 +1,14 @@
 const path = require("path");
 
-function inDir({ json = false, auth = false, isFullStack }) {
-  const folderName = isFullStack ? "fullstack" : json ? "json" : "views";
+function inDir({ json = false, auth = false, isFullStack, hooks = false }) {
+  const folderName =
+    isFullStack && hooks
+      ? "fullstack_hooks"
+      : isFullStack
+      ? "fullstack"
+      : json
+      ? "json"
+      : "views";
   const isAuth = auth ? "auth" : "base";
   return path.join(__dirname, "..", "template", folderName, isAuth);
 }

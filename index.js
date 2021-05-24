@@ -9,17 +9,23 @@ const { inDir, outDir } = require("./utils/paths");
 const { inDir: inNew } = require("./utils/new-paths");
 const performFSCopy = require("./utils/performFSCopy");
 const { getCurrentFolderName } = require("./utils/getCurrentFolderName");
-const { input, flags, showHelp } = cli;
+const { getFlagsNames } = require("./utils/getFlagsNames");
+const { input, showHelp } = cli;
 
-const { json = false, auth = false, fs: isFullStack = false } = flags;
+let [flags, name, issue] = getFlagsNames(cli);
+const {
+  json = false,
+  auth = false,
+  fs: isFullStack = false,
+  hooks = false,
+} = flags;
 
+console.log("getFlagsNames(cli):", getFlagsNames(cli));
 async function main() {
   init();
   if (input.includes("help")) {
     return showHelp(0);
   }
-
-  let { name, issue } = getName(cli);
 
   if (!name) {
     name = await question({
