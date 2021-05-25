@@ -39,17 +39,34 @@ async function main() {
   const newInDirPath = inNew({ ...flags, isFullStack });
   const outDirPath = outDir(name);
 
+  let isCurrentFolder;
   if (name === ".") {
     name = getCurrentFolderName();
+    isCurrentFolder = true;
   }
   const vars = { name, body: "{{body}}", title: "{{title}}" };
   if (isFullStack) {
-    return performFSCopy({ inDirPath: newInDirPath, outDirPath, vars });
+    return performFSCopy({
+      inDirPath: newInDirPath,
+      outDirPath,
+      vars,
+      isCurrentFolder,
+    });
   }
   if (json) {
-    return performJSONCopy({ inDirPath: newInDirPath, outDirPath, vars });
+    return performJSONCopy({
+      inDirPath: newInDirPath,
+      outDirPath,
+      vars,
+      isCurrentFolder,
+    });
   }
-  return performViewsCopy({ inDirPath: newInDirPath, outDirPath, vars });
+  return performViewsCopy({
+    inDirPath: newInDirPath,
+    outDirPath,
+    vars,
+    isCurrentFolder,
+  });
 }
 
 main();

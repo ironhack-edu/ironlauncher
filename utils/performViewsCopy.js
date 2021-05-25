@@ -12,7 +12,7 @@ const getPackage = require("get-repo-package-json");
 
 const spinner = ora({ text: "" });
 
-module.exports = ({ inDirPath, outDirPath, vars }) => {
+module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
   const { name: outDir } = vars;
   // return;
   const layoutFile = path.join(getTemplate(), "layout.hbs");
@@ -20,7 +20,15 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
   const auth = [`connect-mongo`, `express-session`, `bcryptjs`];
-  let pkgs = [`dotenv`, `express`, `hbs`, `mongoose`, `morgan`, `serve-favicon`, `cookie-parser`];
+  let pkgs = [
+    `dotenv`,
+    `express`,
+    `hbs`,
+    `mongoose`,
+    `morgan`,
+    `serve-favicon`,
+    `cookie-parser`,
+  ];
   if (isAuth) {
     pkgs = [...pkgs, ...auth];
   }
@@ -36,7 +44,9 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`);
+    spinner.start(
+      `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
+    );
     process.chdir(outDirPath);
     const pathToViews = path.join(process.cwd(), "views", "layout.hbs");
     await fs.copyFile(layoutFile, pathToViews, () => {});
@@ -48,24 +58,41 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     }
     spinner.succeed(`${g("FINISHED")} installation...`);
 
-    alert({
-      type: "success",
-      name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
-    });
+    if (!isCurrentFolder) {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in ${d(
+          `./${outDir}`
+        )} directory`,
+      });
+    } else {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in the current directory`,
+      });
+    }
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
+          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 
+    if (!isCurrentFolder) {
+      return alert({
+        type: `info`,
+        msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
+        name: "DONE",
+      });
+    }
     return alert({
       type: `info`,
-      msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE"
+      msg: `Projected bootstrapped successfully. \n\nYou can now open the current directory with your code editor`,
+      name: `DONE`,
     });
   });
 };

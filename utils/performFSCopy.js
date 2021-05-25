@@ -14,7 +14,7 @@ const { sep } = require("path");
 
 const spinner = ora({ text: "" });
 
-module.exports = ({ inDirPath, outDirPath, vars }) => {
+module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
   // console.log("outDirPath:", outDirPath);
   const server = path.join(outDirPath, `server`);
   const { name: outDir } = vars;
@@ -68,13 +68,21 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     }
     spinner.succeed(`${g("FINISHED")} installation...`);
 
-    alert({
-      type: "success",
-      name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(
-        `./${outDir}`
-      )} directory`,
-    });
+    if (!isCurrentFolder) {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in ${d(
+          `./${outDir}`
+        )} directory`,
+      });
+    } else {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in the current directory`,
+      });
+    }
 
     if (!isSameVersion) {
       alert({
@@ -84,10 +92,17 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
       });
     }
 
+    if (!isCurrentFolder) {
+      return alert({
+        type: `info`,
+        msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
+        name: "DONE",
+      });
+    }
     return alert({
       type: `info`,
-      msg: `JSON Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE",
+      msg: `Projected bootstrapped successfully. \n\nYou can now open the current directory with your code editor`,
+      name: `DONE`,
     });
   });
 };

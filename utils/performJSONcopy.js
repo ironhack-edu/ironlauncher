@@ -13,7 +13,7 @@ const { jsonSetup } = require("./full/installation");
 
 const spinner = ora({ text: "" });
 
-module.exports = ({ inDirPath, outDirPath, vars }) => {
+module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
   const { name: outDir } = vars;
   // return;
 
@@ -32,7 +32,9 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`);
+    spinner.start(
+      `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
+    );
     await jsonSetup({ isAuth, outDirPath });
     const onlineVersion = await getPackage("itstheandre/lean-express-gen");
     if (onlineVersion.version !== pkg.version) {
@@ -40,24 +42,41 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     }
     spinner.succeed(`${g("FINISHED")} installation...`);
 
-    alert({
-      type: "success",
-      name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
-    });
+    if (!isCurrentFolder) {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in ${d(
+          `./${outDir}`
+        )} directory`,
+      });
+    } else {
+      alert({
+        type: "success",
+        name: `ALL DONE`,
+        msg: `\n\n${createdFiles.length} files created in the current directory`,
+      });
+    }
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
+          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 
+    if (!isCurrentFolder) {
+      return alert({
+        type: `info`,
+        msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
+        name: "DONE",
+      });
+    }
     return alert({
       type: `info`,
-      msg: `JSON Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE"
+      msg: `Projected bootstrapped successfully. \n\nYou can now open the current directory with your code editor`,
+      name: `DONE`,
     });
   });
 };
