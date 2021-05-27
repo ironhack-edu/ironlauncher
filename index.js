@@ -20,7 +20,6 @@ const {
   hooks = false,
 } = flags;
 
-console.log("getFlagsNames(cli):", getFlagsNames(cli));
 async function main() {
   init();
   if (input.includes("help")) {
