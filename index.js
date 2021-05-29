@@ -44,7 +44,7 @@ async function main() {
     isCurrentFolder = true;
   }
   const vars = { name, body: "{{body}}", title: "{{title}}" };
-  if (isFullStack) {
+  if (isFullStack || hooks) {
     return performFSCopy({
       inDirPath: newInDirPath,
       outDirPath,

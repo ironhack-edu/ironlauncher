@@ -53,8 +53,6 @@ module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
     spinner.start(
       `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
     );
-    // await react(client);
-    // await jsonSetup({ isAuth, outDirPath: server });
     await Promise.all([
       react(client),
       jsonSetup({ isAuth, outDirPath: server }),
