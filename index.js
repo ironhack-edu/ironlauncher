@@ -35,7 +35,7 @@ async function main() {
     });
   }
 
-  const newInDirPath = inNew({ ...flags, isFullStack });
+  const newInDirPath = inNew({ ...flags, isFullStack, hooks });
   const outDirPath = outDir(name);
 
   let isCurrentFolder;
