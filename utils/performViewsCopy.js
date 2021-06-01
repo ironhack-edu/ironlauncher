@@ -52,10 +52,7 @@ module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
     await fs.copyFile(layoutFile, pathToViews, () => {});
     await execa("npm", [`install`, ...pkgs]);
     await execa("npm", [`install`, `-D`, `nodemon`]);
-    const onlineVersion = await getPackage("itstheandre/lean-express-gen");
-    if (onlineVersion.version !== pkg.version) {
-      isSameVersion = false;
-    }
+
     spinner.succeed(`${g("FINISHED")} installation...`);
 
     if (!isCurrentFolder) {
@@ -71,14 +68,6 @@ module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
         type: "success",
         name: `ALL DONE`,
         msg: `\n\n${createdFiles.length} files created in the current directory`,
-      });
-    }
-
-    if (!isSameVersion) {
-      alert({
-        type: "warning",
-        msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 

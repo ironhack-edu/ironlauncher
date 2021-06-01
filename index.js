@@ -11,6 +11,7 @@ const performFSCopy = require("./utils/performFSCopy");
 const { getCurrentFolderName } = require("./utils/getCurrentFolderName");
 const { getFlagsNames } = require("./utils/getFlagsNames");
 const { input, showHelp } = cli;
+const { isOutOfSync } = require("./utils/isOutOfSync");
 
 let [flags, name, issue] = getFlagsNames(cli);
 const {
@@ -21,6 +22,10 @@ const {
 } = flags;
 
 async function main() {
+  const isBad = await isOutOfSync();
+  if (isBad) {
+    return;
+  }
   init();
   if (input.includes("help")) {
     return showHelp(0);

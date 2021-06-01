@@ -36,10 +36,7 @@ module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
       `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`
     );
     await jsonSetup({ isAuth, outDirPath });
-    const onlineVersion = await getPackage("itstheandre/lean-express-gen");
-    if (onlineVersion.version !== pkg.version) {
-      isSameVersion = false;
-    }
+
     spinner.succeed(`${g("FINISHED")} installation...`);
 
     if (!isCurrentFolder) {
@@ -55,14 +52,6 @@ module.exports = ({ inDirPath, outDirPath, vars, isCurrentFolder = null }) => {
         type: "success",
         name: `ALL DONE`,
         msg: `\n\n${createdFiles.length} files created in the current directory`,
-      });
-    }
-
-    if (!isSameVersion) {
-      alert({
-        type: "warning",
-        msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 

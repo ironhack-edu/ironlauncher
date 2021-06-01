@@ -20,7 +20,15 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
   const pathBase = inDirPath.split("/");
   const isAuth = pathBase[pathBase.length - 1] === "auth";
   const auth = [`connect-mongo`, `express-session`, `bcryptjs`];
-  let pkgs = [`dotenv`, `express`, `hbs`, `mongoose`, `morgan`, `serve-favicon`, `cookie-parser`];
+  let pkgs = [
+    `dotenv`,
+    `express`,
+    `hbs`,
+    `mongoose`,
+    `morgan`,
+    `serve-favicon`,
+    `cookie-parser`,
+  ];
   if (isAuth) {
     pkgs = [...pkgs, ...auth];
   }
@@ -36,13 +44,15 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     });
     console.log();
     let isSameVersion = true;
-    spinner.start(`${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`);
+    spinner.start(
+      `${y("INSTALLING")} dependencies...\n\n${d(`It make take a moment`)}`
+    );
     process.chdir(outDirPath);
     const pathToViews = path.join(process.cwd(), "views", "layout.hbs");
     await fs.copyFile(layoutFile, pathToViews, () => {});
     await execa("npm", [`install`, ...pkgs]);
     await execa("npm", [`install`, `-D`, `nodemon`]);
-    const onlineVersion = await getPackage("itstheandre/lean-express-gen");
+    const onlineVersion = await getPackage("ironhack-edu/ironlauncher");
     if (onlineVersion.version !== pkg.version) {
       isSameVersion = false;
     }
@@ -51,21 +61,23 @@ module.exports = ({ inDirPath, outDirPath, vars }) => {
     alert({
       type: "success",
       name: `ALL DONE`,
-      msg: `\n\n${createdFiles.length} files created in ${d(`./${outDir}`)} directory`
+      msg: `\n\n${createdFiles.length} files created in ${d(
+        `./${outDir}`
+      )} directory`,
     });
 
     if (!isSameVersion) {
       alert({
         type: "warning",
         msg:
-          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal"
+          "There is a new version of IronLauncher online. \n\nPlease update by running `npm i -g ironlauncher` in your terminal",
       });
     }
 
     return alert({
       type: `info`,
       msg: `Project bootstrapped successfully.\n\nYou can now cd ./${outDir}`,
-      name: "DONE"
+      name: "DONE",
     });
   });
 };

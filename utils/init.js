@@ -8,10 +8,10 @@ module.exports = () => {
     title: "IronGenerator",
     tagLine: "by Ironhack",
     description: pkg.description,
-    version: pkg.version,
     bgColor: "#2DC5FA",
     color: "#000000",
+    version: pkg.version,
     clear: true,
-    bold: true
+    bold: true,
   });
 };
