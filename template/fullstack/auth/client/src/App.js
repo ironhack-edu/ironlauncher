@@ -11,6 +11,7 @@ import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
 import * as PATHS from "./utils/paths";
 import * as CONSTS from "./utils/consts";
+import * as USER_HELPERS from "./utils/userToken";
 
 class App extends React.Component {
   state = {
@@ -19,7 +20,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
+    const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
       return this.setState({
         isLoading: false,
@@ -41,7 +42,7 @@ class App extends React.Component {
   };
 
   handleLogout = () => {
-    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
+    const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
       return this.setState({
         user: null,
@@ -59,7 +60,7 @@ class App extends React.Component {
             console.error("💡 SOMETHING HAPPENED THAT HAS TO DEALT WITH", res);
           }
 
-          localStorage.removeItem(CONSTS.ACCESS_TOKEN);
+          USER_HELPERS.removeUserToken();
           return this.setState({
             isLoading: false,
             user: null,

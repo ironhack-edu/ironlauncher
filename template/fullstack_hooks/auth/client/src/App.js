@@ -11,13 +11,14 @@ import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
 import * as PATHS from "./utils/paths";
 import * as CONSTS from "./utils/consts";
+import * as USER_HELPERS from "./utils/userToken";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
+    const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
       return setIsLoading(false);
     }
@@ -31,7 +32,7 @@ export default function App() {
   }, []);
 
   function handleLogout() {
-    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
+    const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
       setUser(null);
       return setIsLoading(false);
@@ -42,7 +43,7 @@ export default function App() {
         // deal with error here
         console.error("Logout was unsuccessful: ", res);
       }
-      localStorage.removeItem(CONSTS.ACCESS_TOKEN);
+      USER_HELPERS.removeUserToken();
       setIsLoading(false);
       return setUser(null);
     });

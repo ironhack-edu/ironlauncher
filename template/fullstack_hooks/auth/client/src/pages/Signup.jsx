@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { signup } from "../services/auth";
 import "./auth.css";
-import * as CONSTS from "../utils/consts";
 import * as PATHS from "../utils/paths";
+import * as USER_HELPERS from "../utils/userToken";
 
 export default function Signup({ authenticate, history }) {
   const [form, setForm] = useState({
@@ -32,7 +32,7 @@ export default function Signup({ authenticate, history }) {
         });
       }
       // successful signup
-      localStorage.setItem(CONSTS.ACCESS_TOKEN, res.data.accessToken);
+      USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
       history.push(PATHS.HOMEPAGE);
     });

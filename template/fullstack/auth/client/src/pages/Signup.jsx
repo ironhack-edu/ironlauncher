@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { signup } from "../services/auth";
 import "./auth.css";
-import * as CONSTS from "../utils/consts";
 import * as PATHS from "../utils/paths";
+import * as USER_HELPERS from "../utils/userToken";
 
 export default class Signup extends Component {
   state = {
@@ -30,7 +30,7 @@ export default class Signup extends Component {
       if (!res.status) {
         // unsuccessful signup
       }
-      localStorage.setItem(CONSTS.ACCESS_TOKEN, res.data.accessToken);
+      USER_HELPERS.setUserToken(res.data.accessToken);
       this.props.authenticate(res.data.user);
       this.props.history.push(PATHS.HOMEPAGE);
     });

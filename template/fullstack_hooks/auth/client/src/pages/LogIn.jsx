@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { login } from "../services/auth";
 import "./Signup";
-import * as CONSTS from "../utils/consts";
 import * as PATHS from "../utils/paths";
+import * as USER_HELPERS from "../utils/userToken";
 
 export default function LogIn({ authenticate, history }) {
   const [form, setForm] = useState({
@@ -29,7 +29,7 @@ export default function LogIn({ authenticate, history }) {
       if (!res.status) {
         return setError({ message: "Invalid credentials" });
       }
-      localStorage.setItem(CONSTS.ACCESS_TOKEN, res.data.accessToken);
+      USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
       history.push(PATHS.HOMEPAGE);
     });
