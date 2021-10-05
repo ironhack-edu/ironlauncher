@@ -10,6 +10,7 @@ const userSchema = new Schema(
     password: String,
   },
   {
+    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
