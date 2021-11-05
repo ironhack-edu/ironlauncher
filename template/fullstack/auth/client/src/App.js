@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch } from "react-router-dom";
+import { Routes } from "react-router-dom";
 import LoadingComponent from "./components/Loading";
 import Navbar from "./components/Navbar/Navbar";
 import HomePage from "./pages/HomePage";
@@ -84,27 +84,27 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar handleLogout={this.handleLogout} user={this.state.user} />
-        <Switch>
-          <NormalRoute exact path={PATHS.HOMEPAGE} component={HomePage} />
+        <Routes>
+          <NormalRoute exact path={PATHS.HOMEPAGE} element={<HomePage />} />
           <NormalRoute
             exact
             path={PATHS.SIGNUPPAGE}
             authenticate={this.authenticate}
-            component={Signup}
+            element={<Signup />}
           />
           <NormalRoute
             exact
             path={PATHS.LOGINPAGE}
             authenticate={this.authenticate}
-            component={LogIn}
+            element={<LogIn />}
           />
           <ProtectedRoute
             exact
             path={PATHS.PROTECTEDPAGE}
-            component={ProtectedPage}
+            element={<ProtectedPage />}
             user={this.state.user}
           />
-        </Switch>
+        </Routes>
       </div>
     );
   }

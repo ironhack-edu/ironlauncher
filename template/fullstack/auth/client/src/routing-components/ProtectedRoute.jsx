@@ -13,7 +13,7 @@ const ProtectedRoute = ({
 }) => {
   const Component = component;
   if (!user) {
-    return <Redirect to={PATHS.LOGINPAGE} />;
+    return <Navigate to={PATHS.LOGINPAGE} />;
   }
   return (
     <Route
