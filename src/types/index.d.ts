@@ -24,7 +24,7 @@ declare module "cli-meow-help" {
     alias?: string;
   };
   type MeowHelpCommands = Record<string, { desc: string }>;
-  type MeowHelpFlags = Record<string, PossibleArgs>;
+  type MeowHelpFlags<T> = Record<T[number], PossibleArgs>;
   type MeowHelp = {
     flags: MeowHelpFlags;
     commands: MeowHelpCommands;

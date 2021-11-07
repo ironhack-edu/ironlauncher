@@ -1,4 +1,7 @@
 import minimist from "minimist";
+import { FLAGS } from "./helpText";
+import type { FLAGS_OPTS } from "./helpText";
+import { validateName } from "../validations";
 const args = minimist(process.argv.slice(2));
 
 export const { _: inputs, ...flags } = args;
@@ -8,8 +11,6 @@ export const displayHelp = () => {
 };
 
 export const getProjectName = () => {
-  const { _: inputs, ...flags } = args;
-
   let name = inputs[0];
   let warnings: string[] = [];
 
@@ -31,3 +32,41 @@ export const getProjectName = () => {
     currentName: name,
   };
 };
+
+export function getName() {
+  let [name = ""] = inputs;
+  const newFlags: Record<string, boolean> = {};
+
+  const isValid = validateName(name);
+  const isValidName = typeof isValid === "boolean";
+
+  for (const key in flags) {
+    const value = flags[key];
+    if (FLAGS.includes(key as FLAGS_OPTS)) {
+      if (typeof value === "string") {
+        if (value === "true") {
+          newFlags[key] = true;
+        } else if (value === "false") {
+          newFlags["key"] = false;
+        } else {
+          if (!name) {
+            if (!isValidName) {
+              name = value;
+            }
+          }
+          newFlags[key] = true;
+        }
+      } else {
+        newFlags[key] = value;
+      }
+    }
+  }
+
+  if (isValidName) {
+    return { name };
+  }
+  return {
+    name : "",
+    issue: isValid,
+  };
+}
