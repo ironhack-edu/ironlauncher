@@ -7,7 +7,8 @@
   "license": "MIT",
   "description": "Ironhack generator for express bootstrapping",
   "scripts": {
-    "dev": "DEV=true nodemon  "
+    "dev": "DEV=true nodemon  ",
+    "build": "tsc"
   },
   "bin": {
     "ironlauncher": "index.js",
@@ -36,7 +37,7 @@
     "cli-welcome": "^2.2.2",
     "cookie-parser": "^1.4.5",
     "copy-template-dir": "^1.4.0",
-    "create-template-folder": "^1.0.2",
+    "create-template-folder": "^1.1.2",
     "dotenv": "^10.0.0",
     "enquirer": "^2.3.6",
     "execa": "^5.0.0",

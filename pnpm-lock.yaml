@@ -14,7 +14,7 @@ specifiers:
   cli-welcome: ^2.2.2
   cookie-parser: ^1.4.5
   copy-template-dir: ^1.4.0
-  create-template-folder: ^1.0.2
+  create-template-folder: ^1.1.2
   dotenv: ^10.0.0
   enquirer: ^2.3.6
   esbuild: ^0.13.9
@@ -48,7 +48,7 @@ dependencies:
   cli-welcome: 2.2.2
   cookie-parser: 1.4.5
   copy-template-dir: 1.4.0
-  create-template-folder: 1.0.2
+  create-template-folder: 1.1.2
   dotenv: 10.0.0
   enquirer: 2.3.6
   execa: 5.1.1
@@ -705,8 +705,8 @@ packages:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: true
 
-  /create-template-folder/1.0.2:
-    resolution: {integrity: sha512-TjoolDfSrdALsy8gmR4Mu4QqBKieED2wfp1qtJyWyUiHrdF0R5T6Kf3aPlhiuGFKHyzXeaWWnLfRz4q+slr38A==}
+  /create-template-folder/1.1.2:
+    resolution: {integrity: sha512-N3BgzZG+EWC8V6iB5JXAwGxyttq6DfnTVPqOZBZPBDC039wdgOlDAq/MuesRIxGfh0+h/8myzbArjKVjafUtDA==}
     dependencies:
       chalk: 4.1.2
       fs-extra: 9.1.0
@@ -1379,7 +1379,7 @@ packages:
       source-map: 0.6.1
       wordwrap: 1.0.0
     optionalDependencies:
-      uglify-js: 3.14.2
+      uglify-js: 3.14.3
     dev: false
 
   /hard-rejection/2.1.0:
@@ -3181,8 +3181,8 @@ packages:
     hasBin: true
     dev: true
 
-  /uglify-js/3.14.2:
-    resolution: {integrity: sha512-rtPMlmcO4agTUfz10CbgJ1k6UAoXM2gWb3GoMPPZB/+/Ackf8lNWk11K4rYi2D0apgoFRLtQOZhb+/iGNJq26A==}
+  /uglify-js/3.14.3:
+    resolution: {integrity: sha512-mic3aOdiq01DuSVx0TseaEzMIVqebMZ0Z3vaeDhFEh9bsc24hV1TFvN74reA2vs08D0ZWfNjAcJ3UbVLaBss+g==}
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true

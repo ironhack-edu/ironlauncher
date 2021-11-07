@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { log } from "console";
+import { copyTemplate } from "create-template-folder";
 import { askQuestion } from "./askQuestion";
-import { displayHelp, getName, getProjectName, helpText } from "./utils/cli";
-import { isNotEmpty } from "./utils/dir-ops/isNotEmpty";
-import { init } from "./utils/init";
-import { isOutOfSync } from "./utils/sync";
+import { ironlauncherConfig } from "./config";
+import { getCurrentFolderName, inDir, outDirectory } from "./dir-operations";
+import GetInputs from "./inputs/GetInputs";
+import { fullStackInstall } from "./install/npmInstall";
+import { displayHelp, flags, getName, helpText } from "./utils/cli";
 import { validateName } from "./utils/validations";
-const isDevMode = process.env.DEV === "true";
 
 async function main() {
   // init();
@@ -18,13 +19,12 @@ async function main() {
   // }
 
   if (displayHelp()) {
-    if (!isDevMode) {
+    if (!ironlauncherConfig.devMode) {
       return log(helpText);
     }
   }
 
   let { name, issue } = getName();
-  console.log('issue:', issue)
   if (!name) {
     const newName = await askQuestion({
       message: "Project name?",
@@ -37,6 +37,26 @@ async function main() {
     const newNameOption = newName.name.split(" ").join("_");
     name = newNameOption;
   }
+
+  // return;
+  const newInDirPath = inDir(flags);
+  const outDirPath = outDirectory(name);
+
+  let isCurrentFolder = false;
+  if (name === ".") {
+    name = getCurrentFolderName();
+    isCurrentFolder = true;
+  }
+
+  const vars = { name };
+  // await copyTemplate({
+  //   inDir: newInDirPath,
+  //   outDir: outDirPath,
+  //   vars,
+  // });
+
+  // await fullStackInstall(outDirPath, );
+  // process.exit(0);
 }
 
 main();

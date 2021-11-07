@@ -4,10 +4,11 @@ import type { FLAGS_OPTS } from "./helpText";
 import { validateName } from "../validations";
 const args = minimist(process.argv.slice(2));
 
-export const { _: inputs, ...flags } = args;
+export const { _: inputs, "--": __, ...flags } = args;
+console.log("inputs:", inputs);
 
 export const displayHelp = () => {
-  return args._.includes("help") || !!args["help"];
+  return inputs.includes("help") || !!args["help"];
 };
 
 export const getProjectName = () => {
@@ -66,7 +67,7 @@ export function getName() {
     return { name };
   }
   return {
-    name : "",
+    name: "",
     issue: isValid,
   };
 }
