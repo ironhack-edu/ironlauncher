@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { login } from "../services/auth";
+import { Navigate } from "react-router-dom";
 import "./Signup";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
 
-export default function LogIn({ authenticate, history }) {
+export default function LogIn({ authenticate }) {
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -31,7 +32,7 @@ export default function LogIn({ authenticate, history }) {
       }
       USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
-      history.push(PATHS.HOMEPAGE);
+      <Navigate to={PATHS.HOMEPAGE} />;
     });
   }
 
