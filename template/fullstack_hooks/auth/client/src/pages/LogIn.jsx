@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { login } from "../services/auth";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Signup";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
@@ -20,6 +20,7 @@ export default function LogIn({ authenticate }) {
   }
 
   function handleFormSubmission(event) {
+    const navigate = useNavigate();
     event.preventDefault();
 
     const credentials = {
@@ -32,7 +33,7 @@ export default function LogIn({ authenticate }) {
       }
       USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
-      <Navigate to={PATHS.HOMEPAGE} />;
+      navigate(PATHS.HOMEPAGE);
     });
   }
 

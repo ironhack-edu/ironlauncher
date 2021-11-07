@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { signup } from "../services/auth";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
@@ -19,6 +19,7 @@ export default function Signup({ authenticate }) {
   }
 
   function handleFormSubmission(event) {
+    const navigate = useNavigate();
     event.preventDefault();
     const credentials = {
       username,
@@ -35,7 +36,7 @@ export default function Signup({ authenticate }) {
       // successful signup
       USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
-      <Navigate to={PATHS.HOMEPAGE} />;
+      navigate(PATHS.HOMEPAGE);
     });
   }
 
