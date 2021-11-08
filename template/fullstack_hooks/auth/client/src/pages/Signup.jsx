@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { signup } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
 
-export default function Signup({ authenticate, history }) {
+export default function Signup({ authenticate }) {
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
   const { username, password } = form;
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -34,7 +36,7 @@ export default function Signup({ authenticate, history }) {
       // successful signup
       USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
-      history.push(PATHS.HOMEPAGE);
+      navigate(PATHS.HOMEPAGE);
     });
   }
 

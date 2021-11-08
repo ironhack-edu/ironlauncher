@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { login } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 import "./Signup";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
 
-export default function LogIn({ authenticate, history }) {
+export default function LogIn({ authenticate }) {
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
   const { username, password } = form;
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -20,7 +22,6 @@ export default function LogIn({ authenticate, history }) {
 
   function handleFormSubmission(event) {
     event.preventDefault();
-
     const credentials = {
       username,
       password,
@@ -31,7 +32,7 @@ export default function LogIn({ authenticate, history }) {
       }
       USER_HELPERS.setUserToken(res.data.accessToken);
       authenticate(res.data.user);
-      history.push(PATHS.HOMEPAGE);
+      navigate(PATHS.HOMEPAGE);
     });
   }
 

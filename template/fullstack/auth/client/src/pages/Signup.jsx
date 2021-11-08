@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { signup } from "../services/auth";
+import { Navigate } from "react-router-dom";
 import "./auth.css";
 import * as PATHS from "../utils/paths";
 import * as USER_HELPERS from "../utils/userToken";
@@ -32,7 +33,7 @@ export default class Signup extends Component {
       }
       USER_HELPERS.setUserToken(res.data.accessToken);
       this.props.authenticate(res.data.user);
-      this.props.history.push(PATHS.HOMEPAGE);
+      <Navigate to={PATHS.HOMEPAGE} />;
     });
   };
 
