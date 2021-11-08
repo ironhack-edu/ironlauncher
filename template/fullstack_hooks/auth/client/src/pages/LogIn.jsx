@@ -12,6 +12,7 @@ export default function LogIn({ authenticate }) {
   });
   const { username, password } = form;
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -20,9 +21,7 @@ export default function LogIn({ authenticate }) {
   }
 
   function handleFormSubmission(event) {
-    const navigate = useNavigate();
     event.preventDefault();
-
     const credentials = {
       username,
       password,
