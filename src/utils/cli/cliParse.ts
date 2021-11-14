@@ -2,10 +2,24 @@ import minimist from "minimist";
 import { FLAGS } from "./helpText";
 import type { FLAGS_OPTS } from "./helpText";
 import { validateName } from "../validations";
-const args = minimist(process.argv.slice(2));
+const args = minimist(process.argv.slice(2), {});
 
 export const { _: inputs, "--": __, ...flags } = args;
-console.log("inputs:", inputs);
+// console.log("args:", args);
+// console.log("inputs:", inputs);
+
+// export const getFlags = () => {
+//   let obj = {}
+//   for (const key in flags) {
+//     const value = flags[key]
+//     if (key in flags) {
+//       if (typeof value === "boolean" || typeof JSON.parse(value) === "boolean") {
+
+//         obj[]
+//       }
+//     }
+//   }
+// }
 
 export const displayHelp = () => {
   return inputs.includes("help") || !!args["help"];

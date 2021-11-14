@@ -1,4 +1,3 @@
-import pkg from "../../../package.json";
 import { getLocalVersion } from "./getLocalVersion";
 import { getRemoteVersion } from "./getRemoteVersion";
 

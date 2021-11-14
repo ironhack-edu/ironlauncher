@@ -1,113 +1,62 @@
-import React from "react";
-import { Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import LoadingComponent from "./components/Loading";
 import Navbar from "./components/Navbar/Navbar";
-import HomePage from "./pages/HomePage";
-import LogIn from "./pages/LogIn";
-import ProtectedPage from "./pages/ProtectedPage";
-import Signup from "./pages/Signup";
-import NormalRoute from "./routing-components/NormalRoute";
-import ProtectedRoute from "./routing-components/ProtectedRoute";
 import { getLoggedIn, logout } from "./services/auth";
-import * as PATHS from "./utils/paths";
-import * as CONSTS from "./utils/consts";
+import routes from "./config/routes";
 import * as USER_HELPERS from "./utils/userToken";
 
-class App extends React.Component {
-  state = {
-    user: null,
-    isLoading: true,
-  };
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  componentDidMount = () => {
+  useEffect(() => {
     const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
-      return this.setState({
-        isLoading: false,
-      });
+      return setIsLoading(false);
     }
     getLoggedIn(accessToken).then((res) => {
       if (!res.status) {
-        console.log("RES IN CASE OF FAILURE", res);
-        // deal with failed backend call
-        return this.setState({
-          isLoading: false,
-        });
+        return setIsLoading(false);
       }
-      this.setState({
-        user: res.data.user,
-        isLoading: false,
-      });
+      setUser(res.data.user);
+      setIsLoading(false);
     });
-  };
+  }, []);
 
-  handleLogout = () => {
+  function handleLogout() {
     const accessToken = USER_HELPERS.getUserToken();
     if (!accessToken) {
-      return this.setState({
-        user: null,
-        isLoading: false,
-      });
+      setUser(null);
+      return setIsLoading(false);
     }
-    this.setState(
-      {
-        isLoading: true,
-      },
-      () => {
-        logout(accessToken).then((res) => {
-          if (!res.status) {
-            // deal with error here
-            console.error("💡 SOMETHING HAPPENED THAT HAS TO DEALT WITH", res);
-          }
-
-          USER_HELPERS.removeUserToken();
-          return this.setState({
-            isLoading: false,
-            user: null,
-          });
-        });
+    setIsLoading(true);
+    logout(accessToken).then((res) => {
+      if (!res.status) {
+        // deal with error here
+        console.error("Logout was unsuccessful: ", res);
       }
-    );
-  };
-
-  authenticate = (user) => {
-    this.setState({
-      user,
+      USER_HELPERS.removeUserToken();
+      setIsLoading(false);
+      return setUser(null);
     });
-  };
-
-  render() {
-    if (this.state.isLoading) {
-      return <LoadingComponent />;
-    }
-
-    return (
-      <div className="App">
-        <Navbar handleLogout={this.handleLogout} user={this.state.user} />
-        <Switch>
-          <NormalRoute exact path={PATHS.HOMEPAGE} component={HomePage} />
-          <NormalRoute
-            exact
-            path={PATHS.SIGNUPPAGE}
-            authenticate={this.authenticate}
-            component={Signup}
-          />
-          <NormalRoute
-            exact
-            path={PATHS.LOGINPAGE}
-            authenticate={this.authenticate}
-            component={LogIn}
-          />
-          <ProtectedRoute
-            exact
-            path={PATHS.PROTECTEDPAGE}
-            component={ProtectedPage}
-            user={this.state.user}
-          />
-        </Switch>
-      </div>
-    );
   }
-}
 
-export default App;
+  function authenticate(user) {
+    setUser(user);
+  }
+
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+  return (
+    <div className="App">
+      <Navbar handleLogout={handleLogout} user={user} />
+      <Routes>
+        {routes({ user, authenticate, handleLogout }).map((route) => (
+          <Route path={route.path} element={route.element} />
+        ))}
+      </Routes>
+    </div>
+  );
+}

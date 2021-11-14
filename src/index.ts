@@ -1,15 +1,37 @@
 #!/usr/bin/env node
 import { log } from "console";
 import { copyTemplate } from "create-template-folder";
+import { join } from "path";
 import { askQuestion } from "./askQuestion";
 import { ironlauncherConfig } from "./config";
 import { getCurrentFolderName, inDir, outDirectory } from "./dir-operations";
 import GetInputs from "./inputs/GetInputs";
 import { fullStackInstall } from "./install/npmInstall";
-import { displayHelp, flags, getName, helpText } from "./utils/cli";
+import { flags, getName, helpText } from "./utils/cli";
+import { init } from "./utils/init";
 import { validateName } from "./utils/validations";
 
 async function main() {
+  // init()o;
+
+  await ironlauncherConfig.init();
+  // ironlauncherConfig.debug();
+  if (ironlauncherConfig.isOutOfSync) {
+    return; // TODO: ADD SOME LOGGING MESSAGE HERE
+  }
+
+  init();
+  if (ironlauncherConfig.displayHelp) {
+    if (ironlauncherConfig.devMode) {
+      console.log(`requested help`);
+    } else {
+      return log(helpText);
+    }
+  }
+  return console.log(join(__dirname, "..", "template"));
+
+  return;
+  console.log(await GetInputs.getProject());
   // init();
   // const isBad = await isOutOfSync();
   // console.log("isBad:", isBad);
@@ -18,11 +40,13 @@ async function main() {
   //   return;
   // }
 
-  if (displayHelp()) {
-    if (!ironlauncherConfig.devMode) {
-      return log(helpText);
-    }
-  }
+  // if (displayHelp()) {
+  //   if (!ironlauncherConfig.devMode) {
+  //     return log(helpText);
+  //   }
+  // }
+
+  return;
 
   let { name, issue } = getName();
   if (!name) {
@@ -49,13 +73,13 @@ async function main() {
   }
 
   const vars = { name };
-  // await copyTemplate({
-  //   inDir: newInDirPath,
-  //   outDir: outDirPath,
-  //   vars,
-  // });
+  await copyTemplate({
+    inDir: newInDirPath,
+    outDir: outDirPath,
+    vars,
+  });
 
-  // await fullStackInstall(outDirPath, );
+  await fullStackInstall(outDirPath);
   // process.exit(0);
 }
 

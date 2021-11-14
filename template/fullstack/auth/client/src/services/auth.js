@@ -1,5 +1,5 @@
 import axios from "axios";
-import USER_HELPERS from "../utils/userToken";
+import * as USER_HELPERS from "../utils/userToken";
 
 // here we are just maing our code look more DRY. With every backend call we must deal with errors and success states. The idea of creating these kinds of services is to make our lives easier in the components
 function internalServerError(err) {
@@ -37,7 +37,7 @@ export function login(credentials) {
 
 export function getLoggedIn() {
   return authService
-    .get(`/session`, {
+    .get(`session`, {
       headers: {
         Authorization: USER_HELPERS.getUserToken(),
       },

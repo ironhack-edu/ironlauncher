@@ -9,16 +9,22 @@ class CLIConfig {
   #auth = false;
   #json = false;
   #fs = false;
-  #devMode = process.env.DEV === "true";
-  constructor(flags: ICLIConfig) {
+  #dryRun = false;
+  public devMode = process.env.DEV === "true";
+  constructor(private flags: ICLIConfig) {
     this.setVerbose(flags);
     this.setFullStack(flags);
     this.setAuth(flags);
     this.setJSON(flags);
+    this.setDryRun(flags);
   }
 
-  get devMode() {
-    return this.#devMode;
+  async init() {}
+
+  private setDryRun(flags: ICLIConfig) {
+    const { ["dry-run"]: dryRun } = flags;
+
+    this.#dryRun = !!dryRun;
   }
 
   private setAuth(flags: ICLIConfig) {
@@ -58,6 +64,10 @@ class CLIConfig {
     return this.#json && !this.#fs;
   }
 
+  get dryRun() {
+    return this.#dryRun;
+  }
+
   //   TODO: Implement question about which kind of project to build
   get alLFlagData() {
     const { isAuth, isJSON, isFullStack } = this;
@@ -65,4 +75,4 @@ class CLIConfig {
   }
 }
 
-export const ironlauncherConfig = new CLIConfig(flags);
+export const prevConfig = new CLIConfig(flags);

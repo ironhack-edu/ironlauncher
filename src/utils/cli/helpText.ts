@@ -26,8 +26,7 @@ const commands: MeowHelpCommands = {
     desc: `The name of the project will be added as the path to mongodb and package.json`,
   },
   "<command>": {
-    desc:
-      "The commands are chainable. Which means you can ask for json and auth, or fs and auth. See commands below 👇",
+    desc: "The commands are chainable. Which means you can ask for json and auth, or fs and auth. See commands below 👇",
   },
   help: {
     desc: "Print help info",

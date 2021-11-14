@@ -8,7 +8,8 @@
   "description": "Ironhack generator for express bootstrapping",
   "scripts": {
     "dev": "DEV=true nodemon  ",
-    "build": "tsc"
+    "build": "rimraf dist && tsc",
+    "start": "DEV=true esr src/index.ts help --json --auth -v --v --dry-run --name --name a-tua-mae"
   },
   "bin": {
     "ironlauncher": "index.js",
@@ -62,6 +63,7 @@
     "esbuild": "^0.13.9",
     "esbuild-runner": "^2.2.1",
     "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   }
