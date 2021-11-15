@@ -38,8 +38,6 @@ export async function npmCommand(npmArgs: NpmCommand) {
     command += ` --dry-run`;
   }
 
-  console.log({ command });
-
   await runCommand(command);
 }
 

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "DEV=true nodemon  ",
     "build": "rimraf dist && tsc",
-    "start": "DEV=true esr src/index.ts help --json --auth -v --v --dry-run --name --name a-tua-mae"
+    "start": "DEV=true esr src/index.ts "
   },
   "bin": {
     "ironlauncher": "index.js",

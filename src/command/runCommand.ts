@@ -6,7 +6,6 @@ export function runCommand(args: string) {
   const stdio: CommonSpawnOptions["stdio"] = prevConfig.verbose
     ? "inherit"
     : "ignore";
-  console.log("stdio:", stdio);
 
   return new Promise((res, rej) => {
     // if (ironlauncherConfig.devMode) {

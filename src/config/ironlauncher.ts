@@ -56,7 +56,10 @@ class IronLauncher implements IronlauncherConfig {
   #setDryRun(startingValue = false) {
     const { ["dry-run"]: dryRun = false, dryRun: dryRunCommand } = this.flags;
 
-    this.#dryRun = this.#isBoolean(dryRun) || this.#isBoolean(dryRunCommand);
+    this.#dryRun =
+      this.#isBoolean(startingValue) ||
+      this.#isBoolean(dryRun) ||
+      this.#isBoolean(dryRunCommand);
   }
 
   #setBase(startingValue = false) {
@@ -178,9 +181,7 @@ class IronLauncher implements IronlauncherConfig {
 
   public debug(): void {
     console.log(`---- TEMPLATE ----`);
-    console.log(`Views: - ${this.views}`);
-    console.log(`JSON: - ${this.json}`);
-    console.log(`FS: - ${this.fs}`);
+    console.log(`TEMPLATE: - ${this.template}`);
     console.log(`---- VARIANT ----`);
     console.log(
       `VARIANT: ${this.#auth ? "auth" : this.#base ? "base" : "not_defined"}`

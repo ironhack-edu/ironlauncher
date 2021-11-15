@@ -28,7 +28,28 @@ async function main() {
       return log(helpText);
     }
   }
-  return console.log(join(__dirname, "..", "template"));
+
+  if (ironlauncherConfig.devMode) {
+    ironlauncherConfig.debug();
+  }
+
+  const vars = { name: ironlauncherConfig.name };
+
+  const newInDirPath = inDir(flags);
+  const outDirPath = outDirectory(ironlauncherConfig.name);
+
+  await copyTemplate({
+    inDir: newInDirPath,
+    outDir: outDirPath,
+    vars,
+  });
+
+  return console.log(__dirname);
+
+  // const newInDirPath = inDir(flags);
+  // const outDirPath = outDirectory(name);
+
+  // const vars = { name };
 
   return;
   console.log(await GetInputs.getProject());
@@ -63,8 +84,8 @@ async function main() {
   }
 
   // return;
-  const newInDirPath = inDir(flags);
-  const outDirPath = outDirectory(name);
+  // const newInDirPath = inDir(flags);
+  // const outDirPath = outDirectory(name);
 
   let isCurrentFolder = false;
   if (name === ".") {
@@ -72,7 +93,7 @@ async function main() {
     isCurrentFolder = true;
   }
 
-  const vars = { name };
+  // const vars = { name };
   await copyTemplate({
     inDir: newInDirPath,
     outDir: outDirPath,
