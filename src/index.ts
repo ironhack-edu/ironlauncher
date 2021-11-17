@@ -45,9 +45,6 @@ async function main() {
     }
   );
   await install(outDirPath, templatedFiles);
-  // if (ironlauncherConfig.dryRun) {
-  //   // await runCommand(`trash ${outDirPath}`);
-  // }
 }
 
 main();

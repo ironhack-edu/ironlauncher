@@ -37,10 +37,10 @@ class IronLauncher implements IronlauncherConfig {
     this.#setDryRun();
     this.#setDisplayHelp();
     this.#setName();
-    this.#setPnpm();
+    this.#setPackageManagers();
   }
 
-  #setPnpm() {
+  #setPackageManagers() {
     const { p = false, pnpm = false } = this.flags;
 
     this.#isPnpm = this.#isBoolean(p) || this.#isBoolean(pnpm);
@@ -146,6 +146,13 @@ class IronLauncher implements IronlauncherConfig {
   // GETTERS
   get name() {
     return this.#name;
+  }
+
+  get packageManager() {
+    if (this.#isPnpm) {
+      return `pnpm`;
+    }
+    return "npm";
   }
 
   get variant(): IronLauncherVariant {

@@ -2,27 +2,35 @@ import { runCommand } from "../../command";
 import { InstallBase, IronlauncherConfig } from "../../types";
 
 export class SharedInstaller {
-  private baseCommand = "npm install ";
+  private baseCommand = "npm ";
   private _devCommand = ` -D `;
-  private _dryRun = " --dry-run ";
+  private _dryRun = " --package-lock-only ";
+  private baseInstallVerb = " install ";
+  private _pnpmDryRun = " --shrinkwrap-only ";
 
-  public execute(arg: InstallBase, config: IronlauncherConfig) {
+  public async execute(arg: InstallBase, config: IronlauncherConfig) {
     this.logScope(arg.scope);
     const command = this.npmCommand(arg, config);
 
     return runCommand(command);
   }
 
-  private getPrefix(prefix: string) {
-    return ` --prefix ${prefix} `;
+  private getPrefix(prefix: string, config: IronlauncherConfig) {
+    if (config.packageManager === "npm") {
+      return ` --prefix ${prefix} `;
+    }
+    return ` -C ${prefix}`;
   }
 
   private getPackages(packages: string[]) {
     return ` ${packages.join(" ")} `;
   }
 
-  private get dryRun() {
-    return this._dryRun;
+  private dryRun(config: IronlauncherConfig) {
+    if (config.packageManager === "npm") {
+      return this._dryRun;
+    }
+    return this._pnpmDryRun;
   }
 
   private get devCommand() {
@@ -37,23 +45,23 @@ export class SharedInstaller {
 
   private npmCommand(arg: InstallBase, config: IronlauncherConfig) {
     const { prefix, packages, isDev } = arg;
-    let command = this.baseCommand;
-    if (config.isPnpm) {
-      command = `p${this.baseCommand}`;
-    }
+    let command = config.packageManager + this.baseInstallVerb;
 
     if (prefix) {
-      command += this.getPrefix(prefix);
+      command += this.getPrefix(prefix, config);
     }
 
-    if (config.dryRun) {
-      command += this.dryRun;
+    if (this.getPackages.length) {
+      command += this.getPackages(packages);
     }
 
     if (isDev) {
       command += this.devCommand;
     }
 
-    return command + this.getPackages(packages);
+    if (config.dryRun) {
+      command += this.dryRun(config);
+    }
+    return command;
   }
 }
