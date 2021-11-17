@@ -1,1 +1,1 @@
-export * from "./npm-script";
+export * from "./runCommand";

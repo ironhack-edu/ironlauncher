@@ -1,3 +1,4 @@
+import { sep } from "path";
 import GetInputs from "../inputs/GetInputs";
 import {
   ICLIConfig,
@@ -6,6 +7,7 @@ import {
   IronLauncherVariant,
 } from "../types";
 import { flags, inputs } from "../utils/cli";
+import { isNotEmpty, nameExists } from "../utils/dir-ops";
 import { isOutOfSync } from "../utils/sync";
 
 class IronLauncher implements IronlauncherConfig {
@@ -21,6 +23,7 @@ class IronLauncher implements IronlauncherConfig {
   #displayHelp: boolean = false;
   #name: string = "";
   #isOutOfSync: boolean = false;
+  #isCurrentFolder: boolean = false;
 
   // Constructor
   constructor(private flags: ICLIConfig, private inputs: string[]) {
@@ -41,8 +44,26 @@ class IronLauncher implements IronlauncherConfig {
     // const {inputs, flags} = this
     let [name = ""] = this.inputs;
 
+    const isEmpty = !isNotEmpty();
+
+    if (name.trim() === "." && !isEmpty) {
+      return;
+    }
+
+    if (name.trim() === ".") {
+      this.#name = process.cwd().split(sep).slice(-1)[0];
+      this.#isCurrentFolder = true;
+      return;
+    }
+
+    const exists = nameExists(name);
+    if (exists) {
+      return;
+    }
+
     this.#name = name;
   }
+
   #setDisplayHelp(startingValue = false) {
     const { help, h } = this.flags;
 
@@ -177,6 +198,10 @@ class IronLauncher implements IronlauncherConfig {
     return this.#isOutOfSync;
   }
 
+  get isCurrentFolder() {
+    return this.#isCurrentFolder;
+  }
+
   // Methods
 
   public debug(): void {
@@ -198,6 +223,7 @@ class IronLauncher implements IronlauncherConfig {
   get variantDefined() {
     return this.#base || this.#auth;
   }
+
   get templateDefined() {
     return this.#json || this.#fs || this.#views;
   }
@@ -210,15 +236,16 @@ class IronLauncher implements IronlauncherConfig {
   private async arrangeVariant() {
     const { variant } = await GetInputs.getVariant();
     if (variant) {
-      this.#base = true;
-    } else {
       this.#auth = true;
+    } else {
+      this.#base = true;
     }
   }
 
   private async arrangeTemplate() {
     const { project } = await GetInputs.getProject();
-    if (project === "fs") {
+    console.log("project:", project);
+    if (project === "fullstack") {
       this.#fs = true;
     }
     if (project === "json") {

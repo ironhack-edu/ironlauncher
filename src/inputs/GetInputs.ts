@@ -42,8 +42,28 @@ export default class GetInputs {
     );
   }
 
-  static async getProject(): Promise<{ project: "fs" | "json" | "views" }> {
-    const templates = join(process.cwd(), "template");
+  static async getProject(): Promise<{
+    project: "fullstack" | "json" | "views";
+  }> {
+    let templates: string = "";
+    let starting = join(process.cwd());
+    let count = 0;
+
+    while (!templates) {
+      const path = join(starting, "template");
+      try {
+        await readdir(path);
+        templates = path;
+      } catch (_error) {
+        // Runs in case of no template folder present
+        starting = join(process.cwd(), "..");
+      }
+      count++;
+
+      if (count > 3) {
+        process.exit(1);
+      }
+    }
 
     const projectFolders = await readdir(templates);
     const onlyDirs = [...projectFolders]

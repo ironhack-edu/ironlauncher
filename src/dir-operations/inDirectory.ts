@@ -1,12 +1,18 @@
 import path from "path";
-import { InDirArgs } from "../types/InDir.types";
+import { ironlauncherConfig } from "../config";
 
-export function inDir(flags: InDirArgs) {
-  const { auth = false, json = false, fs = false, views = true } = flags;
+export function inDir() {
+  const isTypescript = __filename.includes(".ts");
+  const joining = [__dirname, ".."];
+  if (!isTypescript) {
+    joining.push("..");
+  }
 
-  const folderName = fs ? "fullstack" : json ? "json" : "views";
+  const restOfPath = [
+    "template",
+    ironlauncherConfig.template,
+    ironlauncherConfig.variant,
+  ];
 
-  const isAuth = auth ? "auth" : "base";
-
-  return path.join(__dirname, "..", "template", folderName, isAuth);
+  return path.join(...joining, ...restOfPath);
 }

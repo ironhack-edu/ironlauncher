@@ -32,3 +32,14 @@ declare module "cli-meow-help" {
   };
   export default function meowHelp(options?: MeowHelp);
 }
+
+declare module "cli-alerts" {
+  export type AlertType = "success" | "warning" | "info" | "error";
+  export interface AlertOptions {
+    type: AlertType;
+    msg: string;
+    name: string;
+  }
+
+  export default function alert(alertOptions: AlertOptions): void;
+}
