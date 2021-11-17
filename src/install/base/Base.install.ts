@@ -38,6 +38,9 @@ export class SharedInstaller {
   private npmCommand(arg: InstallBase, config: IronlauncherConfig) {
     const { prefix, packages, isDev } = arg;
     let command = this.baseCommand;
+    if (config.isPnpm) {
+      command = `p${this.baseCommand}`;
+    }
 
     if (prefix) {
       command += this.getPrefix(prefix);

@@ -21,6 +21,7 @@ export interface BaseConfig {
   template?: IronLauncherTemplate;
   displayHelp: boolean;
   name: string;
+  isPnpm: boolean;
 }
 
 export type IronLauncherTemplate = "views" | "json" | "fullstack";

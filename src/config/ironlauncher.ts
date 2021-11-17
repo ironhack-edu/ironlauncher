@@ -24,6 +24,7 @@ class IronLauncher implements IronlauncherConfig {
   #name: string = "";
   #isOutOfSync: boolean = false;
   #isCurrentFolder: boolean = false;
+  #isPnpm: boolean = false;
 
   // Constructor
   constructor(private flags: ICLIConfig, private inputs: string[]) {
@@ -36,6 +37,13 @@ class IronLauncher implements IronlauncherConfig {
     this.#setDryRun();
     this.#setDisplayHelp();
     this.#setName();
+    this.#setPnpm();
+  }
+
+  #setPnpm() {
+    const { p = false, pnpm = false } = this.flags;
+
+    this.#isPnpm = this.#isBoolean(p) || this.#isBoolean(pnpm);
   }
 
   // Setup values from inputs and flags from CLI
@@ -168,6 +176,10 @@ class IronLauncher implements IronlauncherConfig {
 
   get verbose() {
     return this.#verbose;
+  }
+
+  get isPnpm() {
+    return this.#isPnpm;
   }
 
   get devMode() {
