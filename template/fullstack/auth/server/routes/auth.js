@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 // ℹ️ Handles password encryption
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 // How many rounds should bcrypt run the salt (default [10 - 12 rounds])

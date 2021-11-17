@@ -32,9 +32,7 @@ async function main() {
   const vars = { name: ironlauncherConfig.name };
 
   const newInDirPath = inDir();
-  console.log("newInDirPath:", newInDirPath);
   const outDirPath = outDirectory(ironlauncherConfig.name);
-  console.log("outDirPath:", outDirPath);
 
   const templatedFiles = await createTemplateFolder(
     {
