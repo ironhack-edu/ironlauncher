@@ -230,7 +230,8 @@ class IronLauncher implements IronlauncherConfig {
 
   private async arrangeName() {
     const { name } = await GetInputs.getName();
-    this.#name = name;
+
+    this.#name = name.replace(/\s+/g, "-");
   }
 
   private async arrangeVariant() {
