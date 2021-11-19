@@ -30,10 +30,9 @@ async function main() {
     ironlauncherConfig.debug();
   }
 
-  console.log(`RUNG`);
   const newInDirPath = FolderOps.inDirectory();
   const outDirPath = FolderOps.outDirectory(ironlauncherConfig.name);
-  return;
+  // return;
   const vars = { name: ironlauncherConfig.name };
 
   const templatedFiles = await createTemplateFolder(
