@@ -23,6 +23,7 @@ export interface BaseConfig {
   name: string;
   isPnpm: boolean;
   packageManager: `npm` | "pnpm";
+  skipInstall: boolean;
 }
 
 export type IronLauncherTemplate = "views" | "json" | "fullstack";

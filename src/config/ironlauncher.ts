@@ -1,4 +1,6 @@
 import { sep } from "path";
+import { Package } from "../core/pkg/Package";
+import { FsValidator } from "../core/validator";
 import GetInputs from "../inputs/GetInputs";
 import {
   ICLIConfig,
@@ -7,8 +9,6 @@ import {
   IronLauncherVariant,
 } from "../types";
 import { flags, inputs } from "../utils/cli";
-import { isNotEmpty, nameExists } from "../utils/dir-ops";
-import { isOutOfSync } from "../utils/sync";
 
 class IronLauncher implements IronlauncherConfig {
   // Initial Values
@@ -25,6 +25,7 @@ class IronLauncher implements IronlauncherConfig {
   #isOutOfSync: boolean = false;
   #isCurrentFolder: boolean = false;
   #isPnpm: boolean = false;
+  #skipInstall: boolean = false;
 
   // Constructor
   constructor(private flags: ICLIConfig, private inputs: string[]) {
@@ -38,6 +39,12 @@ class IronLauncher implements IronlauncherConfig {
     this.#setDisplayHelp();
     this.#setName();
     this.#setPackageManagers();
+    this.#setSkipInstall();
+  }
+
+  #setSkipInstall() {
+    const { ["skip-install"]: skipInstall } = this.flags;
+    this.#skipInstall = this.#isBoolean(skipInstall);
   }
 
   #setPackageManagers() {
@@ -52,7 +59,7 @@ class IronLauncher implements IronlauncherConfig {
     // const {inputs, flags} = this
     let [name = ""] = this.inputs;
 
-    const isEmpty = !isNotEmpty();
+    const isEmpty = !FsValidator.dirNotEmpty();
 
     if (name.trim() === "." && !isEmpty) {
       return;
@@ -64,7 +71,7 @@ class IronLauncher implements IronlauncherConfig {
       return;
     }
 
-    const exists = nameExists(name);
+    const exists = FsValidator.folderExists(name);
     if (exists) {
       return;
     }
@@ -149,7 +156,7 @@ class IronLauncher implements IronlauncherConfig {
   }
 
   get packageManager() {
-    if (this.#isPnpm) {
+    if (this.#isPnpm && !this.dryRun) {
       return `pnpm`;
     }
     return "npm";
@@ -164,6 +171,10 @@ class IronLauncher implements IronlauncherConfig {
 
   get base() {
     return this.#base;
+  }
+
+  get skipInstall() {
+    return this.#skipInstall;
   }
 
   get template(): IronLauncherTemplate {
@@ -264,7 +275,6 @@ class IronLauncher implements IronlauncherConfig {
 
   private async arrangeTemplate() {
     const { project } = await GetInputs.getProject();
-    console.log("project:", project);
     if (project === "fullstack") {
       this.#fs = true;
     }
@@ -278,7 +288,7 @@ class IronLauncher implements IronlauncherConfig {
 
   async init() {
     if (!this.devMode) {
-      const isBad = await isOutOfSync();
+      const isBad = await Package.isOutOfSync();
       this.#isOutOfSync = isBad;
       if (isBad) {
         return;

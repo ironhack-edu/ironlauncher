@@ -1,25 +1,26 @@
 #!/usr/bin/env node
 import { log } from "console";
 import { createTemplateFolder } from "create-template-folder";
-import { install } from "./install/install";
 import { ironlauncherConfig } from "./config";
-import { inDir, outDirectory } from "./dir-operations";
+import { FolderOps } from "./core/cmd";
+import { install } from "./install/install";
 import { helpText } from "./utils/cli";
 import { init } from "./utils/init";
 
 async function main() {
   // init()o;
+  console.log(`HERE`);
 
   await ironlauncherConfig.init();
   // ironlauncherConfig.debug();
   if (ironlauncherConfig.isOutOfSync) {
-    return; // TODO: ADD SOME LOGGING MESSAGE HERE
+    return console.log(`HERE`); // TODO: ADD SOME LOGGING MESSAGE HERE
   }
 
   init();
   if (ironlauncherConfig.displayHelp) {
     if (ironlauncherConfig.devMode) {
-      console.log(`requested help`);
+      return console.log(`requested help`);
     } else {
       return log(helpText);
     }
@@ -29,10 +30,11 @@ async function main() {
     ironlauncherConfig.debug();
   }
 
+  console.log(`RUNG`);
+  const newInDirPath = FolderOps.inDirectory();
+  const outDirPath = FolderOps.outDirectory(ironlauncherConfig.name);
+  return;
   const vars = { name: ironlauncherConfig.name };
-
-  const newInDirPath = inDir();
-  const outDirPath = outDirectory(ironlauncherConfig.name);
 
   const templatedFiles = await createTemplateFolder(
     {
@@ -41,7 +43,7 @@ async function main() {
       vars,
     },
     {
-      // dryRun: ironlauncherConfig.devMode,
+      dryRun: ironlauncherConfig.devMode,
     }
   );
   await install(outDirPath, templatedFiles);

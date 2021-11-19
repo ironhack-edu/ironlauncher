@@ -1,7 +1,7 @@
 import minimist from "minimist";
-import { FLAGS } from "./helpText";
+import { NameValidator } from "../../core/validator";
 import type { FLAGS_OPTS } from "./helpText";
-import { validateName } from "../validations";
+import { FLAGS } from "./helpText";
 const args = minimist(process.argv.slice(2), {});
 
 export const { _: inputs, "--": __, ...flags } = args;
@@ -26,6 +26,7 @@ export const displayHelp = () => {
 };
 
 export const getProjectName = () => {
+  const nameValidator = new NameValidator();
   let name = inputs[0];
   let warnings: string[] = [];
 
@@ -52,7 +53,7 @@ export function getName() {
   let [name = ""] = inputs;
   const newFlags: Record<string, boolean> = {};
 
-  const isValid = validateName(name);
+  const isValid = NameValidator.validate(name);
   const isValidName = typeof isValid === "boolean";
 
   for (const key in flags) {

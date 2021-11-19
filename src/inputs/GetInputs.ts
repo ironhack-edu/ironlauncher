@@ -1,10 +1,10 @@
-import prompt from "prompts";
 import fs from "fs";
-import { promisify } from "util";
-const readdir = promisify(fs.readdir);
 import { join } from "path";
-import { validateName } from "../utils/validations";
-import { onCancel } from "../utils/functions";
+import type { PromptObject } from "prompts";
+import prompt from "prompts";
+import { promisify } from "util";
+import { NameValidator } from "../core/validator";
+const readdir = promisify(fs.readdir);
 
 export default class GetInputs {
   static async getName(): Promise<{ name: string }> {
@@ -13,10 +13,10 @@ export default class GetInputs {
         name: "name",
         type: "text",
         message: "Project name?",
-        validate: validateName,
+        validate: NameValidator.validate,
       },
       {
-        onCancel,
+        onCancel: this.onCancel,
       }
     );
   }
@@ -37,7 +37,7 @@ export default class GetInputs {
         ],
       },
       {
-        onCancel,
+        onCancel: this.onCancel,
       }
     );
   }
@@ -86,8 +86,14 @@ export default class GetInputs {
         },
       ],
       {
-        onCancel,
+        onCancel: this.onCancel,
       }
     );
+  }
+
+  static onCancel(data: PromptObject) {
+    console.log(`You did not set a ${data.name} and canceled the ironlauncher`);
+
+    process.exit(1);
   }
 }
