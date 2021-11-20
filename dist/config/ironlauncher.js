@@ -221,10 +221,12 @@ _IronLauncher_auth = new WeakMap(), _IronLauncher_base = new WeakMap(), _IronLau
     __classPrivateFieldSet(this, _IronLauncher_name, name, "f");
 }, _IronLauncher_setDisplayHelp = function _IronLauncher_setDisplayHelp(startingValue = false) {
     const { help, h } = this.flags;
+    const isHelpInFlags = Object.values(this.flags).includes("help");
     __classPrivateFieldSet(this, _IronLauncher_displayHelp, __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, startingValue) ||
         __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, help) ||
         __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, h) ||
-        this.inputs.includes("help"), "f");
+        this.inputs.includes("help") ||
+        isHelpInFlags, "f");
 }, _IronLauncher_setDryRun = function _IronLauncher_setDryRun(startingValue = false) {
     const { ["dry-run"]: dryRun = false, dryRun: dryRunCommand } = this.flags;
     __classPrivateFieldSet(this, _IronLauncher_dryRun, __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, startingValue) ||

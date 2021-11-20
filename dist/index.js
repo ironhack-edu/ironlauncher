@@ -20,11 +20,6 @@ const init_1 = require("./utils/init");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // init()o;
-        yield config_1.ironlauncherConfig.init();
-        // ironlauncherConfig.debug();
-        if (config_1.ironlauncherConfig.isOutOfSync) {
-            return logger_1.logger.error(`Packages are out of sync. Please run command again with @latest in front of the package`); // TODO: ADD SOME LOGGING MESSAGE HERE
-        }
         (0, init_1.init)();
         if (config_1.ironlauncherConfig.displayHelp) {
             if (config_1.ironlauncherConfig.devMode) {
@@ -33,6 +28,11 @@ function main() {
             else {
                 return logger_1.logger.log(cli_1.helpText);
             }
+        }
+        yield config_1.ironlauncherConfig.init();
+        // ironlauncherConfig.debug();
+        if (config_1.ironlauncherConfig.isOutOfSync) {
+            return logger_1.logger.error(`Packages are out of sync. Please run command again with @latest in front of the package`); // TODO: ADD SOME LOGGING MESSAGE HERE
         }
         if (config_1.ironlauncherConfig.devMode) {
             config_1.ironlauncherConfig.debug();

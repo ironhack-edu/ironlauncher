@@ -10,14 +10,6 @@ import { init } from "./utils/init";
 async function main() {
   // init()o;
 
-  await ironlauncherConfig.init();
-  // ironlauncherConfig.debug();
-  if (ironlauncherConfig.isOutOfSync) {
-    return logger.error(
-      `Packages are out of sync. Please run command again with @latest in front of the package`
-    ); // TODO: ADD SOME LOGGING MESSAGE HERE
-  }
-
   init();
   if (ironlauncherConfig.displayHelp) {
     if (ironlauncherConfig.devMode) {
@@ -25,6 +17,14 @@ async function main() {
     } else {
       return logger.log(helpText);
     }
+  }
+
+  await ironlauncherConfig.init();
+  // ironlauncherConfig.debug();
+  if (ironlauncherConfig.isOutOfSync) {
+    return logger.error(
+      `Packages are out of sync. Please run command again with @latest in front of the package`
+    ); // TODO: ADD SOME LOGGING MESSAGE HERE
   }
 
   if (ironlauncherConfig.devMode) {

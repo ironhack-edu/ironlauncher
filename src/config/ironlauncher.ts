@@ -81,12 +81,14 @@ class IronLauncher implements IronlauncherConfig {
 
   #setDisplayHelp(startingValue = false) {
     const { help, h } = this.flags;
+    const isHelpInFlags = Object.values(this.flags).includes("help");
 
     this.#displayHelp =
       this.#isBoolean(startingValue) ||
       this.#isBoolean(help) ||
       this.#isBoolean(h) ||
-      this.inputs.includes("help");
+      this.inputs.includes("help") ||
+      isHelpInFlags;
   }
 
   #setDryRun(startingValue = false) {

@@ -7,7 +7,7 @@ Welcome to the IronLauncher! A quick start for your JavaScript applications.
 1. Run the CLI using
 
 ```sh
-npx ironlaucher # <your-app-name> + flag(s)
+npx ironlaucher@latest # <your-app-name> + flag(s)
 ```
 
 ## Help
@@ -15,9 +15,9 @@ npx ironlaucher # <your-app-name> + flag(s)
 If you want to see the flags and options you can always run one of these commands:
 
 ```sh
-npx ironlauncher help
+npx ironlauncher@latest help
 # or
-npx ironlauncher --help
+npx ironlauncher@latest --help
 ```
 
 
@@ -38,7 +38,7 @@ npx ironlauncher --help
 - :arrow_down: This will result in an Express application with handlebars setup:
 
 ```sh
-npx ironlauncher new-app
+npx ironlauncher@latest new-app
 ```
 
 <br>
@@ -54,13 +54,13 @@ npx ironlauncher new-app --auth
 - :arrow_down: This will result in an Express **API** without any view layer:
 
 ```sh
-npx ironlauncher new-app --json
+npx ironlauncher@latest new-app --json
 ```
 
 - :arrow_down: This will result in a CRA (Create React App) and Express setup, where there is already connection between them:
 
 ```sh
-npx ironlauncher new-app --fs
+npx ironlauncher@latest new-app --fs
 ```
 
 <br>
