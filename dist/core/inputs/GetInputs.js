@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
-const path_1 = require("path");
 const prompts_1 = __importDefault(require("prompts"));
 const util_1 = require("util");
+const cmd_1 = require("../cmd");
 const validator_1 = require("../validator");
 const readdir = (0, util_1.promisify)(fs_1.default.readdir);
 class GetInputs {
@@ -50,25 +50,7 @@ class GetInputs {
     }
     static getProject() {
         return __awaiter(this, void 0, void 0, function* () {
-            let templates = "";
-            let starting = (0, path_1.join)(process.cwd());
-            let count = 0;
-            while (!templates) {
-                const path = (0, path_1.join)(starting, "template");
-                try {
-                    yield readdir(path);
-                    templates = path;
-                }
-                catch (_error) {
-                    // Runs in case of no template folder present
-                    starting = (0, path_1.join)(process.cwd(), "..");
-                }
-                count++;
-                if (count > 3) {
-                    process.exit(1);
-                }
-            }
-            const projectFolders = yield readdir(templates);
+            const projectFolders = yield readdir(cmd_1.FolderOps.templatesDir);
             const onlyDirs = [...projectFolders]
                 .filter((e) => !/\./.test(e))
                 .sort((a, b) => b.localeCompare(a));

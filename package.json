@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "DEV=true nodemon  ",
     "build": "rimraf dist && tsc",
-    "start": "DEV=true esr src/index.ts --auth --skip-install --pnpm"
+    "start": "DEV=true esr src/index.ts --auth --skip-install --pnpm",
+    "build:watch": "tsc --watch"
   },
   "bin": {
     "ironlauncher": "index.js"

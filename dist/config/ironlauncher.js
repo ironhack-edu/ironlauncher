@@ -164,12 +164,16 @@ class IronLauncher {
     arrangeTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
             const { project } = yield GetInputs_1.default.getProject();
+            // let project: "fullstack" | "json" | "views" = "fullstack";
+            console.log("project:", project);
             if (project === "fullstack") {
                 __classPrivateFieldSet(this, _IronLauncher_fs, true, "f");
             }
+            // @ts-ignore
             if (project === "json") {
                 __classPrivateFieldSet(this, _IronLauncher_json, true, "f");
             }
+            // @ts-ignore
             if (project === "views") {
                 __classPrivateFieldSet(this, _IronLauncher_views, true, "f");
             }
@@ -188,7 +192,9 @@ class IronLauncher {
                 yield this.arrangeName();
             }
             if (!this.templateDefined) {
+                console.log(`NO TEMPLATE`);
                 yield this.arrangeTemplate();
+                console.log(`NOW TEMPLATE`);
             }
             if (!this.variantDefined) {
                 yield this.arrangeVariant();

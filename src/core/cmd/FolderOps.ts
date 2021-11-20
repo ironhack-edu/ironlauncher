@@ -8,10 +8,13 @@ export class FolderOps {
     return currentFolder;
   }
 
+  static get templatesDir() {
+    return join(__dirname, "..", "..", "..", "template");
+  }
+
   static inDirectory() {
     return join(
-      process.cwd(),
-      "template",
+      this.templatesDir,
       ironlauncherConfig.template,
       ironlauncherConfig.variant
     );

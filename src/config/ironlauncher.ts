@@ -277,12 +277,17 @@ class IronLauncher implements IronlauncherConfig {
 
   private async arrangeTemplate() {
     const { project } = await GetInputs.getProject();
+    // let project: "fullstack" | "json" | "views" = "fullstack";
+    console.log("project:", project);
     if (project === "fullstack") {
       this.#fs = true;
     }
+    // @ts-ignore
     if (project === "json") {
       this.#json = true;
     }
+    // @ts-ignore
+
     if (project === "views") {
       this.#views = true;
     }
@@ -301,7 +306,9 @@ class IronLauncher implements IronlauncherConfig {
     }
 
     if (!this.templateDefined) {
+      console.log(`NO TEMPLATE`);
       await this.arrangeTemplate();
+      console.log(`NOW TEMPLATE`);
     }
 
     if (!this.variantDefined) {

@@ -3,6 +3,7 @@ import { join } from "path";
 import type { PromptObject } from "prompts";
 import prompt from "prompts";
 import { promisify } from "util";
+import { FolderOps } from "../cmd";
 import { NameValidator } from "../validator";
 const readdir = promisify(fs.readdir);
 
@@ -45,27 +46,7 @@ export default class GetInputs {
   static async getProject(): Promise<{
     project: "fullstack" | "json" | "views";
   }> {
-    let templates: string = "";
-    let starting = join(process.cwd());
-    let count = 0;
-
-    while (!templates) {
-      const path = join(starting, "template");
-      try {
-        await readdir(path);
-        templates = path;
-      } catch (_error) {
-        // Runs in case of no template folder present
-        starting = join(process.cwd(), "..");
-      }
-      count++;
-
-      if (count > 3) {
-        process.exit(1);
-      }
-    }
-
-    const projectFolders = await readdir(templates);
+    const projectFolders = await readdir(FolderOps.templatesDir);
     const onlyDirs = [...projectFolders]
       .filter((e) => !/\./.test(e))
       .sort((a, b) => b.localeCompare(a));
