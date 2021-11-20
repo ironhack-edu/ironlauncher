@@ -2,15 +2,15 @@ import { InstallBase, IronlauncherConfig } from "../../../types";
 import { Runner } from "../../cmd";
 
 export class SharedInstaller {
-  private _devCommand = ` -D `;
-  private _npmDryRun = " --package-lock-only " as const;
+  private _devCommand = ` -D ` as const;
+  private npmSkipInstall = " --package-lock-only " as const;
   private npmDryRun = " --dry-run " as const;
   private baseInstallVerb = " install " as const;
-  private _pnpmDryRun = " --shrinkwrap-only " as const;
+  private pnpmSkipInstall = " --shrinkwrap-only " as const;
   constructor(protected runner: Runner = new Runner()) {}
 
   public async execute(arg: InstallBase, config: IronlauncherConfig) {
-    this.logScope(arg.scope);
+    // this.logScope(arg.scope);
     const command = this.npmCommand(arg, config);
 
     return this.runner.execute(command);
@@ -30,14 +30,15 @@ export class SharedInstaller {
     return ` ${packages.join(" ")} `;
   }
 
-  private dryRun(config: IronlauncherConfig) {
-    if (config.dryRun) {
-      return this.npmDryRun;
+  private dryRun() {
+    return this.npmDryRun;
+  }
+
+  private skipInstall(config: IronlauncherConfig) {
+    if (config.packageManager === "npm") {
+      return this.npmSkipInstall;
     }
-    if (config.packageManager === "npm" || config.dryRun) {
-      return this._npmDryRun;
-    }
-    return this._pnpmDryRun;
+    return this.pnpmSkipInstall;
   }
 
   private get devCommand() {
@@ -66,9 +67,17 @@ export class SharedInstaller {
       command += this.devCommand;
     }
 
-    if (config.dryRun) {
-      command += this.dryRun(config);
+    if (config.dryRun || config.skipInstall) {
+      command += this.dryRunOrSkipIstall(config);
     }
     return command;
+  }
+
+  private dryRunOrSkipIstall(config: IronlauncherConfig) {
+    if (config.dryRun) {
+      return this.dryRun();
+    }
+
+    return this.skipInstall(config);
   }
 }

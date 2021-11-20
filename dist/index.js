@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const console_1 = require("console");
 const create_template_folder_1 = require("create-template-folder");
 const config_1 = require("./config");
 const cmd_1 = require("./core/cmd");
@@ -32,7 +31,7 @@ function main() {
                 return logger_1.logger.greenAndRest({ inGreen: "HELP", rest: "asked by user" });
             }
             else {
-                return (0, console_1.log)(cli_1.helpText);
+                return logger_1.logger.log(cli_1.helpText);
             }
         }
         if (config_1.ironlauncherConfig.devMode) {

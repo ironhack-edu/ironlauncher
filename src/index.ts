@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { log } from "console";
 import { createTemplateFolder } from "create-template-folder";
 import { ironlauncherConfig } from "./config";
 import { FolderOps } from "./core/cmd";
@@ -24,7 +23,7 @@ async function main() {
     if (ironlauncherConfig.devMode) {
       return logger.greenAndRest({ inGreen: "HELP", rest: "asked by user" });
     } else {
-      return log(helpText);
+      return logger.log(helpText);
     }
   }
 

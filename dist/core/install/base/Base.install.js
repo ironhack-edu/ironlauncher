@@ -15,14 +15,14 @@ class SharedInstaller {
     constructor(runner = new cmd_1.Runner()) {
         this.runner = runner;
         this._devCommand = ` -D `;
-        this._npmDryRun = " --package-lock-only ";
+        this.npmSkipInstall = " --package-lock-only ";
         this.npmDryRun = " --dry-run ";
         this.baseInstallVerb = " install ";
-        this._pnpmDryRun = " --shrinkwrap-only ";
+        this.pnpmSkipInstall = " --shrinkwrap-only ";
     }
     execute(arg, config) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.logScope(arg.scope);
+            // this.logScope(arg.scope);
             const command = this.npmCommand(arg, config);
             return this.runner.execute(command);
         });
@@ -39,14 +39,14 @@ class SharedInstaller {
     getPackages(packages) {
         return ` ${packages.join(" ")} `;
     }
-    dryRun(config) {
-        if (config.dryRun) {
-            return this.npmDryRun;
+    dryRun() {
+        return this.npmDryRun;
+    }
+    skipInstall(config) {
+        if (config.packageManager === "npm") {
+            return this.npmSkipInstall;
         }
-        if (config.packageManager === "npm" || config.dryRun) {
-            return this._npmDryRun;
-        }
-        return this._pnpmDryRun;
+        return this.pnpmSkipInstall;
     }
     get devCommand() {
         return this._devCommand;
@@ -68,10 +68,16 @@ class SharedInstaller {
         if (isDev) {
             command += this.devCommand;
         }
-        if (config.dryRun) {
-            command += this.dryRun(config);
+        if (config.dryRun || config.skipInstall) {
+            command += this.dryRunOrSkipIstall(config);
         }
         return command;
+    }
+    dryRunOrSkipIstall(config) {
+        if (config.dryRun) {
+            return this.dryRun();
+        }
+        return this.skipInstall(config);
     }
 }
 exports.SharedInstaller = SharedInstaller;

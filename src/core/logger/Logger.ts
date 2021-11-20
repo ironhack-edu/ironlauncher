@@ -19,6 +19,10 @@ class Logger {
   error(str: string) {
     console.log(`${bgRed(white(" ERROR "))} ${str}`);
   }
+
+  log(str: string) {
+    console.log(str);
+  }
 }
 
 export const logger = new Logger();

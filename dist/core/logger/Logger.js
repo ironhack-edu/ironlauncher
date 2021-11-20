@@ -15,5 +15,8 @@ class Logger {
     error(str) {
         console.log(`${(0, kolorist_1.bgRed)((0, kolorist_1.white)(" ERROR "))} ${str}`);
     }
+    log(str) {
+        console.log(str);
+    }
 }
 exports.logger = new Logger();
