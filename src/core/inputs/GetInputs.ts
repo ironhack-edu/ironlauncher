@@ -3,7 +3,7 @@ import { join } from "path";
 import type { PromptObject } from "prompts";
 import prompt from "prompts";
 import { promisify } from "util";
-import { NameValidator } from "../core/validator";
+import { NameValidator } from "../validator";
 const readdir = promisify(fs.readdir);
 
 export default class GetInputs {

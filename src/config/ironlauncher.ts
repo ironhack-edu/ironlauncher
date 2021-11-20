@@ -1,7 +1,7 @@
 import { sep } from "path";
+import GetInputs from "../core/inputs/GetInputs";
 import { Package } from "../core/pkg/Package";
 import { FsValidator } from "../core/validator";
-import GetInputs from "../inputs/GetInputs";
 import {
   ICLIConfig,
   IronlauncherConfig,

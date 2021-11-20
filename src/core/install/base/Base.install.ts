@@ -1,8 +1,7 @@
-import { Runner } from "../../core/cmd";
-import { InstallBase, IronlauncherConfig } from "../../types";
+import { InstallBase, IronlauncherConfig } from "../../../types";
+import { Runner } from "../../cmd";
 
 export class SharedInstaller {
-  private baseCommand = "npm ";
   private _devCommand = ` -D `;
   private _npmDryRun = " --package-lock-only " as const;
   private npmDryRun = " --dry-run " as const;

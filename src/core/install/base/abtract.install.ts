@@ -1,4 +1,8 @@
-import { InstallBase, IronlauncherConfig, InitialPackages } from "../../types";
+import {
+  InstallBase,
+  IronlauncherConfig,
+  InitialPackages,
+} from "../../../types";
 import { SharedInstaller } from "./Base.install";
 
 export abstract class InstallStructure {

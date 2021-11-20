@@ -3,24 +3,26 @@ import { log } from "console";
 import { createTemplateFolder } from "create-template-folder";
 import { ironlauncherConfig } from "./config";
 import { FolderOps } from "./core/cmd";
-import { install } from "./install/install";
+import { install } from "./core/install/install";
+import { logger } from "./core/logger";
 import { helpText } from "./utils/cli";
 import { init } from "./utils/init";
 
 async function main() {
   // init()o;
-  console.log(`HERE`);
 
   await ironlauncherConfig.init();
   // ironlauncherConfig.debug();
   if (ironlauncherConfig.isOutOfSync) {
-    return console.log(`HERE`); // TODO: ADD SOME LOGGING MESSAGE HERE
+    return logger.error(
+      `Packages are out of sync. Please run command again with @latest in front of the package`
+    ); // TODO: ADD SOME LOGGING MESSAGE HERE
   }
 
   init();
   if (ironlauncherConfig.displayHelp) {
     if (ironlauncherConfig.devMode) {
-      return console.log(`requested help`);
+      return logger.greenAndRest({ inGreen: "HELP", rest: "asked by user" });
     } else {
       return log(helpText);
     }
@@ -42,7 +44,7 @@ async function main() {
       vars,
     },
     {
-      dryRun: ironlauncherConfig.devMode,
+      dryRun: ironlauncherConfig.dryRun,
     }
   );
   await install(outDirPath, templatedFiles);

@@ -1,30 +1,25 @@
-// import type { ICopyDir } from "create-template-folder/dist/types";
-// import path from "path";
 import { dim as d, green as g, yellow as y } from "chalk";
 import alert, { AlertType } from "cli-alerts";
 import ora from "ora";
 import { basename, join } from "path";
-import { ironlauncherConfig } from "../config";
+import { ironlauncherConfig } from "../../config";
+import { logger } from "../logger";
 import { InstallStructure } from "./base";
 import { FullStack, JSONInstaller, Views } from "./version";
 
 const spinner = ora({ text: "" });
 
-// export async function install(args: ICopyDir) {
-//   const { vars, outDir, inDir } = args;
-// }
-
 export async function install(basePath: string, fileNames: string[]) {
   const { name: outDir } = ironlauncherConfig;
 
-  console.log();
-  console.log(d(`\nCreating files in $${g(`./${outDir}`)}`));
+  logger.emptyLine();
+  logger.dimmedWithGreen({ inGreen: outDir, rest: "\nCreating files in" });
 
   fileNames.forEach((filePath) => {
     const fileName = basename(filePath);
-    console.log(`${g("CREATED")}: ${fileName}`);
+    logger.greenAndRest({ rest: `: ${fileName}`, inGreen: "CREATED" });
   });
-  console.log();
+  logger.emptyLine();
 
   spinner.start(
     `${y("INSTALLING")} dependencies...\n\n${d(`It might take a moment`)}`

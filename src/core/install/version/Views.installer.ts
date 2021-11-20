@@ -1,5 +1,9 @@
-import { ironlauncherConfig } from "../../config";
-import { InstallBase, InitialPackages, IronlauncherConfig } from "../../types";
+import { ironlauncherConfig } from "../../../config";
+import {
+  InstallBase,
+  InitialPackages,
+  IronlauncherConfig,
+} from "../../../types";
 import { InstallStructure } from "../base";
 import {
   VIEWS_EXPRESS_BASE_DEPS,
