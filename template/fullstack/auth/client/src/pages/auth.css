@@ -1,0 +1,13 @@
+form.auth__form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+button.button__submit {
+  max-width: 100px;
+  margin: 1em auto;
+}
