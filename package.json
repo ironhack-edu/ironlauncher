@@ -1,7 +1,7 @@
 {
   "name": "ironlauncher",
   "version": "0.26.0",
-  "main": "dist/index.js",
+  "main": "index.js",
   "repository": "git@github.com:ironhack-edu/ironlauncher.git",
   "author": "André de Albuquerque (https://itstheandre.com)",
   "license": "MIT",
