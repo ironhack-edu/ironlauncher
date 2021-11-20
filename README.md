@@ -2,23 +2,12 @@
 
 Welcome to the IronLauncher! A quick start for your JavaScript applications.
 
-## Installation guide
-
-```sh
-# Recommended.
-npx ironlauncher <app-name>
-# OR
-npm install -g ironlauncher
-```
-
 ## Usage
 
 1. Run the CLI using
 
 ```sh
 npx ironlaucher # <your-app-name> + flag(s)
-# OR
-ironlauncher # <your-app-name> + flag(s)
 ```
 
 ## Help
@@ -28,8 +17,9 @@ If you want to see the flags and options you can always run one of these command
 ```sh
 npx ironlauncher help
 # or
-ironlauncher help
+npx ironlauncher --help
 ```
+
 
 ---
 
@@ -74,3 +64,4 @@ npx ironlauncher new-app --fs
 ```
 
 <br>
+
