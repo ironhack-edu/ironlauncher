@@ -12,7 +12,7 @@
     "start": "DEV=true esr src/index.ts --auth --skip-install --pnpm"
   },
   "bin": {
-    "ironlauncher": "dist/index.js"
+    "ironlauncher": "index.js"
   },
   "keywords": [
     "express",
