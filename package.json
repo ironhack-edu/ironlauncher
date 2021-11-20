@@ -1,0 +1,55 @@
+{
+  "name": "ironlauncher",
+  "version": "0.23.0",
+  "main": "dist/index.js",
+  "repository": "git@github.com:ironhack-edu/ironlauncher.git",
+  "author": "André de Albuquerque (https://itstheandre.com)",
+  "license": "MIT",
+  "description": "Ironhack generator for express bootstrapping",
+  "scripts": {
+    "dev": "DEV=true nodemon  ",
+    "build": "rimraf dist && tsc",
+    "start": "DEV=true esr src/index.ts --auth --skip-install --pnpm"
+  },
+  "bin": {
+    "ironlauncher": "dist/index.js"
+  },
+  "keywords": [
+    "express",
+    "generator",
+    "cli",
+    "ironhack",
+    "ironlauncher",
+    "ironhack-launcher",
+    "express-launcher",
+    "hbs",
+    "bcrypt",
+    "react"
+  ],
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cli-alerts": "^1.2.2",
+    "cli-handle-unhandled": "^1.1.1",
+    "cli-meow-help": "^2.0.2",
+    "cli-welcome": "^2.2.2",
+    "create-template-folder": "^2.1.0",
+    "get-repo-package-json": "^2.0.0",
+    "inquirer": "^8.0.0",
+    "kolorist": "^1.5.0",
+    "meow": "^9.0.0",
+    "minimist": "^1.2.5",
+    "ora": "^5.4.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^7.3.1",
+    "@types/node": "^14.17.32",
+    "@types/prompts": "^2.0.14",
+    "esbuild": "^0.13.9",
+    "esbuild-runner": "^2.2.1",
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}
