@@ -12,3 +12,4 @@ npm-debug.log
 template/auth-1
 template/base-1
 # dist
+.DS_STORE
