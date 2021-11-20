@@ -5,7 +5,7 @@ export function getUserToken() {
 }
 
 export function setUserToken(value) {
-  return localStorage.setItem(CONSTS.ACCESS_TOKEN, JSON.stringify(value));
+  return localStorage.setItem(CONSTS.ACCESS_TOKEN, value);
 }
 
 export function removeUserToken() {
