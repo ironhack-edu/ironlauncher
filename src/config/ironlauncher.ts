@@ -18,7 +18,7 @@ class IronLauncher implements IronlauncherConfig {
   #json = false;
   #fs = false;
   #dryRun = false;
-  #devMode = process.env.DEV === "true";
+  #devMode = false;
   #verbose = false;
   #displayHelp: boolean = false;
   #name: string = "";
@@ -40,6 +40,13 @@ class IronLauncher implements IronlauncherConfig {
     this.#setName();
     this.#setPackageManagers();
     this.#setSkipInstall();
+    this.#setDebug();
+  }
+
+  #setDebug() {
+    const { debug = false } = this.flags;
+    const isDev = process.env.DEV === "true";
+    this.#devMode = this.#isBoolean(isDev) || this.#isBoolean(debug);
   }
 
   #setSkipInstall() {

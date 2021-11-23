@@ -22,7 +22,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _IronLauncher_instances, _IronLauncher_auth, _IronLauncher_base, _IronLauncher_views, _IronLauncher_json, _IronLauncher_fs, _IronLauncher_dryRun, _IronLauncher_devMode, _IronLauncher_verbose, _IronLauncher_displayHelp, _IronLauncher_name, _IronLauncher_isOutOfSync, _IronLauncher_isCurrentFolder, _IronLauncher_isPnpm, _IronLauncher_skipInstall, _IronLauncher_setSkipInstall, _IronLauncher_setPackageManagers, _IronLauncher_setName, _IronLauncher_setDisplayHelp, _IronLauncher_setDryRun, _IronLauncher_setBase, _IronLauncher_setViews, _IronLauncher_setFs, _IronLauncher_setJson, _IronLauncher_setVerbose, _IronLauncher_setAuth, _IronLauncher_isBoolean;
+var _IronLauncher_instances, _IronLauncher_auth, _IronLauncher_base, _IronLauncher_views, _IronLauncher_json, _IronLauncher_fs, _IronLauncher_dryRun, _IronLauncher_devMode, _IronLauncher_verbose, _IronLauncher_displayHelp, _IronLauncher_name, _IronLauncher_isOutOfSync, _IronLauncher_isCurrentFolder, _IronLauncher_isPnpm, _IronLauncher_skipInstall, _IronLauncher_setDebug, _IronLauncher_setSkipInstall, _IronLauncher_setPackageManagers, _IronLauncher_setName, _IronLauncher_setDisplayHelp, _IronLauncher_setDryRun, _IronLauncher_setBase, _IronLauncher_setViews, _IronLauncher_setFs, _IronLauncher_setJson, _IronLauncher_setVerbose, _IronLauncher_setAuth, _IronLauncher_isBoolean;
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const GetInputs_1 = __importDefault(require("../core/inputs/GetInputs"));
@@ -42,7 +42,7 @@ class IronLauncher {
         _IronLauncher_json.set(this, false);
         _IronLauncher_fs.set(this, false);
         _IronLauncher_dryRun.set(this, false);
-        _IronLauncher_devMode.set(this, process.env.DEV === "true");
+        _IronLauncher_devMode.set(this, false);
         _IronLauncher_verbose.set(this, false);
         _IronLauncher_displayHelp.set(this, false);
         _IronLauncher_name.set(this, "");
@@ -61,6 +61,7 @@ class IronLauncher {
         __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_setName).call(this);
         __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_setPackageManagers).call(this);
         __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_setSkipInstall).call(this);
+        __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_setDebug).call(this);
     }
     // GETTERS
     get name() {
@@ -198,7 +199,11 @@ class IronLauncher {
         });
     }
 }
-_IronLauncher_auth = new WeakMap(), _IronLauncher_base = new WeakMap(), _IronLauncher_views = new WeakMap(), _IronLauncher_json = new WeakMap(), _IronLauncher_fs = new WeakMap(), _IronLauncher_dryRun = new WeakMap(), _IronLauncher_devMode = new WeakMap(), _IronLauncher_verbose = new WeakMap(), _IronLauncher_displayHelp = new WeakMap(), _IronLauncher_name = new WeakMap(), _IronLauncher_isOutOfSync = new WeakMap(), _IronLauncher_isCurrentFolder = new WeakMap(), _IronLauncher_isPnpm = new WeakMap(), _IronLauncher_skipInstall = new WeakMap(), _IronLauncher_instances = new WeakSet(), _IronLauncher_setSkipInstall = function _IronLauncher_setSkipInstall() {
+_IronLauncher_auth = new WeakMap(), _IronLauncher_base = new WeakMap(), _IronLauncher_views = new WeakMap(), _IronLauncher_json = new WeakMap(), _IronLauncher_fs = new WeakMap(), _IronLauncher_dryRun = new WeakMap(), _IronLauncher_devMode = new WeakMap(), _IronLauncher_verbose = new WeakMap(), _IronLauncher_displayHelp = new WeakMap(), _IronLauncher_name = new WeakMap(), _IronLauncher_isOutOfSync = new WeakMap(), _IronLauncher_isCurrentFolder = new WeakMap(), _IronLauncher_isPnpm = new WeakMap(), _IronLauncher_skipInstall = new WeakMap(), _IronLauncher_instances = new WeakSet(), _IronLauncher_setDebug = function _IronLauncher_setDebug() {
+    const { debug = false } = this.flags;
+    const isDev = process.env.DEV === "true";
+    __classPrivateFieldSet(this, _IronLauncher_devMode, __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, isDev) || __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, debug), "f");
+}, _IronLauncher_setSkipInstall = function _IronLauncher_setSkipInstall() {
     const { ["skip-install"]: skipInstall } = this.flags;
     __classPrivateFieldSet(this, _IronLauncher_skipInstall, __classPrivateFieldGet(this, _IronLauncher_instances, "m", _IronLauncher_isBoolean).call(this, skipInstall), "f");
 }, _IronLauncher_setPackageManagers = function _IronLauncher_setPackageManagers() {
