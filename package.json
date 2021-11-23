@@ -33,7 +33,7 @@
     "cli-handle-unhandled": "^1.1.1",
     "cli-meow-help": "^2.0.2",
     "cli-welcome": "^2.2.2",
-    "create-template-folder": "^2.2.0",
+    "create-template-folder": "^2.2.1",
     "kolorist": "^1.5.0",
     "minimist": "^1.2.5",
     "ora": "^5.4.0",
