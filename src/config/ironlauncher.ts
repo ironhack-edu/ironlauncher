@@ -173,7 +173,7 @@ class IronLauncher implements IronlauncherConfig {
 
   get variant(): IronLauncherVariant {
     if (this.#auth) {
-      return "auth";
+      return "authentication";
     }
     return "base";
   }

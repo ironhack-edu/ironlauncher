@@ -27,7 +27,7 @@ export interface BaseConfig {
 }
 
 export type IronLauncherTemplate = "views" | "json" | "fullstack";
-export type IronLauncherVariant = "base" | "auth";
+export type IronLauncherVariant = "base" | "authentication";
 
 export interface IronlauncherConfig extends BaseConfig {
   init(): Promise<void>;
@@ -35,5 +35,5 @@ export interface IronlauncherConfig extends BaseConfig {
 
 export interface IronlauncherType {
   tech: "views" | "json" | "fs";
-  variant: "auth" | "base";
+  variant: "authentication" | "base";
 }

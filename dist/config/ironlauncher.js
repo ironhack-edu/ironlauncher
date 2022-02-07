@@ -75,7 +75,7 @@ class IronLauncher {
     }
     get variant() {
         if (__classPrivateFieldGet(this, _IronLauncher_auth, "f")) {
-            return "auth";
+            return "authentication";
         }
         return "base";
     }

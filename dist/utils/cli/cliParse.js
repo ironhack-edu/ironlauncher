@@ -20,19 +20,6 @@ const validator_1 = require("../../core/validator");
 const helpText_1 = require("./helpText");
 const args = (0, minimist_1.default)(process.argv.slice(2), {});
 exports.inputs = args._, exports.__ = args["--"], exports.flags = __rest(args, ["_", "--"]);
-// console.log("args:", args);
-// console.log("inputs:", inputs);
-// export const getFlags = () => {
-//   let obj = {}
-//   for (const key in flags) {
-//     const value = flags[key]
-//     if (key in flags) {
-//       if (typeof value === "boolean" || typeof JSON.parse(value) === "boolean") {
-//         obj[]
-//       }
-//     }
-//   }
-// }
 const displayHelp = () => {
     return exports.inputs.includes("help") || !!args["help"];
 };
