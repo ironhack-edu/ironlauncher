@@ -7,7 +7,7 @@ Welcome to the IronLauncher! A quick start for your JavaScript applications.
 1. Run the CLI using
 
 ```sh
-npx ironlaucher@latest # <your-app-name> + flag(s)
+npx ironlauncher@latest # <your-app-name> + flag(s)
 ```
 
 ## Help
