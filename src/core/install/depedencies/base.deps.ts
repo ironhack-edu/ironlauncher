@@ -1,12 +1,13 @@
-export const baseExpress = [`dotenv`, `express`, `mongoose`, `morgan`];
+export const baseExpress = [
+  `dotenv`,
+  `express`,
+  `mongoose`,
+  `morgan`,
+  "cookie-parser",
+];
 
 const baseAuth = ["bcrypt"];
 
-export const baseCookieAuth = [
-  ...baseAuth,
-  "cookie-parser",
-  "express-session",
-  "connect-mongo",
-];
+export const baseCookieAuth = [...baseAuth, "express-session", "connect-mongo"];
 
 export const BASE_EXPRESS_DEV = ["nodemon"];

@@ -19,13 +19,13 @@ const app = express();
 require("./config")(app);
 
 // default value for title local
+const capitalized = require("./utils/capitalized");
 const projectName = "{{name}}";
-const capitalized = (string) => string[0].toUpperCase() + string.slice(1).toLowerCase();
 
-app.locals.title = `${capitalized(projectName)} created with IronLauncher`;
+app.locals.appTitle = `${capitalized(projectName)} created with IronLauncher`;
 
 // 👇 Start handling routes here
-const index = require("./routes/index");
+const index = require("./routes/index.routes");
 app.use("/", index);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes

@@ -22,9 +22,9 @@ router.post("/signup", isLoggedOut, (req, res) => {
   const { username, password } = req.body;
 
   if (!username) {
-    return res
-      .status(400)
-      .render("auth/signup", { errorMessage: "Please provide your username." });
+    return res.status(400).render("auth/signup", {
+      errorMessage: "Please provide your username.",
+    });
   }
 
   if (password.length < 8) {
@@ -97,9 +97,9 @@ router.post("/login", isLoggedOut, (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username) {
-    return res
-      .status(400)
-      .render("auth/login", { errorMessage: "Please provide your username." });
+    return res.status(400).render("auth/login", {
+      errorMessage: "Please provide your username.",
+    });
   }
 
   // Here we use the same logic as above
@@ -115,17 +115,17 @@ router.post("/login", isLoggedOut, (req, res, next) => {
     .then((user) => {
       // If the user isn't found, send the message that user provided wrong credentials
       if (!user) {
-        return res
-          .status(400)
-          .render("auth/login", { errorMessage: "Wrong credentials." });
+        return res.status(400).render("auth/login", {
+          errorMessage: "Wrong credentials.",
+        });
       }
 
       // If user is found based on the username, check if the in putted password matches the one saved in the database
       bcrypt.compare(password, user.password).then((isSamePassword) => {
         if (!isSamePassword) {
-          return res
-            .status(400)
-            .render("auth/login", { errorMessage: "Wrong credentials." });
+          return res.status(400).render("auth/login", {
+            errorMessage: "Wrong credentials.",
+          });
         }
         req.session.user = user;
         // req.session.user = user._id; // ! better and safer but in this case we saving the entire user object
