@@ -14,12 +14,12 @@ const flags = {
     },
     auth: {
         type: "boolean",
-        desc: `Adds auth behaviour`,
+        desc: `Adds auth behavior`,
     },
     fs: {
         type: "boolean",
         default: false,
-        desc: "Creates an opinioated express and create-react-app setup",
+        desc: "Creates an opinionated express and create-react-app setup",
     },
 };
 const commands = {
