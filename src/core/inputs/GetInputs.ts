@@ -1,14 +1,22 @@
 import fs from "fs";
-import { join } from "path";
-import type { PromptObject } from "prompts";
+import type { PromptObject, Options } from "prompts";
 import prompt from "prompts";
 import { promisify } from "util";
 import { FolderOps } from "../cmd";
 import { NameValidator } from "../validator";
 const readdir = promisify(fs.readdir);
 
-export default class GetInputs {
-  static async getName(): Promise<{ name: string }> {
+export namespace InputsHandler {
+  const promptOptions: Options = {
+    onCancel(data: PromptObject) {
+      console.log(
+        `You did not set a ${data.name} and canceled the ironlauncher`
+      );
+
+      process.exit(1);
+    },
+  };
+  export async function getName(): Promise<{ name: string }> {
     return prompt(
       {
         name: "name",
@@ -16,13 +24,11 @@ export default class GetInputs {
         message: "Project name?",
         validate: NameValidator.validate,
       },
-      {
-        onCancel: this.onCancel,
-      }
+      promptOptions
     );
   }
 
-  static getVariant(): Promise<{ variant: number }> {
+  export async function getVariant(): Promise<{ variant: number }> {
     return prompt(
       {
         name: "variant",
@@ -37,13 +43,11 @@ export default class GetInputs {
           { title: "Yes, please 💪", value: 1 },
         ],
       },
-      {
-        onCancel: this.onCancel,
-      }
+      promptOptions
     );
   }
 
-  static async getProject(): Promise<{
+  export async function getProject(): Promise<{
     project: "fullstack" | "json" | "views";
   }> {
     const projectFolders = await readdir(FolderOps.templatesDir);
@@ -66,15 +70,7 @@ export default class GetInputs {
           }),
         },
       ],
-      {
-        onCancel: this.onCancel,
-      }
+      promptOptions
     );
-  }
-
-  static onCancel(data: PromptObject) {
-    console.log(`You did not set a ${data.name} and canceled the ironlauncher`);
-
-    process.exit(1);
   }
 }

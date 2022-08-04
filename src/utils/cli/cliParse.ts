@@ -11,7 +11,6 @@ export const displayHelp = () => {
 };
 
 export const getProjectName = () => {
-  const nameValidator = new NameValidator();
   let name = inputs[0];
   let warnings: string[] = [];
 

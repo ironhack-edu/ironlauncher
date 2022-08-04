@@ -1,11 +1,11 @@
 import { existsSync, readdirSync } from "fs";
 
-export class FsValidator {
-  static folderExists(value: string) {
-    return existsSync(value);
+export namespace FsValidator {
+  export function folderExists(folderName: string) {
+    return existsSync(folderName);
   }
 
-  static dirNotEmpty() {
+  export function dirNotEmpty() {
     return !!readdirSync(process.cwd()).length;
   }
 }

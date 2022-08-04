@@ -1,5 +1,5 @@
 import { sep } from "path";
-import GetInputs from "../core/inputs/GetInputs";
+import { InputsHandler } from "../core/inputs/GetInputs";
 import { Package } from "../core/pkg/Package";
 import { FsValidator } from "../core/validator";
 import {
@@ -268,13 +268,13 @@ class IronLauncher implements IronlauncherConfig {
   }
 
   private async arrangeName() {
-    const { name } = await GetInputs.getName();
+    const { name } = await InputsHandler.getName();
 
     this.#name = name.replace(/\s+/g, "-");
   }
 
   private async arrangeVariant() {
-    const { variant } = await GetInputs.getVariant();
+    const { variant } = await InputsHandler.getVariant();
     if (variant) {
       this.#auth = true;
     } else {
@@ -283,7 +283,7 @@ class IronLauncher implements IronlauncherConfig {
   }
 
   private async arrangeTemplate() {
-    const { project } = await GetInputs.getProject();
+    const { project } = await InputsHandler.getProject();
     if (project === "fullstack") {
       this.#fs = true;
     }

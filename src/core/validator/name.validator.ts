@@ -1,30 +1,37 @@
-import { IronRegex } from "../regex";
+import { stripWhiteSpaces } from "../regex";
 import { FsValidator } from "./fs.validator";
 
-export class NameValidator {
-  private static currentFolder = ".";
-  private static currentDirNotEmpty = `This directory is not empty, please choose a different name\n`;
-  private static dirTaken = `This directory already exists`;
-  private static addValue = "Please add a value\n";
+export namespace NameValidator {
+  const currentFolderPath = ".";
+  const NAME_VALIDATOR_ERRORS = {
+    dirNotEmpty: `This directory is not empty, please choose a different name\n`,
+    dirTaken: `This directory already exists`,
+    noValue: "Please add a value\n",
+  } as const;
 
-  static validate(value: string) {
-    if (value === this.currentFolder) {
-      if (FsValidator.dirNotEmpty()) {
-        return this.currentDirNotEmpty;
-      }
-
-      return true;
+  export function validate(value: string) {
+    if (value === currentFolderPath) {
+      return currentFolder();
     }
 
     if (FsValidator.folderExists(value)) {
-      return this.dirTaken;
+      return NAME_VALIDATOR_ERRORS.dirTaken;
     }
 
-    const strippedSpaces = IronRegex.stripWhiteSpaces(value);
+    const strippedSpaces = stripWhiteSpaces(value);
 
     if (FsValidator.folderExists(strippedSpaces)) {
-      return this.dirTaken;
+      return NAME_VALIDATOR_ERRORS.dirTaken;
     }
-    return !value ? this.addValue : true;
+
+    return !value ? NAME_VALIDATOR_ERRORS.noValue : true;
+  }
+
+  function currentFolder() {
+    if (FsValidator.dirNotEmpty()) {
+      return NAME_VALIDATOR_ERRORS.dirNotEmpty;
+    }
+
+    return true;
   }
 }
