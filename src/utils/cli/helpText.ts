@@ -23,6 +23,7 @@ const flags: MeowHelpFlags<typeof FLAGS> = {
     type: "boolean",
     default: false,
     desc: "Installs dependencies through pnpm, assuming you have it installed",
+    alias: "p",
   },
 };
 

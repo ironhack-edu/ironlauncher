@@ -28,27 +28,28 @@
     "react"
   ],
   "dependencies": {
-    "chalk": "^4.1.0",
+    "@swan-io/boxed": "^0.10.0",
+    "chalk": "^4.1.2",
     "cli-alerts": "^1.2.2",
     "cli-handle-unhandled": "^1.1.1",
     "cli-meow-help": "^2.0.2",
     "cli-welcome": "^2.2.2",
     "copy-template-dir": "^1.4.0",
-    "create-template-folder": "^2.3.0",
-    "kolorist": "^1.5.0",
-    "minimist": "^1.2.5",
-    "ora": "^5.4.0",
+    "create-template-folder": "^2.3.1",
+    "kolorist": "^1.5.1",
+    "minimist": "^1.2.6",
+    "ora": "^5.4.1",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.2",
-    "@types/node": "^14.17.32",
+    "@types/node": "^14.18.23",
     "@types/prompts": "^2.0.14",
-    "esbuild": "^0.13.9",
+    "esbuild": "^0.13.15",
     "esbuild-runner": "^2.2.1",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.19",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
-    "typescript": "^4.5.2"
+    "typescript": "^4.7.4"
   }
 }

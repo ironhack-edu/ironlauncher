@@ -8,4 +8,8 @@ export namespace FsValidator {
   export function dirNotEmpty() {
     return !!readdirSync(process.cwd()).length;
   }
+
+  export function dirEmpty() {
+    return !readdirSync(process.cwd()).length;
+  }
 }

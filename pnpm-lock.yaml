@@ -1,28 +1,30 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@swan-io/boxed': ^0.10.0
   '@types/minimist': ^1.2.2
-  '@types/node': ^14.17.32
+  '@types/node': ^14.18.23
   '@types/prompts': ^2.0.14
-  chalk: ^4.1.0
+  chalk: ^4.1.2
   cli-alerts: ^1.2.2
   cli-handle-unhandled: ^1.1.1
   cli-meow-help: ^2.0.2
   cli-welcome: ^2.2.2
   copy-template-dir: ^1.4.0
-  create-template-folder: ^2.3.0
-  esbuild: ^0.13.9
+  create-template-folder: ^2.3.1
+  esbuild: ^0.13.15
   esbuild-runner: ^2.2.1
-  kolorist: ^1.5.0
-  minimist: ^1.2.5
-  nodemon: ^2.0.15
-  ora: ^5.4.0
+  kolorist: ^1.5.1
+  minimist: ^1.2.6
+  nodemon: ^2.0.19
+  ora: ^5.4.1
   prompts: ^2.4.2
   rimraf: ^3.0.2
   ts-node: ^9.1.1
-  typescript: ^4.5.2
+  typescript: ^4.7.4
 
 dependencies:
+  '@swan-io/boxed': 0.10.0
   chalk: 4.1.2
   cli-alerts: 1.2.2
   cli-handle-unhandled: 1.1.1
@@ -54,6 +56,10 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@swan-io/boxed/0.10.0:
+    resolution: {integrity: sha512-p6lMAia7Z6a35x04sHa8cqyg2s7mZuA9f4c4WxBOrVjB8VEuxsIW1wEH1/tpbJCu0tv4/mFoYYAY2zUCfrzopA==}
+    dev: false
 
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
