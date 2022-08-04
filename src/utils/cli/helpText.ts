@@ -19,6 +19,12 @@ const flags: MeowHelpFlags<typeof FLAGS> = {
     default: false,
     desc: "Creates an opinionated express and create-react-app setup",
   },
+  pnpm: {
+    type: "boolean",
+    default: false,
+    desc: "Installs dependencies through pnpm, assuming it is already installed",
+    alias: "p"
+  }
 };
 
 const commands: MeowHelpCommands = {
