@@ -1,7 +1,7 @@
 import type { MeowHelpFlags, MeowHelpCommands } from "cli-meow-help";
 import meowHelp from "cli-meow-help";
 
-export const FLAGS = ["json", "auth", "fs"] as const;
+export const FLAGS = ["json", "auth", "fs", "pnpm"] as const;
 export type FLAGS_OPTS = typeof FLAGS[number];
 
 const flags: MeowHelpFlags<typeof FLAGS> = {
@@ -18,6 +18,11 @@ const flags: MeowHelpFlags<typeof FLAGS> = {
     type: "boolean",
     default: false,
     desc: "Creates an opinionated express and create-react-app setup",
+  },
+  pnpm: {
+    type: "boolean",
+    default: false,
+    desc: "Installs dependencies through pnpm, assuming you have it installed",
   },
 };
 
