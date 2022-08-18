@@ -1,110 +1,92 @@
-import { Option } from "@swan-io/boxed";
-import { sep } from "path";
-import { InputsHandler } from "../core/inputs";
-import { FsValidator } from "../core/validator";
+import { isPkgOutOfSync } from "../core/pkg/Package";
 import {
   ICLIConfig,
   IronLauncherTemplate,
   IronLauncherVariant,
 } from "../types";
-import { multipleBooleans } from "../utils/bools";
-import { getFsState, getJSONState, getViewsState } from "./flagParser";
-import { getName } from "./inputParser";
-
-function getDisplayHelp(
-  startingValue = false,
-  flags: ICLIConfig,
-  inputs: string[]
-): boolean {
-  const { help, h } = flags;
-
-  const isHelpInFlags = Object.values(flags).includes("help");
-  const isHelpInInputs = inputs.includes("help");
-
-  return multipleBooleans(
-    startingValue,
-    help,
-    h,
-    isHelpInFlags,
-    isHelpInInputs
-  );
-}
+import { flags, inputs } from "../utils/cli";
+import {
+  getIsDevMode,
+  getIsDryRun,
+  getIsPnpm,
+  getIsSkipInstall,
+  getIsVerbose,
+} from "./flagParser";
+import {
+  defineName,
+  defineVariant,
+  defineTemplate,
+  getDisplayHelp,
+} from "./retrieveValues";
 
 export class Config {
-  constructor(private flags: ICLIConfig, private inputs: string[]) {}
+  private constructor(readonly config: Readonly<IConfig>) {}
 
-  isVerbose() {
-    const { v, verbose } = this.flags;
-
-    return multipleBooleans(v, verbose);
+  static async create(config: IConfig): Promise<Config> {
+    return new Config(config);
   }
 
-  isJSON() {
-    const { json } = this.flags;
+  debug() {
+    console.log(`---- TEMPLATE ----`);
+    console.log(`TEMPLATE: - ${this.config.template}`);
+    console.log(`VARIANT: ${this.config.variant}`);
 
-    return multipleBooleans(json);
+    console.log(`NAME: ${this.config.name}`);
+
+    console.log(`---- DEBUG ----`);
+    console.log(`DRYRUN: ${this.config.isDryRun}`);
+    console.log(`---- displayHelp ----`);
+    console.log(`DISPLAY_HELP: ${this.config.isDisplayHelp}`);
   }
 }
 
-// function getFlags(flags: ICLIConfig, inputs: string[]) {
-// 	const getFolderAndName = getNameAndFolderStatus(inputs)
-
-// 	const name = getFolderAndName.
-
-//   return {
-//     isJSON: isJSON(flags),
-
-//   };
-// }
-
-async function defineName(inputs: string[]) {
-  const nameOption = getName(inputs);
-
-  if (nameOption.isSome()) {
-    return nameOption.get();
-  }
-
-  const { name } = await InputsHandler.getName();
-
-  //  replaces white spaces for dashes
-  return name.replace(/\s+/g, "-");
-}
-
-async function defineTemplate(
-  flags: ICLIConfig
-): Promise<IronLauncherTemplate> {
-  const isViews = getViewsState(flags);
-  const isJson = getJSONState(flags);
-  const isFs = getFsState(flags);
-
-  if (isViews) {
-    return "views";
-  }
-
-  if (isJson) {
-    return "json";
-  }
-
-  if (isFs) {
-    return "fullstack";
-  }
-
-  const { project } = await InputsHandler.getProject();
-
-  if (project) {
-    return project;
-  }
-
-  return "views";
-}
-
-type IConfig = {
+export type IConfig = {
   name: string;
-  skipInstall: boolean;
-  isPnpm: boolean;
-  isDebug: boolean;
-  isDryRun: boolean;
-  isVerbose: boolean;
   variant: IronLauncherVariant;
   template: IronLauncherTemplate;
+  isDev: boolean;
+  isDryRun: boolean;
+  isVerbose: boolean;
+  isSkipInstall: boolean;
+  isDisplayHelp: boolean;
+  packageManager: "pnpm" | "npm";
+  isOutOfSync: boolean;
+};
+
+async function getConfig(flags: ICLIConfig, input: string[]): Promise<IConfig> {
+  const name = await defineName(input);
+  const variant = await defineVariant(flags);
+  const template = await defineTemplate(flags);
+
+  const isDryRun = getIsDryRun(flags);
+
+  const isDisplayHelp = getDisplayHelp(flags, input);
+
+  const isVerbose = getIsVerbose(flags);
+
+  const isDev = getIsDevMode(flags);
+
+  const packageManager = getIsPnpm(flags) ? "pnpm" : "npm";
+
+  const isSkipInstall = getIsSkipInstall(flags);
+
+  const isOutOfSync = await isPkgOutOfSync();
+
+  return {
+    name,
+    variant,
+    template,
+    isDev,
+    isDryRun,
+    isVerbose,
+    packageManager,
+    isSkipInstall,
+    isDisplayHelp,
+    isOutOfSync,
+  };
+}
+
+export const makeConfig = async (): Promise<Config> => {
+  const configObject = await getConfig(flags, inputs);
+  return await Config.create(configObject);
 };

@@ -2,7 +2,7 @@
 import unhandled from "cli-handle-unhandled";
 import welcome from "cli-welcome";
 import { ironlauncherConfig } from "../config";
-import { Package } from "../core/pkg/Package";
+import { getPkgDescription, getPkgLocalVersion } from "../core/pkg/Package";
 
 export function init() {
   unhandled();
@@ -10,10 +10,10 @@ export function init() {
     welcome({
       title: "IronGenerator",
       tagLine: "by Ironhack",
-      description: Package.description,
+      description: getPkgDescription(),
       bgColor: "#2DC5FA",
       color: "#000000",
-      version: Package.version,
+      version: getPkgLocalVersion(),
       clear: true,
       bold: true,
     });

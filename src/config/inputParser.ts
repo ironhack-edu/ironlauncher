@@ -40,6 +40,6 @@ export function isCurrentFolder(inputs: string[]): Option<true> {
   return Option.None();
 }
 
-export function isHelpInInputs(inputs: string) {
+export function getIsHelpInInputs(inputs: string[]) {
   return inputs.includes("help");
 }

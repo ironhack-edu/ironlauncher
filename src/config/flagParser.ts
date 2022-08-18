@@ -1,35 +1,34 @@
 import { ICLIConfig, IronLauncherVariant } from "../types";
 import { multipleBooleans } from "../utils/bools";
 
-function setSkipInstall({ ["skip-install"]: skipInstall }: ICLIConfig) {
+export function getIsSkipInstall({
+  ["skip-install"]: skipInstall,
+}: ICLIConfig) {
   return multipleBooleans(skipInstall);
 }
 
-export function isPnpm({ p = false, pnpm = false }: ICLIConfig) {
+export function getIsPnpm({ p = false, pnpm = false }: ICLIConfig) {
   return multipleBooleans(p, pnpm);
 }
 
-export function isDebug({ debug = false }: ICLIConfig) {
+export function getIsDevMode({ debug = false }: ICLIConfig) {
   const isDev = process.env.DEV === "true";
   return multipleBooleans(debug, isDev);
 }
 
-export function getDryRun(flags: ICLIConfig): boolean {
+export function getIsDryRun(flags: ICLIConfig): boolean {
   const { ["dry-run"]: dryRun = false, dryRun: dryRunCommand = false } = flags;
 
   return multipleBooleans(dryRun, dryRunCommand);
 }
 
-export function isBaseTemplate(
-  startingValue = false,
-  flags: ICLIConfig
-): boolean {
+export function getIsBaseTemplate(flags: ICLIConfig): boolean {
   const { base, b } = flags;
 
-  return multipleBooleans(base, startingValue, b);
+  return multipleBooleans(base, b);
 }
 
-export function isAuth(flags: ICLIConfig): boolean {
+export function getIsAuthTemplate(flags: ICLIConfig): boolean {
   const { a, auth } = flags;
 
   return multipleBooleans(a, auth);
@@ -48,20 +47,20 @@ export function getJSONState(flags: ICLIConfig): boolean {
   return multipleBooleans(flags.json);
 }
 
-export function isVerbose(flags: ICLIConfig) {
+export function getIsVerbose(flags: ICLIConfig) {
   const { v, verbose } = flags;
 
   return multipleBooleans(v, verbose);
 }
 
 export function getVariant(flags: ICLIConfig): IronLauncherVariant {
-  if (isAuth(flags)) {
+  if (getIsAuthTemplate(flags)) {
     return "authentication";
   }
   return "base";
 }
 
-export function isHelpInFlags(flags: ICLIConfig) {
+export function getIsHelpInFlags(flags: ICLIConfig) {
   const { help, h } = flags;
 
   const helpKeyInCaseOfTitle = Boolean(help);

@@ -2,43 +2,30 @@ const pkg = require("../../../package.json");
 import { promisify } from "util";
 import { exec } from "child_process";
 
-export class Package {
-  static getLocalVersion() {
-    return pkg.version.trim();
-  }
+export function getPkgLocalVersion() {
+  return pkg.version.trim();
+}
 
-  static get version() {
-    return pkg.version.trim();
-  }
+export function getPkgName() {
+  return pkg.name;
+}
 
-  static get pkgName() {
-    return pkg.name;
-  }
-  static get description() {
-    return pkg.name;
-  }
+export function getPkgDescription() {
+  return pkg.description as string;
+}
 
-  static get pkg() {
-    return pkg;
+export async function getRemoteVersion(pkg: string) {
+  const execute = promisify(exec);
+  try {
+    const { stdout } = await execute(`npm view ${pkg} version`);
+    return stdout.trim();
+  } catch (err) {
+    throw new Error(JSON.stringify(err));
   }
+}
 
-  static async getRemoteVersion() {
-    const execute = promisify(exec);
-
-    try {
-      const { stdout } = await execute(this.npmView(pkg.name));
-
-      return stdout.trim();
-    } catch (error) {
-      throw new Error(`Something went wrong. ${JSON.stringify(error)}`);
-    }
-  }
-
-  private static npmView(pkg: string) {
-    return `npm view ${pkg} version`;
-  }
-
-  static async isOutOfSync() {
-    return (await this.getRemoteVersion()) !== this.getLocalVersion();
-  }
+export async function isPkgOutOfSync() {
+  const remote = await getRemoteVersion(pkg.name);
+  const local = getPkgLocalVersion();
+  return remote !== local;
 }

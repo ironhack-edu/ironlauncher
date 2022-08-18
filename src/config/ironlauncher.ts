@@ -1,6 +1,6 @@
 import { sep } from "path";
 import { InputsHandler } from "../core/inputs/GetInputs";
-import { Package } from "../core/pkg/Package";
+import { isPkgOutOfSync } from "../core/pkg/Package";
 import { FsValidator } from "../core/validator";
 import {
   ICLIConfig,
@@ -300,7 +300,7 @@ class IronLauncher implements IronlauncherConfig {
 
   async init() {
     if (!this.devMode) {
-      const isBad = await Package.isOutOfSync();
+      const isBad = await isPkgOutOfSync();
       this.#isOutOfSync = isBad;
       if (isBad) {
         return;
