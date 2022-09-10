@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { join } from "node:path";
 
 export default defineConfig({
   test: {
@@ -9,5 +10,6 @@ export default defineConfig({
       "**/.{idea,git,cache,output,temp}/**",
       "template/**",
     ],
+    dir: join(__dirname, "source"),
   },
 });

@@ -13,6 +13,7 @@ const promptOptions: Options = {
     process.exit(1);
   },
 };
+
 export async function askProjectName(): Promise<{ name: string }> {
   return prompt(
     {

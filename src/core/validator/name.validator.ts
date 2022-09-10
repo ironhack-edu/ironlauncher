@@ -1,3 +1,4 @@
+import { Result } from "@swan-io/boxed";
 import { stripWhiteSpaces } from "../regex";
 import { FsValidator } from "./fs.validator";
 
@@ -7,9 +8,24 @@ export namespace NameValidator {
     dirNotEmpty: `This directory is not empty, please choose a different name\n`,
     dirTaken: `This directory already exists`,
     noValue: "Please add a value\n",
+    unexpectedError: `Something unexpected happened. Please choose a different name\n`,
   } as const;
 
-  export function validate(value: string) {
+  export function validateCurrentFolder() {
+    const result = FsValidator.currentDirectoryNotEmpty();
+
+    if (result.isError()) {
+      return Result.Error(NAME_VALIDATOR_ERRORS.unexpectedError);
+    }
+
+    if (!result.get()) {
+      return Result.Error(NAME_VALIDATOR_ERRORS.dirNotEmpty);
+    }
+
+    return Result.Ok(true);
+  }
+
+  export function validate(value: string = currentFolderPath) {
     if (value === currentFolderPath) {
       return currentFolder();
     }

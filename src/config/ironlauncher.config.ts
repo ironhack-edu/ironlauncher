@@ -1,4 +1,3 @@
-import { isPkgOutOfSync } from "../core/pkg/Package";
 import {
   ICLIConfig,
   IronLauncherTemplate,
@@ -18,6 +17,7 @@ import {
   defineTemplate,
   getDisplayHelp,
 } from "./retrieveValues";
+import { isPkgOutOfSync } from "../core/pkg/Package";
 
 export class Config {
   private constructor(readonly config: Readonly<IConfig>) {}
