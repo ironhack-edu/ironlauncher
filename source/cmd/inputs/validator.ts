@@ -15,6 +15,11 @@ type ITargetDirNotEmpty = {
   readDirFunc?: ReadDir;
 };
 
+export type IFolderExists = (
+  folderName: string,
+  existsSync?: ExistsSync
+) => Result<boolean, unknown>;
+
 export function folderExists(
   folderName: string,
   func = existsSync as ExistsSync
@@ -26,7 +31,11 @@ export function currentDirNotEmpty(func = readdirSync as ReadDir) {
   return targetDirNotEmpty(process.cwd(), { readDirFunc: func });
 }
 
-function currentDirEmpty(func = readdirSync as ReadDir) {
+export type ICurrentDirEmpty = (
+  readDirSync?: ReadDir
+) => Result<boolean, NoSuchFolderError>;
+
+export function currentDirEmpty(func = readdirSync as ReadDir) {
   return targetDirEmpty(process.cwd(), { readDirFunc: func });
 }
 
@@ -36,21 +45,27 @@ export function targetDirNotEmpty(
 ): Result<boolean, NoSuchFolderError> {
   const { existsFunc = existsSync, readDirFunc = readdirSync } = injections;
 
-  const exists = folderExists(target, existsFunc).match({
-    Error: () => false,
-    Ok: (v) => v,
-  });
+  const resultOfExists = folderExists(target, existsFunc);
 
-  if (!exists) {
-    return Result.Error(new NoSuchFolderError(target));
-  }
+  return resultOfExists
+    .flatMap<boolean, NoSuchFolderError>((value) => {
+      if (!value) {
+        return Result.Error(new NoSuchFolderError(target));
+      }
 
-  const countResult = Result.fromExecution<string[], NoSuchFolderError>(() =>
-    readDirFunc(target)
-  );
+      const targetDir = Result.fromExecution<string[], NoSuchFolderError>(() =>
+        readDirFunc(target)
+      );
 
-  return countResult.map((elementsInFolder) => !!elementsInFolder.length);
+      return targetDir.map((elementsInFolder) => !!elementsInFolder.length);
+    })
+    .flatMapError(() => Result.Error(new NoSuchFolderError(target)));
 }
+
+export type ITargetDirEmpty = (
+  target: string,
+  injections?: ITargetDirNotEmpty
+) => Result<boolean, NoSuchFolderError>;
 
 export function targetDirEmpty(
   target: string,

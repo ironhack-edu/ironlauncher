@@ -1,8 +1,6 @@
 import { Variant } from "./cmd/inputs/input.utils";
-import { getPkgDescription, v } from "./utils/pkg";
-
-console.log(v);
-console.log(getPkgDescription());
+import { init } from "./utils";
+import { getPkgDescription } from "./utils/pkg";
 
 export * from "./cmd/inputs/input.utils";
 
@@ -16,3 +14,9 @@ export async function hello(): Promise<string> {
 
   return "hello";
 }
+
+async function main() {
+  init();
+}
+
+main();

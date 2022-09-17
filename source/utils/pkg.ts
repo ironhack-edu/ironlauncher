@@ -58,5 +58,3 @@ export async function isPkgOutOfSync({
 
   return remote.map((v) => v !== local);
 }
-
-export const v = true;

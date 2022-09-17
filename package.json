@@ -5,7 +5,7 @@
   "repository": "git@github.com:ironhack-edu/ironlauncher.git",
   "author": "André de Albuquerque (https://itstheandre.com)",
   "license": "MIT",
-  "description": "Ironhack generator for express bootstrapping",
+  "description": "Project Bootstraper for the Ironhack Stack",
   "scripts": {
     "dev": "DEV=true nodemon  ",
     "build": "rimraf dist && tsc",
@@ -54,6 +54,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "tsup": "^6.2.3",
+    "tsx": "^3.9.0",
     "typescript": "^4.7.4",
     "vite": "^3.0.4",
     "vitest": "^0.20.3"
