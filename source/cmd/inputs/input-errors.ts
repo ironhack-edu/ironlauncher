@@ -5,6 +5,13 @@ export class NoSuchFolderError extends Error {
   }
 }
 
+export class DirectoryTakenError extends Error {
+  constructor(path: string) {
+    super(`The directory is already taken -> ${path}`);
+    this.name = "DirectoryTakenError";
+  }
+}
+
 export class DirNotEmptyError extends Error {
   constructor(path: string = process.cwd()) {
     if (path === process.cwd()) {

@@ -1,45 +1,56 @@
 import { Option, Result } from "@swan-io/boxed";
-import { NoSuchFolderError } from "../../cmd/inputs/input-errors";
+import { basename } from "node:path";
+import { DirectoryTakenError } from "../../cmd/inputs/input-errors";
 import {
   currentDirEmpty,
   folderExists,
   ICurrentDirEmpty,
   IFolderExists,
-  ITargetDirEmpty,
-  targetDirEmpty,
 } from "../../cmd/inputs/validator";
 import { fromTruthy } from "../../lib/option-wrapper";
 
 interface IGetNameIsInInputsDeps {
-  isTargetEmpty?: ITargetDirEmpty;
   isFolderExist?: IFolderExists;
   isCwdEmpty?: ICurrentDirEmpty;
 }
 
 type IGetNameIsInInputs = (
-  deps: IGetNameIsInInputsDeps
+  deps?: IGetNameIsInInputsDeps
 ) => (inputs?: string[]) => Option<string>;
 
 export const makeGetNameIsInInputs: IGetNameIsInInputs = ({
   isFolderExist = folderExists,
-  isTargetEmpty = targetDirEmpty,
   isCwdEmpty = currentDirEmpty,
-}) => {
-  return ([name] = []) => {
-    const isEmpty = isCwdEmpty();
-
-    if (name === "." && isEmpty.isOk() && isEmpty.get()) {
-      return Option.Some(name);
-    }
-
-    return isFolderExist(name)
-      .flatMap((exists) => {
-        if (!exists) {
-          return Result.Error(new NoSuchFolderError(name));
+} = {}) => {
+  return (inputs) =>
+    fromTruthy(inputs)
+      .toResult(null)
+      .flatMap((inputArr) => {
+        return inputArr[0] ? Result.Ok(inputArr[0]) : Result.Error(null);
+      })
+      .flatMap((folderName) => {
+        if (folderName === ".") {
+          return isCwdEmpty().match({
+            Ok(value) {
+              return value
+                ? Result.Ok(basename(process.cwd()))
+                : Result.Error(undefined);
+            },
+            Error() {
+              return Result.Error(undefined);
+            },
+          });
         }
 
-        return isTargetEmpty(name).flatMap(() => Result.Ok(name));
+        const isFolderThere = isFolderExist(folderName);
+
+        return isFolderThere.flatMap((exists) => {
+          if (exists) {
+            return Result.Error(new DirectoryTakenError(folderName));
+          }
+
+          return Result.Ok(folderName);
+        });
       })
       .toOption();
-  };
 };
