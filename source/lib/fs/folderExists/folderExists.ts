@@ -1,6 +1,6 @@
 import { Result } from "@swan-io/boxed";
-import { existsSync, accessSync } from "fs";
-import { join, sep } from "path";
+import { accessSync } from "node:fs";
+import { join, sep } from "node:path";
 import {
   IMakeExistsFolder,
   InvalidFolderPathError,
