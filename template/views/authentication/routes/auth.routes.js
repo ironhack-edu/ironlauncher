@@ -67,7 +67,7 @@ router.post("/signup", isLoggedOut, (req, res) => {
       })
       .then((user) => {
         // Bind the user to the session object
-        req.session.user = user;
+        req.session.currentUser = user;
         res.redirect("/");
       })
       .catch((error) => {
@@ -127,8 +127,8 @@ router.post("/login", isLoggedOut, (req, res, next) => {
             errorMessage: "Wrong credentials.",
           });
         }
-        req.session.user = user;
-        // req.session.user = user._id; // ! better and safer but in this case we saving the entire user object
+        req.session.currentUser = user;
+        // req.session.currentUser = user._id; // ! safer but in this case we are saving the entire user object
         return res.redirect("/");
       });
     })
