@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
-// How many rounds should bcrypt run the salt (default [10 - 12 rounds])
+// How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
 
 // Require the User model in order to interact with the database
@@ -15,10 +15,14 @@ const User = require("../models/User.model");
 const isLoggedOut = require("../middleware/isLoggedOut");
 const isLoggedIn = require("../middleware/isLoggedIn");
 
+
+// GET /auth/signup
 router.get("/signup", isLoggedOut, (req, res) => {
   res.render("auth/signup");
 });
 
+
+// POST /auth/signup
 router.post("/signup", isLoggedOut, (req, res) => {
   const { username, password } = req.body;
 
@@ -90,10 +94,14 @@ router.post("/signup", isLoggedOut, (req, res) => {
   });
 });
 
+
+// GET /auth/login
 router.get("/login", isLoggedOut, (req, res) => {
   res.render("auth/login");
 });
 
+
+// POST /auth/login
 router.post("/login", isLoggedOut, (req, res, next) => {
   const { username, password } = req.body;
 
@@ -142,6 +150,8 @@ router.post("/login", isLoggedOut, (req, res, next) => {
     });
 });
 
+
+// GET /auth/logout
 router.get("/logout", isLoggedIn, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
