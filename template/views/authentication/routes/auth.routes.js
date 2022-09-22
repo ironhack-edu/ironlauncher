@@ -24,74 +24,64 @@ router.get("/signup", isLoggedOut, (req, res) => {
 
 // POST /auth/signup
 router.post("/signup", isLoggedOut, (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!username) {
-    return res.status(400).render("auth/signup", {
-      errorMessage: "Please provide your username.",
-    });
+  // Check that username, email, and password are provided
+  if (username === "" || email === "" || password === "") {
+    res
+      .status(400)
+      .render("auth/signup", {
+        errorMessage: "All fields are mandatory. Please provide your username, email and password."
+      });
+
+    return;
   }
 
-  if (password.length < 8) {
-    return res.status(400).render("auth/signup", {
-      errorMessage: "Your password needs to be at least 8 characters long.",
-    });
+  if (password.length < 6) {
+    res
+      .status(400)
+      .render("auth/signup", {
+        errorMessage: "Your password needs to be at least 6 characters long.",
+      });
+
+    return;
   }
 
-  //   ! This use case is using a regular expression to control for special characters and min length
+  //   ! This regular expression checks password for special characters and minimum length
   /*
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-
+  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!regex.test(password)) {
-    return res.status(400).render("signup", {
-      errorMessage:
-        "Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
+    res
+      .status(400)
+      .render("auth/signup", {
+        errorMessage: "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter."
     });
+    return;
   }
   */
 
-  // Search the database for a user with the username submitted in the form
-  User.findOne({ username }).then((found) => {
-    // If the user is found, send the message username is taken
-    if (found) {
-      return res
-        .status(400)
-        .render("auth.signup", { errorMessage: "Username already taken." });
-    }
-
-    // if user is not found, create a new user - start with hashing the password
-    return bcrypt
-      .genSalt(saltRounds)
-      .then((salt) => bcrypt.hash(password, salt))
-      .then((hashedPassword) => {
-        // Create a user and save it in the database
-        return User.create({
-          username,
-          password: hashedPassword,
+  // Create a new user - start by hashing the password
+  bcrypt.genSalt(saltRounds)
+    .then((salt) => bcrypt.hash(password, salt))
+    .then((hashedPassword) => {
+      // Create a user and save it in the database
+      return User.create({ username, email, password: hashedPassword });
+    })
+    .then((user) => {
+      res.redirect("/auth/login");
+    })
+    .catch((error) => {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.status(500).render('auth/signup', { errorMessage: error.message });
+      }
+      else if (error.code === 11000) {
+        res.status(500).render('auth/signup', {
+            errorMessage: 'Username and email need to be unique. Provide a valid username or email.'
         });
-      })
-      .then((user) => {
-        // Bind the user to the session object
-        req.session.currentUser = user;
-        res.redirect("/");
-      })
-      .catch((error) => {
-        if (error instanceof mongoose.Error.ValidationError) {
-          return res
-            .status(400)
-            .render("auth/signup", { errorMessage: error.message });
-        }
-        if (error.code === 11000) {
-          return res.status(400).render("auth/signup", {
-            errorMessage:
-              "Username need to be unique. The username you chose is already in use.",
-          });
-        }
-        return res
-          .status(500)
-          .render("auth/signup", { errorMessage: error.message });
-      });
-  });
+      } else {
+        next(error);
+      }
+    });
 });
 
 
