@@ -93,51 +93,53 @@ router.get("/login", isLoggedOut, (req, res) => {
 
 // POST /auth/login
 router.post("/login", isLoggedOut, (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!username) {
-    return res.status(400).render("auth/login", {
-      errorMessage: "Please provide your username.",
+  // Check that username, email, and password are provided
+  if (username === "" || email === "" || password === "") {
+    res.status(400).render("auth/login", {
+      errorMessage: "All fields are mandatory. Please provide username, email and password."
     });
+
+    return;
   }
 
   // Here we use the same logic as above
   // - either length based parameters or we check the strength of a password
-  if (password.length < 8) {
+  if (password.length < 6) {
     return res.status(400).render("auth/login", {
-      errorMessage: "Your password needs to be at least 8 characters long.",
+      errorMessage: "Your password needs to be at least 6 characters long.",
     });
   }
 
-  // Search the database for a user with the username submitted in the form
-  User.findOne({ username })
+  // Search the database for a user with the email submitted in the form
+  User.findOne({ email })
     .then((user) => {
-      // If the user isn't found, send the message that user provided wrong credentials
+      // If the user isn't found, send an error message that user provided wrong credentials
       if (!user) {
-        return res.status(400).render("auth/login", {
-          errorMessage: "Wrong credentials.",
-        });
+        res.status(400).render("auth/login", { errorMessage: "Wrong credentials." });
+        return;
       }
 
       // If user is found based on the username, check if the in putted password matches the one saved in the database
-      bcrypt.compare(password, user.password).then((isSamePassword) => {
-        if (!isSamePassword) {
-          return res.status(400).render("auth/login", {
-            errorMessage: "Wrong credentials.",
-          });
-        }
-        req.session.currentUser = user;
-        // req.session.currentUser = user._id; // ! safer but in this case we are saving the entire user object
-        return res.redirect("/");
-      });
-    })
+      bcrypt.compare(password, user.password)
+        .then((isSamePassword) => {
+          if (!isSamePassword) {
+            res.status(400).render("auth/login", { errorMessage: "Wrong credentials." });
+            return;
+          }
 
-    .catch((err) => {
-      // in this case we are sending the error handling to the error handling middleware that is defined in the error handling file
-      // you can just as easily run the res.status that is commented out below
-      next(err);
-      // return res.status(500).render("login", { errorMessage: err.message });
-    });
+          // Add the user object to the session object
+          req.session.currentUser = user.toObject();
+          // Remove the password field
+          delete req.session.currentUser.password;
+
+          res.redirect("/");
+        })
+        .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
+
+    })
+    .catch((err) => next(err));
 });
 
 
