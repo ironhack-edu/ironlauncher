@@ -8,6 +8,7 @@ import { InstallStructure } from "../base";
 import {
   JSON_EXPRESS_DEPS,
   EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+  EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
   BASE_EXPRESS_DEV,
 } from "../depedencies";
 
@@ -22,7 +23,7 @@ export class JSONInstaller extends InstallStructure {
     },
     {
       isDev: false,
-      packages: EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+      packages: EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
       scope: "backend",
       isAuth: true,
     },

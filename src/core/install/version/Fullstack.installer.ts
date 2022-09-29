@@ -10,6 +10,7 @@ import {
   REACT_DEV_DEPS,
   JSON_EXPRESS_DEPS,
   EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+  EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
   BASE_EXPRESS_DEV,
 } from "../depedencies";
 
@@ -40,7 +41,7 @@ export class FullStack extends InstallStructure {
       scope: "backend",
     },
     {
-      packages: EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+      packages: EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
       isDev: false,
       scope: "backend",
       isAuth: true,
