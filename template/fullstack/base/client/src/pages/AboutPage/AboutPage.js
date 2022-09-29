@@ -4,7 +4,7 @@ import "./AboutPage.css";
 function AboutPage() {
   return (
     <div>
-      <h1>About Ppage</h1>
+      <h1>About page</h1>
     </div>
   );
 }
