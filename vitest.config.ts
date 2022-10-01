@@ -10,6 +10,6 @@ export default defineConfig({
       "**/.{idea,git,cache,output,temp}/**",
       "template/**",
     ],
-    dir: join(__dirname, "source"),
+    includeSource: ["source/**/*.ts"],
   },
 });

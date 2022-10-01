@@ -1,10 +1,21 @@
-import '@swan-io/boxed';
-import unhandled from 'cli-handle-unhandled';
-import welcome from 'cli-welcome';
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import minimist from 'minimist';
-import meowHelp from 'cli-meow-help';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+require('@swan-io/boxed');
+var unhandled = require('cli-handle-unhandled');
+var welcome = require('cli-welcome');
+var util = require('util');
+var child_process = require('child_process');
+var minimist = require('minimist');
+var meowHelp = require('cli-meow-help');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var unhandled__default = /*#__PURE__*/_interopDefaultLegacy(unhandled);
+var welcome__default = /*#__PURE__*/_interopDefaultLegacy(welcome);
+var minimist__default = /*#__PURE__*/_interopDefaultLegacy(minimist);
+var meowHelp__default = /*#__PURE__*/_interopDefaultLegacy(meowHelp);
 
 // source/index.ts
 
@@ -27,7 +38,7 @@ var Variant = /* @__PURE__ */ ((Variant2) => {
 // package.json
 var version = "0.36.0";
 var description = "Project Bootstraper for the Ironhack Stack";
-promisify(exec);
+util.promisify(child_process.exec);
 function getPkgDescription(pkgJson = description) {
   return pkgJson.trim();
 }
@@ -37,8 +48,8 @@ function getPkgLocalVersion(pkgJson = version) {
 
 // source/utils/init.ts
 function init() {
-  unhandled();
-  welcome({
+  unhandled__default["default"]();
+  welcome__default["default"]({
     bgColor: "#2dc5fa",
     description: getPkgDescription(),
     color: "#333",
@@ -127,7 +138,7 @@ var commands = {
     desc: "Prints help info"
   }
 };
-var helpText = meowHelp({ flags, commands, name: "ironlauncher" });
+var helpText = meowHelp__default["default"]({ flags, commands, name: "ironlauncher" });
 
 // source/index.ts
 var auth = 0 /* NoAuth */;
@@ -140,9 +151,14 @@ async function main() {
   init();
 }
 main();
-var args = minimist(process.argv.slice(2));
+var args = minimist__default["default"](process.argv.slice(2));
 console.log("args:", args);
 console.log("helpText:", helpText);
 console.log(Object.keys(process.env).filter((e) => /ironlauncher/gi.test(e)));
 
-export { Variant, add, auth, getName, hello, promptOptions };
+exports.Variant = Variant;
+exports.add = add;
+exports.auth = auth;
+exports.getName = getName;
+exports.hello = hello;
+exports.promptOptions = promptOptions;

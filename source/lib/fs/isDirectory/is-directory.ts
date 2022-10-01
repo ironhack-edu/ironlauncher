@@ -2,7 +2,7 @@ import { Result } from "@swan-io/boxed";
 import { lstatSync, Stats } from "node:fs";
 import { fromTruthy } from "../../option-wrapper";
 
-type IsDirFunc = (target: string) => Stats;
+export type IsDirFunc = (target: string) => Stats;
 
 export type IDirectoryExists = (
   targetDir?: IsDirFunc

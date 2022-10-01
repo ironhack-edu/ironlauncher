@@ -7,4 +7,9 @@ export default defineConfig({
   outDir: "build",
   clean: true,
   shims: true,
+  treeshake: true,
+  define: {
+    // @ts-ignore
+    "import.meta.vitest": false,
+  },
 });

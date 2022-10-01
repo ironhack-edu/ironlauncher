@@ -6,7 +6,7 @@ import { getPkgDescription } from "./utils/pkg";
 export * from "./cmd/inputs/input.utils";
 
 export const auth = Variant.NoAuth;
-export * from "./cmd/inputs/ask-variant";
+export * from "./config/make-config/name";
 
 export async function hello(): Promise<string> {
   if (!Variant.NoAuth) {
@@ -40,3 +40,14 @@ function getUser(): Result<User, Error> {
 async function getInfo(user: User): Promise<Result<Info, Error>> {
   return Result.Ok<Info>({ id: "123", user });
 }
+
+import meowHelp from "cli-meow-help";
+import minimist from "minimist";
+import { helpText } from "./cli/flags/helper-text";
+
+const args = minimist(process.argv.slice(2));
+console.log("args:", args);
+
+console.log("helpText:", helpText);
+
+console.log(Object.keys(process.env).filter((e) => /ironlauncher/gi.test(e)));

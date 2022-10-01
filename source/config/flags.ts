@@ -1,40 +1,40 @@
-import { ICLIConfig } from "../types/cli-config";
+import { IIronlauncherConfig } from "../types/cli-config";
 import { handleBooleanValues } from "../utils/bool-helpers";
 
 export function getIsSkipInstall({
   ["skip-install"]: skipInstall,
-}: ICLIConfig) {
+}: IIronlauncherConfig) {
   return handleBooleanValues(skipInstall);
 }
 
-export function getIsPnpm({ p = false, pnpm = false }: ICLIConfig) {
+export function getIsPnpm({ p = false, pnpm = false }: IIronlauncherConfig) {
   return handleBooleanValues(p, pnpm);
 }
 
-export function getIsDevMode({ dev = false }: ICLIConfig) {
+export function getIsDevMode({ dev = false }: IIronlauncherConfig) {
   return handleBooleanValues(dev, process.env.DEV_MODE);
 }
 
 export function getIsDryRun({
   ["dry-run"]: dryRun,
   dryRun: dryRunCommand,
-}: ICLIConfig) {
+}: IIronlauncherConfig) {
   return handleBooleanValues(dryRun, dryRunCommand);
 }
 
-export function getIsBaseTemplate({ base, b }: ICLIConfig) {
+export function getIsBaseTemplate({ base, b }: IIronlauncherConfig) {
   return handleBooleanValues(base, b);
 }
 
-export function getIsAuthTemplate({ auth, a }: ICLIConfig) {
+export function getIsAuthTemplate({ auth, a }: IIronlauncherConfig) {
   return handleBooleanValues(a, auth);
 }
 
-export function getIsViewsTemplate({ views }: ICLIConfig) {
+export function getIsViewsTemplate({ views }: IIronlauncherConfig) {
   return handleBooleanValues(views);
 }
 
-export function getIsJsonTemplate({ json, JSON }: ICLIConfig) {
+export function getIsJsonTemplate({ json, JSON }: IIronlauncherConfig) {
   return handleBooleanValues(json, JSON);
 }
 
@@ -43,14 +43,14 @@ export function getIsFSTemplate({
   fullStack,
   fullstack,
   ["full-stack"]: fsCommand,
-}: ICLIConfig) {
+}: IIronlauncherConfig) {
   return handleBooleanValues(fs, fullStack, fullstack, fsCommand);
 }
 
-export function getIsHelpInFlags({ help, h }: ICLIConfig) {
+export function getIsHelpInFlags({ help, h }: IIronlauncherConfig) {
   return handleBooleanValues(help, h);
 }
 
-export function getIsVerbose({ verbose }: ICLIConfig) {
+export function getIsVerbose({ verbose }: IIronlauncherConfig) {
   return handleBooleanValues(verbose);
 }
