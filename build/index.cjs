@@ -2,13 +2,16 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-require('@swan-io/boxed');
+var boxed = require('@swan-io/boxed');
 var unhandled = require('cli-handle-unhandled');
 var welcome = require('cli-welcome');
 var util = require('util');
 var child_process = require('child_process');
 var minimist = require('minimist');
 var meowHelp = require('cli-meow-help');
+var prompts = require('prompts');
+var fs = require('fs');
+var path = require('path');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -16,12 +19,13 @@ var unhandled__default = /*#__PURE__*/_interopDefaultLegacy(unhandled);
 var welcome__default = /*#__PURE__*/_interopDefaultLegacy(welcome);
 var minimist__default = /*#__PURE__*/_interopDefaultLegacy(minimist);
 var meowHelp__default = /*#__PURE__*/_interopDefaultLegacy(meowHelp);
+var prompts__default = /*#__PURE__*/_interopDefaultLegacy(prompts);
 
 // source/index.ts
 
 // source/cmd/inputs/input.utils.ts
-function promptOptions(args2 = {}) {
-  const { exitter = process.exit, logger = console.error } = args2;
+function promptOptions(args = {}) {
+  const { exitter = process.exit, logger = console.error } = args;
   return {
     onCancel(data) {
       logger(`You did not set a ${data.name} and canceled the ironlauncher`);
@@ -61,12 +65,38 @@ function init() {
   });
 }
 
-// source/config/make-config/name.ts
-async function getName() {
+// source/utils/strip-whitespaces.ts
+function stripWhitespaces(string) {
+  return string.replaceAll(/\s+/g, "-");
 }
-function add(...args2) {
-  return args2.reduce((a, b) => a + b, 0);
+
+// source/utils/bool-helpers.ts
+function isBoolean(option) {
+  if (typeof option === "string") {
+    return option.trim() === "true";
+  }
+  return option === true;
 }
+function handleBooleanValues(...options) {
+  return options.some((opt) => isBoolean(opt));
+}
+
+// source/utils/nodejs-fs-error.ts
+var NodeFSError = class extends Error {
+  errno;
+  code;
+  path;
+  stack;
+  constructor(error) {
+    const err = error;
+    super(err == null ? void 0 : err.message);
+    this.name = "NodeJsFSError";
+    this.cause = err == null ? void 0 : err.cause;
+    this.errno = err == null ? void 0 : err.errno;
+    this.stack = err == null ? void 0 : err.stack;
+    this.path = err == null ? void 0 : err.path;
+  }
+};
 
 // source/shared/consts.ts
 var IHL_FLAGS = {
@@ -140,7 +170,330 @@ var commands = {
 };
 var helpText = meowHelp__default["default"]({ flags, commands, name: "ironlauncher" });
 
+// source/cmd/inputs/input-errors.ts
+var NoSuchFolderError = class extends Error {
+  constructor(path) {
+    super(`There is no such folder -> ${path}`);
+    this.name = "NoSuchFolderError";
+  }
+};
+var DirectoryTakenError = class extends Error {
+  constructor(path) {
+    super(`The directory is already taken -> ${path}`);
+    this.name = "DirectoryTakenError";
+  }
+};
+var DirNotEmptyError = class extends Error {
+  constructor(path = process.cwd()) {
+    if (path === process.cwd()) {
+      super(`Please choose a different name. Current directory is not empty
+`);
+    } else {
+      super(
+        `Please choose a different name. Target dir not empty -> ${path}
+`
+      );
+    }
+    this.name = "DirNotEmptyError";
+  }
+};
+var NoValueError = class extends Error {
+  constructor() {
+    super("Please add a value\n");
+  }
+};
+
+// source/cmd/inputs/validator.ts
+function folderExists(folderName, func = fs.existsSync) {
+  return boxed.Result.fromExecution(() => func(folderName));
+}
+function currentDirEmpty(func = fs.readdirSync) {
+  return targetDirEmpty(process.cwd(), { readDirFunc: func });
+}
+function targetDirNotEmpty(target, injections = {}) {
+  const { existsFunc = fs.existsSync, readDirFunc = fs.readdirSync } = injections;
+  const resultOfExists = folderExists(target, existsFunc);
+  return resultOfExists.flatMap((value) => {
+    if (!value) {
+      return boxed.Result.Error(new NoSuchFolderError(target));
+    }
+    const targetDir = boxed.Result.fromExecution(
+      () => readDirFunc(target)
+    );
+    return targetDir.map((elementsInFolder) => !!elementsInFolder.length);
+  }).flatMapError(() => boxed.Result.Error(new NoSuchFolderError(target)));
+}
+function targetDirEmpty(target, injections = {}) {
+  return targetDirNotEmpty(target, injections).map((e) => !e);
+}
+var CURRENT_FOLDER_PATH = ".";
+function validateCurrentFolder() {
+  const result = currentDirEmpty().flatMap(
+    (value) => value ? boxed.Result.Ok(value) : boxed.Result.Error(new DirNotEmptyError())
+  );
+  if (result.isError()) {
+    return result.value.message;
+  }
+  return true;
+}
+function validateName(value) {
+  if (value === CURRENT_FOLDER_PATH) {
+    return validateCurrentFolder();
+  }
+  if (!value) {
+    return new NoValueError().message;
+  }
+  const val = stripWhitespaces(value);
+  const folderName = value.includes(process.cwd()) ? val : path.join(process.cwd(), val);
+  const exists = folderExists(folderName).match({
+    Error() {
+      return false;
+    },
+    Ok: (v) => v
+  });
+  if (exists) {
+    return new DirNotEmptyError(val).message;
+  }
+  return true;
+}
+
+// source/cmd/inputs/ask-name.ts
+async function askName(args = {}) {
+  const { name: name2 } = await prompts__default["default"](
+    {
+      name: "name",
+      type: "text",
+      message: "Project name?",
+      validate: validateName
+    },
+    promptOptions(args)
+  );
+  return name2;
+}
+function fromTruthy(val) {
+  const value = val ?? null;
+  return boxed.Option.fromNull(value);
+}
+
+// source/utils/validate-keys-in-obj.ts
+function validateKeysInObj(obj, arr) {
+  const keys = {};
+  arr.forEach((opt) => {
+    const option = opt;
+    keys[option] = obj[option] ?? false;
+  });
+  return keys;
+}
+
+// source/cli/flags/flags.ts
+function flagsData(flags2 = {}) {
+  const auth2 = getFlagsAuth(flags2);
+  const template = getFlagsProjectVariant(flags2);
+  const isSkipInstall = getFlagsSkipInstall(flags2);
+  const isDryRun = getFlagsDryRun(flags2);
+  const isPnpm = getFlagsIsPnpm(flags2);
+  const isHelp = getFlagsHelp(flags2);
+  return {
+    auth: auth2,
+    template,
+    isSkipInstall,
+    isDryRun,
+    isPnpm,
+    isHelp
+  };
+}
+var getFlagsProjectVariant = (flags2 = {}) => {
+  return fromTruthy(flags2).flatMap((e) => {
+    if (getFlagsView(e)) {
+      return boxed.Option.Some("views");
+    }
+    if (getFlagsJson(e)) {
+      return boxed.Option.Some("json");
+    }
+    if (getFlagsFs(e)) {
+      return boxed.Option.Some("fullstack");
+    }
+    return boxed.Option.None();
+  });
+};
+var getFlagsAuth = (flags2) => {
+  if (getFlagsAuthSession(flags2)) {
+    return "session";
+  }
+  return "jwt";
+};
+var getFlagsIsPnpm = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.pnpm);
+};
+var getFlagsView = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.views);
+};
+var getFlagsJson = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.json);
+};
+var getFlagsFs = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.fs);
+};
+var getFlagsAuthSession = (flags2 = {}) => {
+  return flags2.auth === "session";
+};
+var getFlagsHelp = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.help);
+};
+function getInfoFromFlags(flags2, arr) {
+  return handleBooleanValues(
+    ...Object.values(validateKeysInObj(flags2, arr))
+  );
+}
+var getFlagsSkipInstall = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.skipInstall);
+};
+var getFlagsDryRun = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.dryRun);
+};
+
+// source/cli/inputs/help.input.ts
+function getIsHelpInInputs(inputs2 = []) {
+  return inputs2.includes("help");
+}
+var makeReadDirFunc = (deps = {}) => {
+  return (target) => {
+    const { readDir = fs.readdirSync } = deps;
+    return boxed.Result.fromExecution(() => readDir(target)).mapError(
+      (err) => new NodeFSError(err)
+    );
+  };
+};
+
+// source/lib/fs/dir-empty/dir-empty.ts
+var makeDirEmptyFunc = (deps = {}) => {
+  return (target) => {
+    const { readDir = fs.readdirSync } = deps;
+    const func = makeReadDirFunc({ readDir });
+    return func(target).map((val) => !val.length);
+  };
+};
+
+// source/lib/fs/folder-exists/folderExists.types.ts
+var InvalidFolderPathError = class extends Error {
+  constructor() {
+    super("[Ironlauncher ERROR] - name must be single word");
+    this.name = "InvalidFolderPathError";
+  }
+};
+
+// source/lib/fs/folder-exists/folderExists.ts
+var makeExistsFolder = (existsFunc = fs.accessSync) => {
+  return (folderName) => {
+    if (folderName.split(path.sep).length > 1) {
+      return boxed.Result.Error(new InvalidFolderPathError());
+    }
+    return boxed.Result.fromExecution(
+      () => existsFunc(path.join(process.cwd(), folderName))
+    ).map(() => true);
+  };
+};
+
+// source/cli/inputs/name.input.ts
+var makeGetNameIsInInputs = (deps = {}) => {
+  const { dirEmpty = makeDirEmptyFunc, folderExists: folderExists2 = makeExistsFolder } = deps;
+  const isEmpty = dirEmpty();
+  const isFolderExists = folderExists2();
+  return (inputs2) => {
+    return fromTruthy(inputs2).flatMap((inputArr) => {
+      const firstEl = inputArr[0];
+      return firstEl ? boxed.Option.Some(firstEl) : boxed.Option.None();
+    }).flatMap((folderName) => {
+      if (folderName === ".") {
+        return isEmpty(process.cwd()).match({
+          Ok(value) {
+            return value ? boxed.Option.Some(path.basename(process.cwd())) : boxed.Option.None();
+          },
+          Error() {
+            return boxed.Option.None();
+          }
+        });
+      }
+      return isFolderExists(folderName).match({
+        Error() {
+          return boxed.Result.Ok(folderName);
+        },
+        Ok(value) {
+          if (value) {
+            return boxed.Result.Error(new DirectoryTakenError(folderName));
+          }
+          return boxed.Result.Ok(folderName);
+        }
+      }).toOption();
+    });
+  };
+};
+
+// source/env/retrieve-env.ts
+function isShowAllFlags(env) {
+  return handleBooleanValues(env["IHL_ALL" /* IHL_ALL */]);
+}
+function isVerboseIHL(env) {
+  return handleBooleanValues(env["IHL_VERBOSE" /* IHL_VERBOSE */]);
+}
+function getEnvInfo(env = process.env) {
+  return {
+    isShowAll: isShowAllFlags(env),
+    isVerbose: isVerboseIHL(env)
+  };
+}
+async function askProjectType() {
+  return prompts__default["default"]([
+    {
+      name: "project",
+      type: "select",
+      message: "Which kind?",
+      initial: 0,
+      choices: [
+        { title: "views", value: "views" },
+        { title: "json", value: "json" },
+        { title: "fullstack", value: "fullstack" }
+      ]
+    }
+  ]);
+}
+
+// source/config/config.ts
+var getNameInInputs = makeGetNameIsInInputs();
+async function makeConfig(cliFlags2, cliInputs) {
+  const { isHelp, ...flags2 } = flagsData(cliFlags2);
+  const helpInInputs = getIsHelpInInputs(cliInputs);
+  const userAsksForHelp = handleBooleanValues(helpInInputs, isHelp);
+  if (userAsksForHelp) {
+    return boxed.Option.None();
+  }
+  const name2 = await makeName(getNameInInputs(cliInputs));
+  const template = await makeTemplate(flags2.template);
+  const envStatus = getEnvInfo();
+  return boxed.Option.Some({
+    ...flags2,
+    name: name2,
+    template,
+    ...envStatus
+  });
+}
+async function makeName(nameOpt) {
+  if (nameOpt.isSome()) {
+    return nameOpt.get();
+  }
+  const value = await askName();
+  return value;
+}
+async function makeTemplate(template) {
+  if (template.isSome()) {
+    return template.get();
+  }
+  const { project } = await askProjectType();
+  return project;
+}
+
 // source/index.ts
+var { _: inputs, "--": __, ...cliFlags } = minimist__default["default"](process.argv.slice(2));
 var auth = 0 /* NoAuth */;
 async function hello() {
   {
@@ -149,16 +502,15 @@ async function hello() {
 }
 async function main() {
   init();
+  const configOpt = await makeConfig(cliFlags, inputs);
+  if (configOpt.isNone()) {
+    return console.log(helpText);
+  }
+  configOpt.get();
 }
 main();
-var args = minimist__default["default"](process.argv.slice(2));
-console.log("args:", args);
-console.log("helpText:", helpText);
-console.log(Object.keys(process.env).filter((e) => /ironlauncher/gi.test(e)));
 
 exports.Variant = Variant;
-exports.add = add;
 exports.auth = auth;
-exports.getName = getName;
 exports.hello = hello;
 exports.promptOptions = promptOptions;

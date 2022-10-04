@@ -1,6 +1,6 @@
 import { it, expect, describe } from "vitest";
 import { ENV_FLAGS } from "../shared";
-import { envStatus } from "./retrieve-env";
+import { getEnvInfo } from "./retrieve-env";
 
 type TestCases = {
   flags: NodeJS.ProcessEnv;
@@ -45,7 +45,7 @@ describe("envStatus", () => {
     )} if in the flags we have the following values ${JSON.stringify(
       tc.flags
     )}`, () => {
-      const result = envStatus(tc.flags);
+      const result = getEnvInfo(tc.flags);
 
       expect(result).toEqual(tc.result);
     });

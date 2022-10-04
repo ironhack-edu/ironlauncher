@@ -18,17 +18,20 @@ export function flagsData(flags: IIronlauncherConfig = {}) {
 
   const isPnpm = getFlagsIsPnpm(flags);
 
+  const isHelp = getFlagsHelp(flags);
+
   return {
     auth,
     template,
     isSkipInstall,
     isDryRun,
     isPnpm,
+    isHelp,
   };
 }
 
 const getFlagsProjectVariant = (flags: IIronlauncherConfig = {}) => {
-  return fromTruthy(flags).flatMap<"views" | "json" | "fs">((e) => {
+  return fromTruthy(flags).flatMap<"views" | "json" | "fullstack">((e) => {
     if (getFlagsView(e)) {
       return Option.Some("views");
     }
@@ -38,7 +41,7 @@ const getFlagsProjectVariant = (flags: IIronlauncherConfig = {}) => {
     }
 
     if (getFlagsFs(e)) {
-      return Option.Some("fs");
+      return Option.Some("fullstack");
     }
 
     return Option.None();
@@ -73,6 +76,10 @@ const getFlagsAuthSession: IGetInfoFromFlag = (flags = {}) => {
   return flags.auth === "session";
 };
 
+const getFlagsHelp: IGetInfoFromFlag = (flags = {}) => {
+  return getInfoFromFlags(flags, IHL_FLAGS.help);
+};
+
 function getInfoFromFlags(flags: IIronlauncherConfig, arr: readonly string[]) {
   return handleBooleanValues(
     ...(Object.values(validateKeysInObj(flags, arr)) as Array<
@@ -93,6 +100,13 @@ if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
 
   describe("flag", () => {
+    it("help in flags", () => {
+      expect(getFlagsHelp()).toBe(false);
+      expect(getFlagsHelp({})).toBe(false);
+      expect(getFlagsHelp({ help: true })).toBe(true);
+      expect(getFlagsHelp({ h: true })).toBe(true);
+    });
+
     it("pnpm in flags", () => {
       expect(getFlagsIsPnpm()).toBe(false);
       expect(getFlagsIsPnpm({})).toBe(false);
@@ -233,7 +247,7 @@ if (import.meta.vitest) {
           const opt = getFlagsProjectVariant(tc.flags);
           expect(opt.isSome()).toBe(true);
           // @ts-expect-error
-          expect(opt.get()).toBe("fs");
+          expect(opt.get()).toBe("fullstack");
         });
       }
     });

@@ -2,11 +2,18 @@ import { Future, Result } from "@swan-io/boxed";
 import { Variant } from "./cmd/inputs/input.utils";
 import { init } from "./utils";
 import { getPkgDescription } from "./utils/pkg";
+import meowHelp from "cli-meow-help";
+import minimist from "minimist";
+import { helpText } from "./cli/flags/helper-text";
+import { makeConfig } from "./config/config";
+import { askName } from "./cmd/inputs/ask-name";
+import { configDefaults } from "vitest/config";
+
+const { _: inputs, "--": __, ...cliFlags } = minimist(process.argv.slice(2));
 
 export * from "./cmd/inputs/input.utils";
 
 export const auth = Variant.NoAuth;
-export * from "./config/make-config/name";
 
 export async function hello(): Promise<string> {
   if (!Variant.NoAuth) {
@@ -18,6 +25,14 @@ export async function hello(): Promise<string> {
 
 async function main() {
   init();
+
+  const configOpt = await makeConfig(cliFlags, inputs);
+
+  if (configOpt.isNone()) {
+    return console.log(helpText);
+  }
+
+  const config = configOpt.get();
 }
 
 main();
@@ -41,13 +56,6 @@ async function getInfo(user: User): Promise<Result<Info, Error>> {
   return Result.Ok<Info>({ id: "123", user });
 }
 
-import meowHelp from "cli-meow-help";
-import minimist from "minimist";
-import { helpText } from "./cli/flags/helper-text";
+// console.log("helpText:", helpText);
 
-const args = minimist(process.argv.slice(2));
-console.log("args:", args);
-
-console.log("helpText:", helpText);
-
-console.log(Object.keys(process.env).filter((e) => /ironlauncher/gi.test(e)));
+// console.log(Object.keys(process.env).filter((e) => /ironlauncher/gi.test(e)));

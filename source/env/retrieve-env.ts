@@ -9,7 +9,7 @@ function isVerboseIHL(env: NodeJS.ProcessEnv) {
   return handleBooleanValues(env[ENV_FLAGS.IHL_VERBOSE]);
 }
 
-export function envStatus(env: NodeJS.ProcessEnv = process.env) {
+export function getEnvInfo(env: NodeJS.ProcessEnv = process.env) {
   return {
     isShowAll: isShowAllFlags(env),
     isVerbose: isVerboseIHL(env),

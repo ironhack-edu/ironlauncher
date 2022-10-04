@@ -20,6 +20,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.None(),
+        isHelp: false,
       },
     },
     {
@@ -30,11 +31,13 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.None(),
+        isHelp: false,
       },
     },
     {
       flags: { views: true },
       result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: false,
         isPnpm: false,
@@ -45,6 +48,7 @@ describe("flagsData", () => {
     {
       flags: { json: true },
       result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: false,
         isPnpm: false,
@@ -55,16 +59,18 @@ describe("flagsData", () => {
     {
       flags: { fs: true },
       result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: false,
         isPnpm: false,
         isSkipInstall: false,
-        template: Option.Some("fs"),
+        template: Option.Some("fullstack"),
       },
     },
     {
       flags: { dryRun: true },
       result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: true,
         isPnpm: false,
@@ -75,6 +81,18 @@ describe("flagsData", () => {
     {
       flags: { pnpm: true },
       result: {
+        isHelp: false,
+        auth: "jwt",
+        isDryRun: false,
+        isPnpm: true,
+        isSkipInstall: false,
+        template: Option.None(),
+      },
+    },
+    {
+      flags: { p: true },
+      result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: false,
         isPnpm: true,
@@ -85,6 +103,7 @@ describe("flagsData", () => {
     {
       flags: { "skip-install": true },
       result: {
+        isHelp: false,
         auth: "jwt",
         isDryRun: false,
         isPnpm: false,
@@ -92,10 +111,34 @@ describe("flagsData", () => {
         template: Option.None(),
       },
     },
+    {
+      flags: { help: true },
+      result: {
+        isHelp: true,
+        auth: "jwt",
+        isDryRun: false,
+        isPnpm: false,
+        isSkipInstall: false,
+        template: Option.None(),
+      },
+    },
+    {
+      flags: { h: true },
+      result: {
+        isHelp: true,
+        auth: "jwt",
+        isDryRun: false,
+        isPnpm: false,
+        isSkipInstall: false,
+        template: Option.None(),
+      },
+    },
   ];
 
   for (const tc of testCases) {
-    it(`should return ${tc.result} when receives flags: ${tc.flags}`, () => {
+    it(`should return ${JSON.stringify(
+      tc.result
+    )} when receives flags: ${JSON.stringify(tc.flags)}`, () => {
       const result = flagsData(tc.flags);
 
       expect(result).toEqual(tc.result);
