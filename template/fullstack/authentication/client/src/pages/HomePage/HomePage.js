@@ -1,6 +1,5 @@
 import "./HomePage.css";
 
-
 function HomePage() {
   return (
     <div>

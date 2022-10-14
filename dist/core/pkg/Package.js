@@ -46,6 +46,7 @@ class Package {
     }
     static isOutOfSync() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(yield this.getRemoteVersion(), this.getLocalVersion());
             return (yield this.getRemoteVersion()) !== this.getLocalVersion();
         });
     }

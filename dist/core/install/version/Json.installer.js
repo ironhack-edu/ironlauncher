@@ -16,7 +16,7 @@ class JSONInstaller extends base_1.InstallStructure {
             },
             {
                 isDev: false,
-                packages: depedencies_1.EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+                packages: depedencies_1.EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
                 scope: "backend",
                 isAuth: true,
             },
