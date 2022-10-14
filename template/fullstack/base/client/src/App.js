@@ -1,15 +1,24 @@
-import React from "react";
+import './App.css';
+import Navbar from "./components/Navbar/Navbar";
+
+import HomePage from "./pages/HomePage/HomePage";
+import AboutPage from "./pages/AboutPage/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+
 import { Routes, Route } from "react-router-dom";
-import routes from "./config/routes";
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
+      
       <Routes>
-        {routes({}).map((route) => (
-          <Route key={route.path} path={route.path} element={route.element} />
-        ))}
-      </Routes>
+        <Route  path="/" element={<HomePage />} />
+
+        <Route path="/about" element={<AboutPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>      
     </div>
   );
 }
