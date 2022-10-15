@@ -27,7 +27,7 @@ class FullStack extends base_1.InstallStructure {
                 scope: "backend",
             },
             {
-                packages: depedencies_1.EXPRESS_IRONLAUNCHER_AUTH_DEPS,
+                packages: depedencies_1.EXPRESS_IRONLAUNCHER_JWT_AUTH_DEPS,
                 isDev: false,
                 scope: "backend",
                 isAuth: true,
