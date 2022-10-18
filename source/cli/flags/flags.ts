@@ -7,7 +7,16 @@ import { validateKeysInObj } from "../../utils/validate-keys-in-obj";
 
 type IGetInfoFromFlag = (flags?: IIronlauncherConfig) => boolean;
 
-export function flagsData(flags: IIronlauncherConfig = {}) {
+export type IFlagsData = {
+  auth: "session" | "jwt";
+  template: Option<"views" | "json" | "fullstack">;
+  isSkipInstall: boolean;
+  isDryRun: boolean;
+  isPnpm: boolean;
+  isHelp: boolean;
+};
+
+export function flagsData(flags: IIronlauncherConfig = {}): IFlagsData {
   const auth = getFlagsAuth(flags);
 
   const template = getFlagsProjectVariant(flags);

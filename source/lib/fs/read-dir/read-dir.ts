@@ -1,5 +1,5 @@
 import { Result } from "@swan-io/boxed";
-import { readdirSync } from "node:fs";
+import { Dirent, readdirSync } from "node:fs";
 import { NodeFSError } from "../../../utils/nodejs-fs-error";
 
 export type IReadDirFunc = (target: string) => string[];
