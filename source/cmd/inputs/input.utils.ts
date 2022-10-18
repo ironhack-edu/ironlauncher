@@ -23,8 +23,3 @@ export function promptOptions(args: IPromptArgs = {}): Options {
     },
   };
 }
-
-export const enum Variant {
-  NoAuth,
-  Auth,
-}

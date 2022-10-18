@@ -1,6 +1,8 @@
 import { IronlauncherValue } from "../../../types/cli-config";
 
-export function makeCommandString(info: IronlauncherValue) {}
+export function makeCommandString(config: IronlauncherValue) {
+  const packageManager = getPackageManager(config);
+}
 
 type IMakePathConfig = Pick<IronlauncherValue, "isDryRun" | "isPnpm">;
 function makePath(path: string, config: IronlauncherValue) {
@@ -13,4 +15,16 @@ function makePath(path: string, config: IronlauncherValue) {
   }
 
   return `--prefix ${path}`;
+}
+
+function getPackageManager(config: IronlauncherValue) {
+  if (config.isDryRun) {
+    return "npm";
+  }
+
+  if (config.isPnpm) {
+    return "pnpm";
+  }
+
+  return "npm";
 }
