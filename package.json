@@ -6,7 +6,6 @@
   "author": "André de Albuquerque (https://itstheandre.com)",
   "license": "MIT",
   "description": "Project Bootstraper for the Ironhack Stack",
-  "type": "module",
   "scripts": {
     "dev": "DEV=true nodemon  ",
     "build": "rimraf dist && tsc",
@@ -41,7 +40,8 @@
     "kolorist": "^1.5.1",
     "minimist": "^1.2.6",
     "ora": "^5.4.1",
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "the-templator": "^1.0.0"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.2",

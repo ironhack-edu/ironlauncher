@@ -20,7 +20,7 @@ async function main() {
   }
 
   if (config.config.isOutOfSync) {
-    return logger.error(
+    logger.error(
       `Packages are out of sync. Please run command again with @latest in front of the package`
     );
   }

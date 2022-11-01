@@ -20,7 +20,7 @@ export async function askProjectType(
   }
 
   const templatesList = templatesResult.get();
-  console.log("templatesList:", templatesList);
+  // console.log("templatesList:", templatesList);
 
   const { project } = await prompts(
     [

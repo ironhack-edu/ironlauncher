@@ -5,6 +5,12 @@ export function makeCommandString(config: IronlauncherValue) {
 }
 
 type IMakePathConfig = Pick<IronlauncherValue, "isDryRun" | "isPnpm">;
+export function makeCommand(config: IronlauncherValue, path: string) {
+  return {
+    packageManager: "npm",
+  };
+}
+
 function makePath(path: string, config: IronlauncherValue) {
   if (config.isDryRun) {
     return "";

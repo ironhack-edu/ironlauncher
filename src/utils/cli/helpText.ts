@@ -1,7 +1,7 @@
 import type { MeowHelpFlags, MeowHelpCommands } from "cli-meow-help";
 import meowHelp from "cli-meow-help";
 
-export const FLAGS = ["json", "auth", "fs", "pnpm"] as const;
+export const FLAGS = ["json", "auth", "fs", "pnpm"];
 export type FLAGS_OPTS = typeof FLAGS[number];
 
 const flags: MeowHelpFlags<typeof FLAGS> = {

@@ -1,8 +1,7 @@
-import { createTemplateFolder } from "create-template-folder";
-import { readdirSync } from "fs";
 import minimist from "minimist";
-import { join } from "path";
+import { the_templator } from "the-templator";
 import { helpText } from "./cli/flags/helper-text";
+import { logFiles } from "./cmd/logger";
 import { getInDir } from "./cmd/paths/in-dir";
 import { getOutDir } from "./cmd/paths/out-dir";
 import { IronlauncherConfig } from "./config/config";
@@ -26,24 +25,18 @@ async function main() {
   }
 
   const config = configOpt.get();
-  console.log("config:", config);
+  // console.log("config:", config);
   const inDir = getInDir(config);
-  console.log("inDir:", inDir);
 
   const outDir = getOutDir(config);
 
-  const templatedFiles = await createTemplateFolder(
-    {
-      inDir,
-      outDir,
-      vars: { name: config.name },
-    },
-    {
-      dryRun: config.isDryRun || true,
-    }
-  );
+  const templatedFiles = await the_templator({
+    in_dir: inDir,
+    out_dir: outDir,
+    vars: { name: config.name },
+  });
 
-  console.log("templatedFiles:", templatedFiles);
+  logFiles(templatedFiles, outDir);
 }
 
 main();
