@@ -26,3 +26,5 @@ export const makeCommand: IMakeCommand = (func = spawn) => {
     });
   };
 };
+
+export const runCommand = makeCommand();
