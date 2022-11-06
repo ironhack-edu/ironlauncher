@@ -14,6 +14,8 @@ export type IRunCommand = (
 
 export const makeCommand: IMakeCommand = (func = spawn) => {
   return (command, verbose) => {
+    console.log("command:", command);
+    console.log("verbose:", verbose);
     return new Promise((resolve, reject) => {
       const childProcess = func(command, {
         stdio: verbose ? "inherit" : "ignore",

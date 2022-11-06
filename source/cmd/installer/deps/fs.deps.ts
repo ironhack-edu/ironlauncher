@@ -1,6 +1,6 @@
 import { IProjectDependency } from "../../../types/deps.types";
 
-export const REACT_DEPS: IProjectDependency[] = [
+export const REACT_DEPS = [
   {
     name: "react",
   },
@@ -28,4 +28,4 @@ export const REACT_DEPS: IProjectDependency[] = [
     name: "@testing-library/user-event",
     dev: true,
   },
-];
+] as const;

@@ -1,14 +1,15 @@
 import minimist from 'minimist';
 import { the_templator } from 'the-templator';
 import meowHelp from 'cli-meow-help';
-import { basename, join, sep } from 'path';
-import { Option, Result } from '@swan-io/boxed';
-import prompts from 'prompts';
-import { accessSync, existsSync, readdirSync } from 'fs';
+import { Result, Option } from '@swan-io/boxed';
+import groupBy from 'just-group-by';
+import { exec, spawn } from 'child_process';
 import unhandled from 'cli-handle-unhandled';
 import welcome from 'cli-welcome';
 import { promisify } from 'util';
-import { exec } from 'child_process';
+import { basename, join, sep } from 'path';
+import prompts from 'prompts';
+import { accessSync, existsSync, readdirSync } from 'fs';
 
 // source/index.ts
 
@@ -83,6 +84,265 @@ var commands = {
   }
 };
 var helpText = meowHelp({ flags, commands, name: "ironlauncher" });
+var makeCommand = (func = spawn) => {
+  return (command, verbose) => {
+    console.log("verbose:", verbose);
+    return new Promise((resolve, reject) => {
+      const childProcess = func(command, {
+        stdio: verbose ? "inherit" : "ignore",
+        shell: true
+      });
+      childProcess.on("close", resolve);
+      childProcess.on("error", reject);
+    });
+  };
+};
+var runCommand = makeCommand();
+
+// package.json
+var version = "0.36.0";
+var description = "Project Bootstraper for the Ironhack Stack";
+promisify(exec);
+function getPkgDescription(pkgJson = description) {
+  return pkgJson.trim();
+}
+function getPkgLocalVersion(pkgJson = version) {
+  return pkgJson.trim();
+}
+
+// source/utils/init.ts
+function init() {
+  unhandled();
+  welcome({
+    bgColor: "#2dc5fa",
+    description: getPkgDescription(),
+    color: "#333",
+    version: getPkgLocalVersion(),
+    clear: true,
+    bold: true,
+    title: "IronLauncher",
+    tagLine: "by Ironhack"
+  });
+}
+
+// source/utils/strip-whitespaces.ts
+function stripWhitespaces(string) {
+  return string.replaceAll(/\s+/g, "-");
+}
+
+// source/utils/bool-helpers.ts
+function isBoolean(option) {
+  if (typeof option === "string") {
+    return option.trim() === "true";
+  }
+  return option === true;
+}
+function handleBooleanValues(...options) {
+  return options.some((opt) => isBoolean(opt));
+}
+
+// source/utils/nodejs-fs-error.ts
+var NodeFSError = class extends Error {
+  errno;
+  code;
+  path;
+  stack;
+  constructor(error) {
+    const err = error;
+    super(err == null ? void 0 : err.message);
+    this.name = "NodeJsFSError";
+    this.cause = err == null ? void 0 : err.cause;
+    this.errno = err == null ? void 0 : err.errno;
+    this.stack = err == null ? void 0 : err.stack;
+    this.path = err == null ? void 0 : err.path;
+  }
+};
+var makeMoveToFolder = (func = process.chdir) => {
+  return ({ directory, dryRun }) => {
+    if (dryRun) {
+      return Result.Ok(void 0);
+    }
+    return Result.fromExecution(() => func(directory));
+  };
+};
+var moveToFolder = makeMoveToFolder();
+
+// source/cmd/installer/command-runner.ts
+var makeCommandRunner = (opts = {}) => {
+  const { moveToOtherFolder = moveToFolder, runCommandFunc = runCommand } = opts;
+  return async ({ deps, isDryRun, isPnpm }) => {
+    const organizeByPaths = groupBy(deps, ({ path }) => path);
+    for (const [path, allDeps] of Object.entries(organizeByPaths)) {
+      moveToOtherFolder({ directory: path, dryRun: isDryRun });
+      const seperateDev = groupBy(
+        allDeps.map((e) => ({ ...e, dev: e.dev || false })),
+        (dep) => dep.dev.toString()
+      );
+      for (const [devStatus, packages] of Object.entries(seperateDev)) {
+        const command = makeCommandBase({ isDryRun, isPnpm }, true).join(" ");
+        const dependenciesToInstall = packages.map((e) => e.name).join(" ");
+        await runCommandFunc(`${command} ${dependenciesToInstall}`, true);
+      }
+    }
+    return Result.Ok(void 0);
+  };
+};
+function getPackageManager(value) {
+  if (handleBooleanValues(!value.isDryRun, value.isPnpm)) {
+    return "pnpm";
+  }
+  return "npm";
+}
+function getInstallCommand(packageManager) {
+  if (packageManager === "pnpm") {
+    return "add";
+  }
+  return "install";
+}
+function getDryRunCommand(value) {
+  if (value.isDryRun) {
+    return "--dry-run";
+  }
+  return "";
+}
+function getIsDevCommand(isDev = false) {
+  return isDev ? "-D" : "";
+}
+function makeCommandBase(config, isDev = false) {
+  const packageManager = getPackageManager(config);
+  const installCommand = getInstallCommand(packageManager);
+  const isDevCommand = getIsDevCommand(isDev);
+  const dryRunCommand = getDryRunCommand(config);
+  return [packageManager, installCommand, isDevCommand, dryRunCommand];
+}
+
+// source/cmd/installer/deps/fs.deps.ts
+var REACT_DEPS = [
+  {
+    name: "react"
+  },
+  {
+    name: "react-dom"
+  },
+  {
+    name: "react-scripts"
+  },
+  {
+    name: "react-router-dom"
+  },
+  {
+    name: "axios"
+  },
+  {
+    name: "@testing-library/jest-dom",
+    dev: true
+  },
+  {
+    name: "@testing-library/react",
+    dev: true
+  },
+  {
+    name: "@testing-library/user-event",
+    dev: true
+  }
+];
+
+// source/cmd/installer/deps/base-backend.deps.ts
+var BASE_BACKEND_DEPS = [
+  {
+    name: "dotenv"
+  },
+  {
+    name: "express"
+  },
+  {
+    name: "mongoose"
+  },
+  {
+    name: "morgan"
+  },
+  {
+    name: "bcrypt"
+  },
+  {
+    name: "nodemon",
+    dev: true
+  }
+];
+
+// source/cmd/installer/deps/json.deps.ts
+var JSON_DEPS = [
+  ...BASE_BACKEND_DEPS,
+  {
+    name: "express-jwt"
+  },
+  {
+    name: "jsonwebtoken"
+  }
+];
+
+// source/cmd/installer/deps/views.deps.ts
+var VIEWS_DEPS = [
+  ...BASE_BACKEND_DEPS,
+  {
+    name: "hbs"
+  },
+  {
+    name: "serve-favicon"
+  },
+  {
+    name: "cookie-parser"
+  },
+  {
+    name: "express-session"
+  },
+  {
+    name: "connect-mongo"
+  }
+];
+function assertCannotReach(x) {
+  throw new Error("this should never ever be reached");
+}
+function makeTemplateArr(template, fn) {
+  switch (template) {
+    case "fullstack": {
+      return fn([REACT_DEPS, JSON_DEPS]);
+    }
+    case "views": {
+      return fn([VIEWS_DEPS]);
+    }
+    case "json": {
+      return fn([JSON_DEPS]);
+    }
+    default: {
+      assertCannotReach();
+      return fn([]);
+    }
+  }
+}
+function makePathsToProjects(outDir, template) {
+  switch (template) {
+    case "fullstack": {
+      return makeTemplateArr(template, (deps) => {
+        const [client, server] = deps;
+        const clientPath = join(outDir, "client");
+        const serverPath = join(outDir, "server");
+        const clientDeps = client.map((dep) => ({
+          ...dep,
+          path: clientPath
+        }));
+        const serverDeps = server.map((dep) => ({ ...dep, path: serverPath }));
+        return [...clientDeps, ...serverDeps];
+      });
+    }
+    default: {
+      return makeTemplateArr(template, (deps) => {
+        const [allDeps] = deps;
+        return allDeps.map((dep) => ({ ...dep, path: outDir }));
+      });
+    }
+  }
+}
 async function logFiles(fileNames, name2) {
   console.log();
   console.log(`ting files in ./$${basename(name2)}`);
@@ -113,11 +373,6 @@ function promptOptions(args = {}) {
       exitter(1);
     }
   };
-}
-
-// source/utils/strip-whitespaces.ts
-function stripWhitespaces(string) {
-  return string.replaceAll(/\s+/g, "-");
 }
 
 // source/cmd/inputs/input-errors.ts
@@ -220,60 +475,6 @@ async function askName(args = {}) {
   );
   return name2;
 }
-
-// package.json
-var version = "0.36.0";
-var description = "Project Bootstraper for the Ironhack Stack";
-promisify(exec);
-function getPkgDescription(pkgJson = description) {
-  return pkgJson.trim();
-}
-function getPkgLocalVersion(pkgJson = version) {
-  return pkgJson.trim();
-}
-
-// source/utils/init.ts
-function init() {
-  unhandled();
-  welcome({
-    bgColor: "#2dc5fa",
-    description: getPkgDescription(),
-    color: "#333",
-    version: getPkgLocalVersion(),
-    clear: true,
-    bold: true,
-    title: "IronLauncher",
-    tagLine: "by Ironhack"
-  });
-}
-
-// source/utils/bool-helpers.ts
-function isBoolean(option) {
-  if (typeof option === "string") {
-    return option.trim() === "true";
-  }
-  return option === true;
-}
-function handleBooleanValues(...options) {
-  return options.some((opt) => isBoolean(opt));
-}
-
-// source/utils/nodejs-fs-error.ts
-var NodeFSError = class extends Error {
-  errno;
-  code;
-  path;
-  stack;
-  constructor(error) {
-    const err = error;
-    super(err == null ? void 0 : err.message);
-    this.name = "NodeJsFSError";
-    this.cause = err == null ? void 0 : err.cause;
-    this.errno = err == null ? void 0 : err.errno;
-    this.stack = err == null ? void 0 : err.stack;
-    this.path = err == null ? void 0 : err.path;
-  }
-};
 function fromTruthy(val) {
   const value = val ?? null;
   return Option.fromNull(value);
@@ -551,5 +752,14 @@ async function main() {
     vars: { name: config.name }
   });
   logFiles(templatedFiles, outDir);
+  const dependencies = makePathsToProjects(outDir, config.template);
+  const installCommand = makeCommandRunner();
+  console.log("installing? ");
+  await installCommand({
+    deps: dependencies,
+    isDryRun: config.isDryRun,
+    isPnpm: config.isPnpm
+  });
+  console.log("installed");
 }
 main();

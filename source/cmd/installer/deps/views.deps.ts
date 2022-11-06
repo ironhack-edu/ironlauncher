@@ -19,6 +19,4 @@ export const VIEWS_DEPS = [
   {
     name: "connect-mongo",
   },
-] as const satisfies readonly IProjectDependency[];
-
-
+] as const;

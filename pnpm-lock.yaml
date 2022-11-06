@@ -15,6 +15,7 @@ specifiers:
   create-template-folder: ^2.3.1
   esbuild: ^0.13.15
   esbuild-runner: ^2.2.1
+  just-group-by: ^2.1.2
   kolorist: ^1.5.1
   minimist: ^1.2.6
   mock-fs: ^5.1.4
@@ -41,6 +42,7 @@ dependencies:
   cli-welcome: 2.2.2
   copy-template-dir: 1.4.0
   create-template-folder: 2.3.1
+  just-group-by: 2.1.2
   kolorist: 1.6.0
   minimist: 1.2.7
   ora: 5.4.1
@@ -1529,6 +1531,10 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
+    dev: false
+
+  /just-group-by/2.1.2:
+    resolution: {integrity: sha512-pl5PjWr/WAQx0XL7igWUMwQoiyhYt+tc/8STlNgjENqZjRch4V9dExBF1vd9SRob75vGXrUKyL2Dp4kRVeadPQ==}
     dev: false
 
   /kind-of/3.2.2:

@@ -1,5 +1,3 @@
-import { IProjectDependency } from "../../../types/deps.types";
-
 export const BASE_BACKEND_DEPS = [
   {
     name: "dotenv",
@@ -8,7 +6,13 @@ export const BASE_BACKEND_DEPS = [
     name: "express",
   },
   {
+    name: "mongodb",
+  },
+  {
     name: "mongoose",
+  },
+  {
+    name: "morgan",
   },
   {
     name: "bcrypt",
@@ -17,5 +21,4 @@ export const BASE_BACKEND_DEPS = [
     name: "nodemon",
     dev: true,
   },
-] as const satisfies readonly IProjectDependency[];;
-
+] as const;
