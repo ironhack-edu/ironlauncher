@@ -36,6 +36,10 @@ export class IronlauncherConfig {
     this.flagData = rest;
   }
 
+  isCurrentFolder() {
+    return this.cliInputs?.[0] === ".";
+  }
+
   async get(): Promise<Option<IronlauncherValue>> {
     if (this.isHelp) {
       return Option.None();
@@ -47,11 +51,14 @@ export class IronlauncherConfig {
 
     const envStatus = getEnvInfo();
 
+    const isVerbose = envStatus.isVerbose || this.flagData.isVerbose;
+
     return Option.Some({
       ...this.flagData,
       name,
       template,
       ...envStatus,
+      isVerbose,
     });
   }
 }

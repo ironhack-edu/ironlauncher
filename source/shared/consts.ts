@@ -11,4 +11,5 @@ export const IHL_FLAGS = {
   dryRun: ["dry-run", "dryRun"],
   help: ["help", "h"],
   skipInstall: ["skip-install", "skipInstall"],
+  verbose: ["verbose", "isVerbose"],
 } as const;

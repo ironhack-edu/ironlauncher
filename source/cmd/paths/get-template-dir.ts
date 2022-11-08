@@ -1,5 +1,7 @@
 import { join } from "path";
 
 export function getTemplateDir() {
-  return join(process.cwd(), "template");
+  const basePath = join(require.main!.path, "..");
+
+  return join(basePath, "template");
 }

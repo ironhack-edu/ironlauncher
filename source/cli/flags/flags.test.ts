@@ -21,6 +21,7 @@ describe("flagsData", () => {
         isSkipInstall: false,
         template: Option.None(),
         isHelp: false,
+        isVerbose: false,
       },
     },
     {
@@ -32,6 +33,7 @@ describe("flagsData", () => {
         isSkipInstall: false,
         template: Option.None(),
         isHelp: false,
+        isVerbose: false,
       },
     },
     {
@@ -43,6 +45,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.Some("views"),
+        isVerbose: false,
       },
     },
     {
@@ -54,6 +57,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.Some("json"),
+        isVerbose: false,
       },
     },
     {
@@ -65,6 +69,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.Some("fullstack"),
+        isVerbose: false,
       },
     },
     {
@@ -76,6 +81,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.None(),
+        isVerbose: false,
       },
     },
     {
@@ -87,6 +93,7 @@ describe("flagsData", () => {
         isPnpm: true,
         isSkipInstall: false,
         template: Option.None(),
+        isVerbose: false,
       },
     },
     {
@@ -98,6 +105,7 @@ describe("flagsData", () => {
         isPnpm: true,
         isSkipInstall: false,
         template: Option.None(),
+        isVerbose: false,
       },
     },
     {
@@ -109,6 +117,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: true,
         template: Option.None(),
+        isVerbose: false,
       },
     },
     {
@@ -120,6 +129,7 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.None(),
+        isVerbose: false,
       },
     },
     {
@@ -131,6 +141,31 @@ describe("flagsData", () => {
         isPnpm: false,
         isSkipInstall: false,
         template: Option.None(),
+        isVerbose: false,
+      },
+    },
+    {
+      flags: { verbose: true },
+      result: {
+        isHelp: false,
+        auth: "jwt",
+        isDryRun: false,
+        isPnpm: false,
+        isSkipInstall: false,
+        template: Option.None(),
+        isVerbose: true,
+      },
+    },
+    {
+      flags: { isVerbose: true },
+      result: {
+        isHelp: false,
+        auth: "jwt",
+        isDryRun: false,
+        isPnpm: false,
+        isSkipInstall: false,
+        template: Option.None(),
+        isVerbose: true,
       },
     },
   ];

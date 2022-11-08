@@ -11,6 +11,5 @@ describe("prompts", () => {
       type: "text",
       message: "Project name?",
     });
-    console.log("value:", value);
   });
 });

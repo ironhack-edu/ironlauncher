@@ -13,6 +13,5 @@ describe("Name Validator", () => {
     });
 
     const result = NameValidator.validate(".");
-    console.log("result:", result);
   });
 });

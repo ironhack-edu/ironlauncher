@@ -6,6 +6,5 @@ function isBoolean(option: string | boolean = false) {
 }
 
 export function multipleBooleans(...options: Array<string | boolean>) {
-  console.log("options:", options);
   return options.some((opt) => isBoolean(opt));
 }

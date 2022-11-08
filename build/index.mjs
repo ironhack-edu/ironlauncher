@@ -1,9 +1,13 @@
+#!/usr/bin/env node
+import alert from 'cli-alerts';
+import { dim, green, bgRed, white, yellow } from 'kolorist';
 import minimist from 'minimist';
 import { the_templator } from 'the-templator';
 import meowHelp from 'cli-meow-help';
 import { Result, Option } from '@swan-io/boxed';
 import groupBy from 'just-group-by';
 import { exec, spawn } from 'child_process';
+import ora from 'ora';
 import unhandled from 'cli-handle-unhandled';
 import welcome from 'cli-welcome';
 import { promisify } from 'util';
@@ -11,7 +15,13 @@ import { basename, join, sep } from 'path';
 import prompts from 'prompts';
 import { accessSync, existsSync, readdirSync } from 'fs';
 
-// source/index.ts
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined")
+    return require.apply(this, arguments);
+  throw new Error('Dynamic require of "' + x + '" is not supported');
+});
 
 // source/shared/consts.ts
 var IHL_FLAGS = {
@@ -21,7 +31,8 @@ var IHL_FLAGS = {
   pnpm: ["pnpm", "p"],
   dryRun: ["dry-run", "dryRun"],
   help: ["help", "h"],
-  skipInstall: ["skip-install", "skipInstall"]
+  skipInstall: ["skip-install", "skipInstall"],
+  verbose: ["verbose", "isVerbose"]
 };
 
 // source/cli/flags/helper-text.ts
@@ -32,7 +43,8 @@ var flagKeys = {
   help: IHL_FLAGS.help[0],
   pnpm: IHL_FLAGS.pnpm[0],
   skipInstall: IHL_FLAGS.skipInstall[0],
-  dryRun: IHL_FLAGS.dryRun[0]
+  dryRun: IHL_FLAGS.dryRun[0],
+  verbose: IHL_FLAGS.verbose[0]
 };
 var flags = {
   [flagKeys.views]: {
@@ -70,6 +82,11 @@ var flags = {
     type: "boolean",
     default: false,
     desc: "Does a dry run. IE does all necessary validation, however it does not move any file, nor does it install anything"
+  },
+  [flagKeys.verbose]: {
+    type: "boolean",
+    default: false,
+    desc: "Runs a verbose run of commands, printing a lot more to stdout. Useful for debugging"
   }
 };
 var commands = {
@@ -86,7 +103,6 @@ var commands = {
 var helpText = meowHelp({ flags, commands, name: "ironlauncher" });
 var makeCommand = (func = spawn) => {
   return (command, verbose) => {
-    console.log("verbose:", verbose);
     return new Promise((resolve, reject) => {
       const childProcess = func(command, {
         stdio: verbose ? "inherit" : "ignore",
@@ -98,6 +114,38 @@ var makeCommand = (func = spawn) => {
   };
 };
 var runCommand = makeCommand();
+var logger = {
+  emptyLine() {
+    console.log();
+  },
+  dimmed({ dimmed, rest }) {
+    const greenText = green(`./${rest}`);
+    const dimmedText = dim(`
+${dimmed} $${greenText}`);
+    console.log(dimmedText);
+  },
+  focus({ focus, rest }) {
+    const focusedText = green(focus);
+    console.log(`${focusedText}${rest}`);
+  },
+  error(str) {
+    console.log(`${bgRed(white(" ERROR "))} - ${str}`);
+  },
+  log(str) {
+    console.log(str);
+  }
+};
+var makeSpinner = (spinnerMaker = ora) => {
+  const spinner = spinnerMaker({ text: "" });
+  return {
+    start(str) {
+      spinner.start(str);
+    },
+    succeed(str) {
+      spinner.succeed(str);
+    }
+  };
+};
 
 // package.json
 var version = "0.36.0";
@@ -169,9 +217,22 @@ var moveToFolder = makeMoveToFolder();
 
 // source/cmd/installer/command-runner.ts
 var makeCommandRunner = (opts = {}) => {
-  const { moveToOtherFolder = moveToFolder, runCommandFunc = runCommand } = opts;
-  return async ({ deps, isDryRun, isPnpm }) => {
+  const {
+    moveToOtherFolder = moveToFolder,
+    runCommandFunc = runCommand,
+    spinner = makeSpinner()
+  } = opts;
+  return async ({ deps, isDryRun, isPnpm, isSkipInstall, isVerbose }) => {
     const organizeByPaths = groupBy(deps, ({ path }) => path);
+    if (!isVerbose) {
+      spinner.start(
+        `${yellow("INSTALLING")} dependencies...
+
+${dim(
+          `It might take a moment`
+        )}`
+      );
+    }
     for (const [path, allDeps] of Object.entries(organizeByPaths)) {
       moveToOtherFolder({ directory: path, dryRun: isDryRun });
       const seperateDev = groupBy(
@@ -179,10 +240,23 @@ var makeCommandRunner = (opts = {}) => {
         (dep) => dep.dev.toString()
       );
       for (const [devStatus, packages] of Object.entries(seperateDev)) {
-        const command = makeCommandBase({ isDryRun, isPnpm }, true).join(" ");
+        const isDev = devStatus === "true";
+        const command = makeCommandBase(
+          { isPnpm, isDryRun, isSkipInstall },
+          isDev
+        ).join(" ");
         const dependenciesToInstall = packages.map((e) => e.name).join(" ");
-        await runCommandFunc(`${command} ${dependenciesToInstall}`, true);
+        if (isVerbose) {
+          logger.focus({
+            focus: "Installing dependencies inside ",
+            rest: path
+          });
+        }
+        await runCommandFunc(`${command} ${dependenciesToInstall}`, isVerbose);
       }
+    }
+    if (!isVerbose) {
+      spinner.succeed(`${green("FINISHED")} installation...`);
     }
     return Result.Ok(void 0);
   };
@@ -199,11 +273,14 @@ function getInstallCommand(packageManager) {
   }
   return "install";
 }
-function getDryRunCommand(value) {
-  if (value.isDryRun) {
-    return "--dry-run";
+function getSkipInstallCommand(value, packageManager) {
+  if (!value.isSkipInstall) {
+    return "";
   }
-  return "";
+  if (packageManager === "npm") {
+    return " --package-lock-only ";
+  }
+  return " --lockfile-only";
 }
 function getIsDevCommand(isDev = false) {
   return isDev ? "-D" : "";
@@ -212,8 +289,8 @@ function makeCommandBase(config, isDev = false) {
   const packageManager = getPackageManager(config);
   const installCommand = getInstallCommand(packageManager);
   const isDevCommand = getIsDevCommand(isDev);
-  const dryRunCommand = getDryRunCommand(config);
-  return [packageManager, installCommand, isDevCommand, dryRunCommand];
+  const dryRunCommand = getSkipInstallCommand(config, packageManager);
+  return [packageManager, installCommand, dryRunCommand, isDevCommand];
 }
 
 // source/cmd/installer/deps/fs.deps.ts
@@ -254,6 +331,9 @@ var BASE_BACKEND_DEPS = [
   },
   {
     name: "express"
+  },
+  {
+    name: "mongodb"
   },
   {
     name: "mongoose"
@@ -344,32 +424,37 @@ function makePathsToProjects(outDir, template) {
   }
 }
 async function logFiles(fileNames, name2) {
-  console.log();
-  console.log(`ting files in ./$${basename(name2)}`);
+  logger.emptyLine();
+  logger.dimmed({ dimmed: `
+Creating files in`, rest: basename(name2) });
   fileNames.forEach((filePath) => {
     const fileName = basename(filePath);
-    console.log(`CREATED: ${fileName}`);
+    logger.focus({ focus: "CREATED", rest: `: ${fileName}` });
   });
-  console.log();
+  logger.emptyLine();
 }
 function getTemplateDir() {
-  return join(process.cwd(), "template");
+  const basePath = join(__require.main.path, "..");
+  return join(basePath, "template");
 }
 
 // source/cmd/paths/in-dir.ts
 function getInDir({ template }) {
   return join(getTemplateDir(), template, "authentication");
 }
-function getOutDir(config) {
+function getOutDir(config, isCurrentFolder = false) {
+  if (isCurrentFolder) {
+    return process.cwd();
+  }
   return join(process.cwd(), config.name);
 }
 
 // source/cmd/inputs/input.utils.ts
 function promptOptions(args = {}) {
-  const { exitter = process.exit, logger = console.error } = args;
+  const { exitter = process.exit, logger: logger2 = console.error } = args;
   return {
     onCancel(data) {
-      logger(`You did not set a ${data.name} and canceled the ironlauncher`);
+      logger2(`You did not set a ${data.name} and canceled the ironlauncher`);
       exitter(1);
     }
   };
@@ -498,13 +583,15 @@ function flagsData(flags2 = {}) {
   const isDryRun = getFlagsDryRun(flags2);
   const isPnpm = getFlagsIsPnpm(flags2);
   const isHelp = getFlagsHelp(flags2);
+  const isVerbose = getFlagsVerbose(flags2);
   return {
     auth,
     template,
     isSkipInstall,
     isDryRun,
     isPnpm,
-    isHelp
+    isHelp,
+    isVerbose
   };
 }
 var getFlagsProjectVariant = (flags2 = {}) => {
@@ -526,6 +613,9 @@ var getFlagsAuth = (flags2) => {
     return "session";
   }
   return "jwt";
+};
+var getFlagsVerbose = (flags2 = {}) => {
+  return getInfoFromFlags(flags2, IHL_FLAGS.verbose);
 };
 var getFlagsIsPnpm = (flags2 = {}) => {
   return getInfoFromFlags(flags2, IHL_FLAGS.pnpm);
@@ -697,6 +787,10 @@ var IronlauncherConfig = class {
   }
   isHelp;
   flagData;
+  isCurrentFolder() {
+    var _a;
+    return ((_a = this.cliInputs) == null ? void 0 : _a[0]) === ".";
+  }
   async get() {
     if (this.isHelp) {
       return Option.None();
@@ -704,11 +798,13 @@ var IronlauncherConfig = class {
     const name2 = await makeName(getNameInInputs(this.cliInputs));
     const template = await makeTemplate(this.flagData.template);
     const envStatus = getEnvInfo();
+    const isVerbose = envStatus.isVerbose || this.flagData.isVerbose;
     return Option.Some({
       ...this.flagData,
       name: name2,
       template,
-      ...envStatus
+      ...envStatus,
+      isVerbose
     });
   }
 };
@@ -737,29 +833,59 @@ async function main() {
   init();
   const ironlauncherConfig = new IronlauncherConfig(cliFlags, inputs);
   if (ironlauncherConfig.isHelp) {
-    return console.log(helpText);
+    return logger.log(helpText);
   }
   const configOpt = await ironlauncherConfig.get();
   if (configOpt.isNone()) {
-    return console.log(helpText);
+    return logger.log(helpText);
   }
   const config = configOpt.get();
   const inDir = getInDir(config);
-  const outDir = getOutDir(config);
-  const templatedFiles = await the_templator({
-    in_dir: inDir,
-    out_dir: outDir,
-    vars: { name: config.name }
-  });
+  const outDir = getOutDir(config, ironlauncherConfig.isCurrentFolder());
+  const templatedFiles = await the_templator(
+    {
+      in_dir: inDir,
+      out_dir: outDir,
+      vars: { name: config.name }
+    },
+    config.isDryRun
+  );
   logFiles(templatedFiles, outDir);
   const dependencies = makePathsToProjects(outDir, config.template);
   const installCommand = makeCommandRunner();
-  console.log("installing? ");
+  if (config.isDryRun) {
+    logger.focus({ focus: "DRY RUN SUCCESSFULLY EXECUTED", rest: "" });
+    return;
+  }
   await installCommand({
     deps: dependencies,
-    isDryRun: config.isDryRun,
-    isPnpm: config.isPnpm
+    ...config
   });
-  console.log("installed");
+  const isCurrentFolder = ironlauncherConfig.isCurrentFolder();
+  const createdMsg = isCurrentFolder ? `
+
+${templatedFiles.length} files created in the current directory` : `
+
+${templatedFiles.length} files created in ${dim(
+    `.${outDir}`
+  )} directory`;
+  const bootStrapMsg = isCurrentFolder ? `Projected bootstrapped successfully. 
+
+You can now open the current directory with your code editor` : `Project bootstrapped successfully.
+
+You can now cd into ${dim(
+    `.${outDir}`
+  )}`;
+  alert({
+    type: "success",
+    name: "ALL DONE",
+    msg: createdMsg
+  });
+  alert({
+    type: "success",
+    name: "DONE",
+    msg: bootStrapMsg
+  });
+  return;
 }
 main();

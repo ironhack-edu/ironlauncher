@@ -1,4 +1,9 @@
+#!/usr/bin/env node
+
+import alert from "cli-alerts";
+import { dim } from "kolorist";
 import minimist from "minimist";
+import path, { dirname, join } from "path";
 import { the_templator } from "the-templator";
 import { helpText } from "./cli/flags/helper-text";
 import { makeCommandRunner } from "./cmd/installer/command-runner";
@@ -7,6 +12,7 @@ import { logFiles } from "./cmd/logger";
 import { getInDir } from "./cmd/paths/in-dir";
 import { getOutDir } from "./cmd/paths/out-dir";
 import { IronlauncherConfig } from "./config/config";
+import { logger } from "./lib/logger";
 import { init } from "./utils";
 
 const { _: inputs, "--": __, ...cliFlags } = minimist(process.argv.slice(2));
@@ -17,21 +23,19 @@ async function main() {
   const ironlauncherConfig = new IronlauncherConfig(cliFlags, inputs);
 
   if (ironlauncherConfig.isHelp) {
-    return console.log(helpText);
+    return logger.log(helpText);
   }
 
   const configOpt = await ironlauncherConfig.get();
 
   if (configOpt.isNone()) {
-    return console.log(helpText);
+    return logger.log(helpText);
   }
 
   const config = configOpt.get();
-  console.log("config:", config);
-  // console.log("config:", config);
   const inDir = getInDir(config);
 
-  const outDir = getOutDir(config);
+  const outDir = getOutDir(config, ironlauncherConfig.isCurrentFolder());
 
   const templatedFiles = await the_templator(
     {
@@ -48,18 +52,42 @@ async function main() {
 
   const installCommand = makeCommandRunner();
 
-  console.log("installing? ");
   if (config.isDryRun) {
+    logger.focus({ focus: "DRY RUN SUCCESSFULLY EXECUTED", rest: "" });
     return;
   }
+
   await installCommand({
     deps: dependencies,
-    isDryRun: config.isDryRun,
-    isPnpm: config.isPnpm,
-    isSkipInstall: config.isSkipInstall,
+    ...config,
   });
 
-  console.log("installed");
+  const isCurrentFolder = ironlauncherConfig.isCurrentFolder();
+  const createdMsg = isCurrentFolder
+    ? `\n\n${templatedFiles.length} files created in the current directory`
+    : `\n\n${templatedFiles.length} files created in ${dim(
+        `.${outDir}`
+      )} directory`;
+
+  const bootStrapMsg = isCurrentFolder
+    ? `Projected bootstrapped successfully. \n\nYou can now open the current directory with your code editor`
+    : `Project bootstrapped successfully.\n\nYou can now cd into ${dim(
+        `.${outDir}`
+      )}`;
+
+  alert({
+    type: "success",
+    name: "ALL DONE",
+    msg: createdMsg,
+  });
+
+  alert({
+    type: "success",
+    name: "DONE",
+    msg: bootStrapMsg,
+  });
+
+  return;
 }
 
 main();

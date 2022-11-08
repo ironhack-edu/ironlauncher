@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 declare module "cli-handle-unhandled" {
   export default function unhandled(): void;
 }

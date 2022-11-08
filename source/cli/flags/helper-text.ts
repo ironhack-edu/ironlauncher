@@ -9,6 +9,7 @@ const flagKeys = {
   pnpm: IHL_FLAGS.pnpm[0],
   skipInstall: IHL_FLAGS.skipInstall[0],
   dryRun: IHL_FLAGS.dryRun[0],
+  verbose: IHL_FLAGS.verbose[0],
 } as const;
 
 const flags = {
@@ -47,6 +48,11 @@ const flags = {
     type: "boolean",
     default: false,
     desc: "Does a dry run. IE does all necessary validation, however it does not move any file, nor does it install anything",
+  },
+  [flagKeys.verbose]: {
+    type: "boolean",
+    default: false,
+    desc: "Runs a verbose run of commands, printing a lot more to stdout. Useful for debugging",
   },
 } as const;
 

@@ -49,7 +49,6 @@ describe("elementExists", () => {
     mockFS({});
 
     const folderExistsResult = FsValidator.elementExists(folderName);
-    console.log("folderExistsResult:", folderExistsResult);
   });
 });
 

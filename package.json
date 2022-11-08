@@ -14,7 +14,7 @@
     "test": "vitest"
   },
   "bin": {
-    "ironlauncher": "index.js"
+    "ironlauncher": "build/index.js"
   },
   "keywords": [
     "express",

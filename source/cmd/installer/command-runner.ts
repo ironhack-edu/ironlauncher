@@ -1,7 +1,9 @@
 import { Result } from "@swan-io/boxed";
 import groupBy from "just-group-by";
-import { getIsDryRun } from "../../../src/config/flagParser";
+import { dim, green, yellow } from "kolorist";
 import { IRunCommand, runCommand } from "../../lib/commands/run-command";
+import { logger } from "../../lib/logger";
+import { makeSpinner, Spinner } from "../../lib/spinner";
 import { IronlauncherValue } from "../../types/cli-config";
 import { IProjectDependency } from "../../types/deps.types";
 import { handleBooleanValues } from "../../utils";
@@ -16,11 +18,13 @@ export type ICommandArgs = {
   isPnpm: IronlauncherValue["isPnpm"];
   isDryRun: IronlauncherValue["isDryRun"];
   isSkipInstall: IronlauncherValue["isSkipInstall"];
+  isVerbose: IronlauncherValue["isVerbose"];
 };
 
 export type ICommandRunnerArgs = {
   runCommandFunc?: IRunCommand;
   moveToOtherFolder?: IMakeMakeMoveToFolderFunc;
+  spinner?: Spinner;
 };
 
 export type ICommandRunner = (
@@ -28,11 +32,22 @@ export type ICommandRunner = (
 ) => (args: ICommandArgs) => Promise<Result<void, unknown>>;
 
 export const makeCommandRunner: ICommandRunner = (opts = {}) => {
-  const { moveToOtherFolder = moveToFolder, runCommandFunc = runCommand } =
-    opts;
+  const {
+    moveToOtherFolder = moveToFolder,
+    runCommandFunc = runCommand,
+    spinner = makeSpinner(),
+  } = opts;
 
-  return async ({ deps, isDryRun, isPnpm, isSkipInstall }) => {
+  return async ({ deps, isDryRun, isPnpm, isSkipInstall, isVerbose }) => {
     const organizeByPaths = groupBy(deps, ({ path }) => path);
+
+    if (!isVerbose) {
+      spinner.start(
+        `${yellow("INSTALLING")} dependencies...\n\n${dim(
+          `It might take a moment`
+        )}`
+      );
+    }
 
     for (const [path, allDeps] of Object.entries(organizeByPaths)) {
       moveToOtherFolder({ directory: path, dryRun: isDryRun });
@@ -47,13 +62,24 @@ export const makeCommandRunner: ICommandRunner = (opts = {}) => {
 
         const command = makeCommandBase(
           { isPnpm, isDryRun, isSkipInstall },
-          true
+          isDev
         ).join(" ");
 
         const dependenciesToInstall = packages.map((e) => e.name).join(" ");
 
-        await runCommandFunc(`${command} ${dependenciesToInstall}`, true);
+        if (isVerbose) {
+          logger.focus({
+            focus: "Installing dependencies inside ",
+            rest: path,
+          });
+        }
+
+        await runCommandFunc(`${command} ${dependenciesToInstall}`, isVerbose);
       }
+    }
+
+    if (!isVerbose) {
+      spinner.succeed(`${green("FINISHED")} installation...`);
     }
 
     return Result.Ok(undefined);

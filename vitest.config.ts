@@ -11,5 +11,6 @@ export default defineConfig({
       "template/**",
     ],
     includeSource: ["source/**/*.ts"],
+    include: ["./source/**/*.{spec,test}.ts"],
   },
 });

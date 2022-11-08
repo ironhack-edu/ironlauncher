@@ -1,13 +1,14 @@
 import { basename } from "path";
+import { logger } from "../../lib/logger";
 
 export async function logFiles(fileNames: string[], name: string) {
-  console.log();
-  console.log(`ting files in ./$${basename(name)}`);
+  logger.emptyLine();
+  logger.dimmed({ dimmed: `\nCreating files in`, rest: basename(name) });
 
   fileNames.forEach((filePath) => {
     const fileName = basename(filePath);
-    console.log(`CREATED: ${fileName}`);
+    logger.focus({ focus: "CREATED", rest: `: ${fileName}` });
   });
 
-  console.log();
+  logger.emptyLine();
 }

@@ -14,6 +14,7 @@ export type IFlagsData = {
   isDryRun: boolean;
   isPnpm: boolean;
   isHelp: boolean;
+  isVerbose: boolean;
 };
 
 export function flagsData(flags: IIronlauncherConfig = {}): IFlagsData {
@@ -29,6 +30,8 @@ export function flagsData(flags: IIronlauncherConfig = {}): IFlagsData {
 
   const isHelp = getFlagsHelp(flags);
 
+  const isVerbose = getFlagsVerbose(flags);
+
   return {
     auth,
     template,
@@ -36,6 +39,7 @@ export function flagsData(flags: IIronlauncherConfig = {}): IFlagsData {
     isDryRun,
     isPnpm,
     isHelp,
+    isVerbose,
   };
 }
 
@@ -63,6 +67,10 @@ const getFlagsAuth = (flags?: IIronlauncherConfig): "session" | "jwt" => {
   }
 
   return "jwt";
+};
+
+const getFlagsVerbose: IGetInfoFromFlag = (flags = {}) => {
+  return getInfoFromFlags(flags, IHL_FLAGS.verbose);
 };
 
 const getFlagsIsPnpm: IGetInfoFromFlag = (flags = {}) => {
