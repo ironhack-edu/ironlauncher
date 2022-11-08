@@ -63,21 +63,22 @@ var flags = {
   [flagKeys.views]: {
     type: "boolean",
     default: true,
-    desc: "Creates an opinionated views server with express and handlebars"
+    desc: "Creates an opinionated views server with express and handlebars with authentication already built in"
   },
   [flagKeys.json]: {
     type: "boolean",
     default: false,
-    desc: "Creates an opinionated json server with express "
+    desc: "Creates an opinionated json server with express with authentication already built in"
   },
   [flagKeys.fs]: {
     type: "boolean",
     default: false,
-    desc: "Creates an opinionated express and create-react-app setup"
+    desc: "Creates an opinionated express and create-react-app setup with authentication already built in"
   },
   [flagKeys.help]: {
     type: "boolean",
     default: false,
+    alias: "h",
     desc: "Displays help instructions"
   },
   [flagKeys.pnpm]: {
@@ -106,7 +107,7 @@ var commands = {
   "<name>": {
     desc: "The name of the project will be added as the path to mongodb and package.json"
   },
-  "<command>": {
+  "<flags>": {
     desc: "Some flags are chainable. You can request the project to be installed with pnpm and request a express/views application"
   },
   help: {

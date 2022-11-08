@@ -6,7 +6,7 @@ export enum ENV_FLAGS {
 export const IHL_FLAGS = {
   views: ["views"],
   json: ["json", "JSON"],
-  fs: ["fs", "fullStack", "fullstack", "full-stack"],
+  fs: ["fs", "fullStack", "fullstack", "full-stack", "fUlLsTaCk", "FuLlStAcK"],
   pnpm: ["pnpm", "p"],
   dryRun: ["dry-run", "dryRun"],
   help: ["help", "h"],
