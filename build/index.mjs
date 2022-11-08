@@ -27,7 +27,7 @@ var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require
 var IHL_FLAGS = {
   views: ["views"],
   json: ["json", "JSON"],
-  fs: ["fs", "fullStack", "fullstack", "full-stack"],
+  fs: ["fs", "fullStack", "fullstack", "full-stack", "fUlLsTaCk", "FuLlStAcK"],
   pnpm: ["pnpm", "p"],
   dryRun: ["dry-run", "dryRun"],
   help: ["help", "h"],
@@ -359,6 +359,9 @@ var JSON_DEPS = [
   },
   {
     name: "jsonwebtoken"
+  },
+  {
+    name: "cors"
   }
 ];
 

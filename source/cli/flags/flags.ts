@@ -2,6 +2,7 @@ import { Option } from "@swan-io/boxed";
 import { fromTruthy } from "../../lib/option-wrapper";
 import { IHL_FLAGS } from "../../shared";
 import { FlagData, IIronlauncherConfig } from "../../types/cli-config";
+import { IronlauncherTemplate } from "../../types/template.type";
 import { handleBooleanValues } from "../../utils";
 import { validateKeysInObj } from "../../utils/validate-keys-in-obj";
 
@@ -9,7 +10,7 @@ type IGetInfoFromFlag = (flags?: IIronlauncherConfig) => boolean;
 
 export type IFlagsData = {
   auth: "session" | "jwt";
-  template: Option<"views" | "json" | "fullstack">;
+  template: Option<IronlauncherTemplate>;
   isSkipInstall: boolean;
   isDryRun: boolean;
   isPnpm: boolean;

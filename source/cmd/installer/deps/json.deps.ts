@@ -9,4 +9,7 @@ export const JSON_DEPS = [
   {
     name: "jsonwebtoken",
   },
+  {
+    name: "cors",
+  },
 ] as const;
