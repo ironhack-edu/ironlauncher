@@ -45,7 +45,7 @@ export function flagsData(flags: IIronlauncherConfig = {}): IFlagsData {
 }
 
 const getFlagsProjectVariant = (flags: IIronlauncherConfig = {}) => {
-  return fromTruthy(flags).flatMap<"views" | "json" | "fullstack">((e) => {
+  return fromTruthy(flags).flatMap<IronlauncherTemplate>((e) => {
     if (getFlagsView(e)) {
       return Option.Some("views");
     }

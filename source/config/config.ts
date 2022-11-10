@@ -1,21 +1,20 @@
 import { Option } from "@swan-io/boxed";
 import {
-  IIronlauncherConfig,
-  IIronLauncherInputs,
-  IronlauncherValue,
-} from "../types/cli-config";
-import { askName } from "../cmd/inputs/ask-name";
-import { handleBooleanValues } from "../utils";
-import {
   flagsData,
   getIsHelpInInputs,
   IFlagsData,
   makeGetNameIsInInputs,
 } from "../cli";
-import { getEnvInfo } from "../env";
+import { askName } from "../cmd/inputs/ask-name";
 import { askProjectType } from "../cmd/inputs/ask-template";
-import { makeReadDirFunc } from "../lib/fs/read-dir/read-dir";
-import { join } from "path";
+import { getEnvInfo } from "../env";
+import {
+  IIronlauncherConfig,
+  IIronLauncherInputs,
+  IronlauncherValue,
+} from "../types/cli-config";
+import { IronlauncherTemplate } from "../types/template.type";
+import { handleBooleanValues } from "../utils";
 
 const getNameInInputs = makeGetNameIsInInputs();
 
@@ -73,7 +72,7 @@ async function makeName(nameOpt: Option<string>) {
   return value;
 }
 
-async function makeTemplate(template: Option<"json" | "views" | "fullstack">) {
+async function makeTemplate(template: Option<IronlauncherTemplate>) {
   if (template.isSome()) {
     return template.get();
   }

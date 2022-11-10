@@ -132,7 +132,7 @@ function makeCommandBase(
 
   const isDevCommand = getIsDevCommand(isDev);
 
-  const dryRunCommand = getSkipInstallCommand(config, packageManager);
+  const skipInstallCommand = getSkipInstallCommand(config, packageManager);
 
-  return [packageManager, installCommand, dryRunCommand, isDevCommand];
+  return [packageManager, installCommand, skipInstallCommand, isDevCommand];
 }
