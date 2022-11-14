@@ -30,13 +30,10 @@
   ],
   "dependencies": {
     "@swan-io/boxed": "^0.10.0",
-    "chalk": "^4.1.2",
     "cli-alerts": "^1.2.2",
     "cli-handle-unhandled": "^1.1.1",
     "cli-meow-help": "^2.0.2",
     "cli-welcome": "^2.2.2",
-    "copy-template-dir": "^1.4.0",
-    "create-template-folder": "^2.3.1",
     "just-group-by": "^2.1.2",
     "kolorist": "^1.5.1",
     "minimist": "^1.2.6",

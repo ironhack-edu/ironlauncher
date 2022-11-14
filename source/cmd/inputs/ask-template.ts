@@ -16,7 +16,7 @@ export async function askProjectType(
   const templatesResult = readDir(join(process.cwd(), "template"));
 
   if (templatesResult.isError()) {
-    throw new Error("OOpsie");
+    throw new Error("For some reason could not reach the template folder");
   }
 
   const templatesList = templatesResult.get();

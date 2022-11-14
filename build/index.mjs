@@ -12,8 +12,8 @@ import unhandled from 'cli-handle-unhandled';
 import welcome from 'cli-welcome';
 import { promisify } from 'util';
 import { basename, join, sep } from 'path';
-import prompts from 'prompts';
 import { accessSync, existsSync, readdirSync } from 'fs';
+import prompts from 'prompts';
 
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -290,8 +290,8 @@ function makeCommandBase(config, isDev = false) {
   const packageManager = getPackageManager(config);
   const installCommand = getInstallCommand(packageManager);
   const isDevCommand = getIsDevCommand(isDev);
-  const dryRunCommand = getSkipInstallCommand(config, packageManager);
-  return [packageManager, installCommand, dryRunCommand, isDevCommand];
+  const skipInstallCommand = getSkipInstallCommand(config, packageManager);
+  return [packageManager, installCommand, skipInstallCommand, isDevCommand];
 }
 
 // source/cmd/installer/deps/fs.deps.ts
@@ -452,118 +452,6 @@ function getOutDir(config, isCurrentFolder = false) {
   }
   return join(process.cwd(), config.name);
 }
-
-// source/cmd/inputs/input.utils.ts
-function promptOptions(args = {}) {
-  const { exitter = process.exit, logger: logger2 = console.error } = args;
-  return {
-    onCancel(data) {
-      logger2(`You did not set a ${data.name} and canceled the ironlauncher`);
-      exitter(1);
-    }
-  };
-}
-
-// source/cmd/inputs/input-errors.ts
-var NoSuchFolderError = class extends Error {
-  constructor(path) {
-    super(`There is no such folder -> ${path}`);
-    this.name = "NoSuchFolderError";
-  }
-};
-var DirectoryTakenError = class extends Error {
-  constructor(path) {
-    super(`The directory is already taken -> ${path}`);
-    this.name = "DirectoryTakenError";
-  }
-};
-var DirNotEmptyError = class extends Error {
-  constructor(path = process.cwd()) {
-    if (path === process.cwd()) {
-      super(`Please choose a different name. Current directory is not empty
-`);
-    } else {
-      super(
-        `Please choose a different name. Target dir not empty -> ${path}
-`
-      );
-    }
-    this.name = "DirNotEmptyError";
-  }
-};
-var NoValueError = class extends Error {
-  constructor() {
-    super("Please add a value\n");
-  }
-};
-
-// source/cmd/inputs/validator.ts
-function folderExists(folderName, func = existsSync) {
-  return Result.fromExecution(() => func(folderName));
-}
-function currentDirEmpty(func = readdirSync) {
-  return targetDirEmpty(process.cwd(), { readDirFunc: func });
-}
-function targetDirNotEmpty(target, injections = {}) {
-  const { existsFunc = existsSync, readDirFunc = readdirSync } = injections;
-  const resultOfExists = folderExists(target, existsFunc);
-  return resultOfExists.flatMap((value) => {
-    if (!value) {
-      return Result.Error(new NoSuchFolderError(target));
-    }
-    const targetDir = Result.fromExecution(
-      () => readDirFunc(target)
-    );
-    return targetDir.map((elementsInFolder) => !!elementsInFolder.length);
-  }).flatMapError(() => Result.Error(new NoSuchFolderError(target)));
-}
-function targetDirEmpty(target, injections = {}) {
-  return targetDirNotEmpty(target, injections).map((e) => !e);
-}
-var CURRENT_FOLDER_PATH = ".";
-function validateCurrentFolder() {
-  const result = currentDirEmpty().flatMap(
-    (value) => value ? Result.Ok(value) : Result.Error(new DirNotEmptyError())
-  );
-  if (result.isError()) {
-    return result.value.message;
-  }
-  return true;
-}
-function validateName(value) {
-  if (value === CURRENT_FOLDER_PATH) {
-    return validateCurrentFolder();
-  }
-  if (!value) {
-    return new NoValueError().message;
-  }
-  const val = stripWhitespaces(value);
-  const folderName = value.includes(process.cwd()) ? val : join(process.cwd(), val);
-  const exists = folderExists(folderName).match({
-    Error() {
-      return false;
-    },
-    Ok: (v) => v
-  });
-  if (exists) {
-    return new DirNotEmptyError(val).message;
-  }
-  return true;
-}
-
-// source/cmd/inputs/ask-name.ts
-async function askName(args = {}) {
-  const { name: name2 } = await prompts(
-    {
-      name: "name",
-      type: "text",
-      message: "Project name?",
-      validate: validateName
-    },
-    promptOptions(args)
-  );
-  return name2;
-}
 function fromTruthy(val) {
   const value = val ?? null;
   return Option.fromNull(value);
@@ -655,6 +543,39 @@ var getFlagsDryRun = (flags2 = {}) => {
 function getIsHelpInInputs(inputs2 = []) {
   return inputs2.includes("help");
 }
+
+// source/cmd/inputs/input-errors.ts
+var NoSuchFolderError = class extends Error {
+  constructor(path) {
+    super(`There is no such folder -> ${path}`);
+    this.name = "NoSuchFolderError";
+  }
+};
+var DirectoryTakenError = class extends Error {
+  constructor(path) {
+    super(`The directory is already taken -> ${path}`);
+    this.name = "DirectoryTakenError";
+  }
+};
+var DirNotEmptyError = class extends Error {
+  constructor(path = process.cwd()) {
+    if (path === process.cwd()) {
+      super(`Please choose a different name. Current directory is not empty
+`);
+    } else {
+      super(
+        `Please choose a different name. Target dir not empty -> ${path}
+`
+      );
+    }
+    this.name = "DirNotEmptyError";
+  }
+};
+var NoValueError = class extends Error {
+  constructor() {
+    super("Please add a value\n");
+  }
+};
 var makeReadDirFunc = (deps = {}) => {
   return (target) => {
     const { readDir = readdirSync } = deps;
@@ -728,18 +649,81 @@ var makeGetNameIsInInputs = (deps = {}) => {
   };
 };
 
-// source/env/retrieve-env.ts
-function isShowAllFlags(env) {
-  return handleBooleanValues(env["IHL_ALL" /* IHL_ALL */]);
-}
-function isVerboseIHL(env) {
-  return handleBooleanValues(env["IHL_VERBOSE" /* IHL_VERBOSE */]);
-}
-function getEnvInfo(env = process.env) {
+// source/cmd/inputs/input.utils.ts
+function promptOptions(args = {}) {
+  const { exitter = process.exit, logger: logger2 = console.error } = args;
   return {
-    isShowAll: isShowAllFlags(env),
-    isVerbose: isVerboseIHL(env)
+    onCancel(data) {
+      logger2(`You did not set a ${data.name} and canceled the ironlauncher`);
+      exitter(1);
+    }
   };
+}
+function folderExists(folderName, func = existsSync) {
+  return Result.fromExecution(() => func(folderName));
+}
+function currentDirEmpty(func = readdirSync) {
+  return targetDirEmpty(process.cwd(), { readDirFunc: func });
+}
+function targetDirNotEmpty(target, injections = {}) {
+  const { existsFunc = existsSync, readDirFunc = readdirSync } = injections;
+  const resultOfExists = folderExists(target, existsFunc);
+  return resultOfExists.flatMap((value) => {
+    if (!value) {
+      return Result.Error(new NoSuchFolderError(target));
+    }
+    const targetDir = Result.fromExecution(
+      () => readDirFunc(target)
+    );
+    return targetDir.map((elementsInFolder) => !!elementsInFolder.length);
+  }).flatMapError(() => Result.Error(new NoSuchFolderError(target)));
+}
+function targetDirEmpty(target, injections = {}) {
+  return targetDirNotEmpty(target, injections).map((e) => !e);
+}
+var CURRENT_FOLDER_PATH = ".";
+function validateCurrentFolder() {
+  const result = currentDirEmpty().flatMap(
+    (value) => value ? Result.Ok(value) : Result.Error(new DirNotEmptyError())
+  );
+  if (result.isError()) {
+    return result.value.message;
+  }
+  return true;
+}
+function validateName(value) {
+  if (value === CURRENT_FOLDER_PATH) {
+    return validateCurrentFolder();
+  }
+  if (!value) {
+    return new NoValueError().message;
+  }
+  const val = stripWhitespaces(value);
+  const folderName = value.includes(process.cwd()) ? val : join(process.cwd(), val);
+  const exists = folderExists(folderName).match({
+    Error() {
+      return false;
+    },
+    Ok: (v) => v
+  });
+  if (exists) {
+    return new DirNotEmptyError(val).message;
+  }
+  return true;
+}
+
+// source/cmd/inputs/ask-name.ts
+async function askName(args = {}) {
+  const { name: name2 } = await prompts(
+    {
+      name: "name",
+      type: "text",
+      message: "Project name?",
+      validate: validateName
+    },
+    promptOptions(args)
+  );
+  return name2;
 }
 var makeGetAllDirsFunc = (deps = {}) => {
   return (target) => {
@@ -760,7 +744,7 @@ async function askProjectType(choices, args = {}) {
   const readDir = makeGetAllDirsFunc();
   const templatesResult = readDir(join(process.cwd(), "template"));
   if (templatesResult.isError()) {
-    throw new Error("OOpsie");
+    throw new Error("For some reason could not reach the template folder");
   }
   templatesResult.get();
   const { project } = await prompts(
@@ -776,6 +760,20 @@ async function askProjectType(choices, args = {}) {
     promptOptions(args)
   );
   return project;
+}
+
+// source/env/retrieve-env.ts
+function isShowAllFlags(env) {
+  return handleBooleanValues(env["IHL_ALL" /* IHL_ALL */]);
+}
+function isVerboseIHL(env) {
+  return handleBooleanValues(env["IHL_VERBOSE" /* IHL_VERBOSE */]);
+}
+function getEnvInfo(env = process.env) {
+  return {
+    isShowAll: isShowAllFlags(env),
+    isVerbose: isVerboseIHL(env)
+  };
 }
 
 // source/config/config.ts

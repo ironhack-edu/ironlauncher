@@ -1,11 +1,10 @@
 import { Option, Result } from "@swan-io/boxed";
-import { readdirSync } from "fs";
 import { basename } from "path";
 import { DirectoryTakenError } from "../../cmd/inputs/input-errors";
-import { type IDirEmpty, makeDirEmptyFunc } from "../../lib/fs/dir-empty";
+import { makeDirEmptyFunc, type IDirEmpty } from "../../lib/fs/dir-empty";
 import {
-  type IMakeExistsFolder,
   makeExistsFolder,
+  type IMakeExistsFolder,
 } from "../../lib/fs/folder-exists";
 import { fromTruthy } from "../../lib/option-wrapper";
 import { IIronLauncherInputs } from "../../types/cli-config";

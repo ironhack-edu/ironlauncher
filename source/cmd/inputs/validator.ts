@@ -75,12 +75,6 @@ export function targetDirEmpty(
 }
 
 const CURRENT_FOLDER_PATH = ".";
-const NAME_VALIDATOR_ERRORS = {
-  dirNotEmpty: `This directory is not empty, please choose a different name\n`,
-  dirTaken: `This directory already exists`,
-  noValue: "Please add a value\n",
-  unexpectedError: `Something unexpected happened. Please choose a different name\n`,
-} as const;
 
 export function validateCurrentFolder(): string | true {
   const result = currentDirEmpty().flatMap((value) =>

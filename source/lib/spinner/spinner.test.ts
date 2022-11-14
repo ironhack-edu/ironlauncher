@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { makeSpinner } from "./index";
 
-describe.skip("spinner maker", () => {
+describe("spinner maker", () => {
   it("calls correct methods?", () => {
     const succeed = vi.fn();
     const start = vi.fn();
