@@ -89,7 +89,7 @@ router.post("/login", (req, res, next) => {
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
-        res.status(401).json({ message: "User not found." });
+        res.status(401).json({ message: "Authentication failed." });
         return;
       }
 
@@ -112,7 +112,7 @@ router.post("/login", (req, res, next) => {
         // Send the token as the response
         res.status(200).json({ authToken: authToken });
       } else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
+        res.status(401).json({ message: "Authentication failed." });
       }
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
